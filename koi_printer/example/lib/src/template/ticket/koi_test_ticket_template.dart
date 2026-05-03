@@ -67,7 +67,7 @@ class KoiTestTicketTemplate implements KoiTicketTemplate<void> {
       const KoiTextElement(text: '>> 弹钱箱 (Cash Drawer)'),
       const KoiCashDrawerElement(pin: KoiCashDrawerPin.pin2),
       const KoiTextElement(text: '>> 注入原始空指令 (Raw Bytes)'),
-      const KoiRawBytesElement([0x00]), // NUL
+      const KoiRawBytesElement([0x1B, 0x4A, 0x00]), // ESC J 0 (安全空走纸)
       const KoiSpacerElement(lines: 1),
 
       const KoiTextElement(text: '图片打印测试 (Logo):'),

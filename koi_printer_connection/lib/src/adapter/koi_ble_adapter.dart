@@ -216,6 +216,10 @@ class KoiBleAdapter implements KoiPrinterAdapter {
           piece,
           withoutResponse: _characteristic!.properties.writeWithoutResponse,
         );
+        // 增加流量控制: 如果是 withoutResponse，连续的高速突发写入极易导致打印机底层 BLE 芯片 UART 缓冲溢出而断开连接。
+        if (_characteristic!.properties.writeWithoutResponse) {
+          await Future.delayed(const Duration(milliseconds: 20));
+        }
       } catch (e) {
         debugPrint('KoiBleAdapter: write error at offset $offset: $e');
         rethrow;
