@@ -635,8 +635,13 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
   }
 
   /// 图片光栅化 — 单次遍历 O(N) 高效实现。
-  /// 支持任意格式的 img.Image (含调色板、单色、透明背景等)，无需内存复制与格式转换。
-  List<int> _toRasterFormat(img.Image image) {
+  /// 支持任意格式的 img.Image (含调色板、单色、透明背景等)。
+  List<int> _toRasterFormat(img.Image imgSrc) {
+    // 强制归一化为 8-bit RGBA 格式。
+    // 如果不进行转换，对于 1-bit 单色位图，getPixel() 会返回未归一化的值（如 p.a 永远为 0，最大通道值为 1），
+    // 导致后续 p.a >= 128 的判断永远为 false，最终打印出一张完全空白的图片。
+    final image = imgSrc.convert(format: img.Format.uint8, numChannels: 4);
+    
     final widthPx = image.width;
     final heightPx = image.height;
 
