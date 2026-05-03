@@ -73,16 +73,23 @@ class KoiBleAdapter implements KoiPrinterAdapter {
       _mtu = config.mtu;
 
       // 监听连接状态变化
-      _connectionSub = _device!.connectionState.listen((bleState) {
+      _connectionSub = _device!.connectionState.listen((bleState) async {
         switch (bleState) {
           case BluetoothConnectionState.connected:
-            _discoverServices();
+            if (_state != KoiConnectionState.ready) {
+              await _discoverServices();
+            }
+            break;
           case BluetoothConnectionState.disconnected:
             _updateState(KoiConnectionState.disconnected);
+            _characteristic = null;
+            break;
           case BluetoothConnectionState.connecting:
             _updateState(KoiConnectionState.connecting);
+            break;
           case BluetoothConnectionState.disconnecting:
             _updateState(KoiConnectionState.disconnecting);
+            break;
         }
       });
 
@@ -119,8 +126,23 @@ class KoiBleAdapter implements KoiPrinterAdapter {
           rethrow;
         }
       }
+      // 等待到底层连接成功且发现服务完成 (isReady)
+      if (!isReady) {
+        try {
+          await stateStream
+              .firstWhere(
+                (s) =>
+                    s == KoiConnectionState.ready ||
+                    s == KoiConnectionState.disconnected ||
+                    (s == KoiConnectionState.connected && _characteristic == null),
+              )
+              .timeout(const Duration(seconds: 15));
+        } catch (_) {
+          // 超时或错误
+        }
+      }
       
-      return true;
+      return isReady;
     } catch (e) {
       debugPrint('KoiBleAdapter: connect error: $e');
       _updateState(KoiConnectionState.disconnected);
