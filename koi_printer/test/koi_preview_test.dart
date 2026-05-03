@@ -13,14 +13,14 @@ void main() {
   group('KoiPreviewRenderer ticket', () {
     testWidgets('renders empty ticket document', (tester) async {
       const doc = KoiTicketDocument(elements: []);
-      final widget = KoiPreviewRenderer.build(doc);
+      final widget = KoiPreviewRenderer.build(document: doc, paperWidthPx: 384);
       await tester.pumpWidget(MaterialApp(home: Scaffold(body: widget)));
       expect(find.byType(Column), findsOneWidget);
     });
 
     testWidgets('renders TextElement', (tester) async {
       const doc = KoiTicketDocument(elements: [KoiTextElement(text: '测试文本')]);
-      final widget = KoiPreviewRenderer.build(doc);
+      final widget = KoiPreviewRenderer.build(document: doc, paperWidthPx: 384);
       await tester.pumpWidget(MaterialApp(home: Scaffold(body: widget)));
       expect(find.text('测试文本'), findsOneWidget);
     });
@@ -31,7 +31,7 @@ void main() {
           KoiTextElement(text: 'Bold', bold: true, size: KoiTextSize.size2),
         ],
       );
-      final widget = KoiPreviewRenderer.build(doc);
+      final widget = KoiPreviewRenderer.build(document: doc, paperWidthPx: 384);
       await tester.pumpWidget(MaterialApp(home: Scaffold(body: widget)));
       expect(find.text('Bold'), findsOneWidget);
     });
@@ -46,7 +46,7 @@ void main() {
           ),
         ],
       );
-      final widget = KoiPreviewRenderer.build(doc);
+      final widget = KoiPreviewRenderer.build(document: doc, paperWidthPx: 384);
       await tester.pumpWidget(MaterialApp(home: Scaffold(body: widget)));
       expect(find.text('Reversed'), findsOneWidget);
     });
@@ -55,7 +55,7 @@ void main() {
       const doc = KoiTicketDocument(
         elements: [KoiTextElement(text: 'Right', align: KoiTextAlign.right)],
       );
-      final widget = KoiPreviewRenderer.build(doc);
+      final widget = KoiPreviewRenderer.build(document: doc, paperWidthPx: 384);
       await tester.pumpWidget(MaterialApp(home: Scaffold(body: widget)));
       expect(find.text('Right'), findsOneWidget);
     });
@@ -73,7 +73,7 @@ void main() {
           KoiTextElement(text: 'S8', size: KoiTextSize.size8),
         ],
       );
-      final widget = KoiPreviewRenderer.build(doc);
+      final widget = KoiPreviewRenderer.build(document: doc, paperWidthPx: 384);
       await tester.pumpWidget(MaterialApp(home: Scaffold(body: widget)));
       expect(find.text('S1'), findsOneWidget);
       expect(find.text('S8'), findsOneWidget);
@@ -95,7 +95,7 @@ void main() {
           ),
         ],
       );
-      final widget = KoiPreviewRenderer.build(doc);
+      final widget = KoiPreviewRenderer.build(document: doc, paperWidthPx: 384);
       await tester.pumpWidget(MaterialApp(home: Scaffold(body: widget)));
       expect(find.text('Left'), findsOneWidget);
       expect(find.text('Right'), findsOneWidget);
@@ -109,7 +109,7 @@ void main() {
           ),
         ],
       );
-      final widget = KoiPreviewRenderer.build(doc);
+      final widget = KoiPreviewRenderer.build(document: doc, paperWidthPx: 384);
       await tester.pumpWidget(MaterialApp(home: Scaffold(body: widget)));
       expect(find.text('Bold'), findsOneWidget);
     });
@@ -118,7 +118,7 @@ void main() {
       const doc = KoiTicketDocument(
         elements: [KoiQrCodeElement(data: 'https://example.com')],
       );
-      final widget = KoiPreviewRenderer.build(doc);
+      final widget = KoiPreviewRenderer.build(document: doc, paperWidthPx: 384);
       await tester.pumpWidget(MaterialApp(home: Scaffold(body: widget)));
       expect(find.byType(Column), findsWidgets);
     });
@@ -127,7 +127,7 @@ void main() {
       const doc = KoiTicketDocument(
         elements: [KoiBarcodeElement(data: '123456789')],
       );
-      final widget = KoiPreviewRenderer.build(doc);
+      final widget = KoiPreviewRenderer.build(document: doc, paperWidthPx: 384);
       await tester.pumpWidget(MaterialApp(home: Scaffold(body: widget)));
       // Check barcode text is rendered
       expect(find.text('123456789'), findsOneWidget);
@@ -135,28 +135,28 @@ void main() {
 
     testWidgets('renders DividerElement', (tester) async {
       const doc = KoiTicketDocument(elements: [KoiDividerElement()]);
-      final widget = KoiPreviewRenderer.build(doc);
+      final widget = KoiPreviewRenderer.build(document: doc, paperWidthPx: 384);
       await tester.pumpWidget(MaterialApp(home: Scaffold(body: widget)));
       expect(find.byType(Column), findsOneWidget);
     });
 
     testWidgets('renders DividerElement with custom char', (tester) async {
       const doc = KoiTicketDocument(elements: [KoiDividerElement(char: '=')]);
-      final widget = KoiPreviewRenderer.build(doc);
+      final widget = KoiPreviewRenderer.build(document: doc, paperWidthPx: 384);
       await tester.pumpWidget(MaterialApp(home: Scaffold(body: widget)));
       expect(find.byType(Column), findsOneWidget);
     });
 
     testWidgets('renders SpacerElement', (tester) async {
       const doc = KoiTicketDocument(elements: [KoiSpacerElement(lines: 3)]);
-      final widget = KoiPreviewRenderer.build(doc);
+      final widget = KoiPreviewRenderer.build(document: doc, paperWidthPx: 384);
       await tester.pumpWidget(MaterialApp(home: Scaffold(body: widget)));
       expect(find.byType(SizedBox), findsWidgets);
     });
 
     testWidgets('renders CutElement', (tester) async {
       const doc = KoiTicketDocument(elements: [KoiCutElement()]);
-      final widget = KoiPreviewRenderer.build(doc);
+      final widget = KoiPreviewRenderer.build(document: doc, paperWidthPx: 384);
       await tester.pumpWidget(MaterialApp(home: Scaffold(body: widget)));
       // Cut renders a dashed line + scissors icon
       expect(find.byType(Column), findsOneWidget);
@@ -182,7 +182,7 @@ void main() {
           ),
         ],
       );
-      final widget = KoiPreviewRenderer.build(doc);
+      final widget = KoiPreviewRenderer.build(document: doc, paperWidthPx: 384);
       await tester.pumpWidget(MaterialApp(home: Scaffold(body: widget)));
       expect(find.byType(Image), findsOneWidget);
     });
@@ -209,7 +209,7 @@ void main() {
           KoiCutElement(),
         ],
       );
-      final widget = KoiPreviewRenderer.build(doc);
+      final widget = KoiPreviewRenderer.build(document: doc, paperWidthPx: 384);
       await tester.pumpWidget(MaterialApp(home: Scaffold(body: widget)));
       expect(find.text('Header'), findsOneWidget);
       expect(find.text('Item'), findsOneWidget);
@@ -218,7 +218,7 @@ void main() {
     testWidgets('renders with custom parameters', (tester) async {
       const doc = KoiTicketDocument(elements: [KoiTextElement(text: 'Custom')]);
       final widget = KoiPreviewRenderer.build(
-        doc,
+        document: doc,
         paperWidthPx: 300,
         backgroundColor: Colors.grey,
         textColor: Colors.blue,
@@ -239,7 +239,7 @@ void main() {
         ],
       );
       // ForEach isn't rendered in preview, it should pass through silently
-      final widget = KoiPreviewRenderer.build(doc);
+      final widget = KoiPreviewRenderer.build(document: doc, paperWidthPx: 384);
       await tester.pumpWidget(MaterialApp(home: Scaffold(body: widget)));
       expect(find.byType(Column), findsOneWidget);
     });
@@ -254,7 +254,7 @@ void main() {
       const doc = KoiLabelDocument(
         elements: [KoiLabelSetupElement(widthMm: 60, heightMm: 40)],
       );
-      final widget = KoiPreviewRenderer.build(doc);
+      final widget = KoiPreviewRenderer.build(document: doc, paperWidthPx: 384);
       await tester.pumpWidget(MaterialApp(home: Scaffold(body: widget)));
       expect(find.byType(Stack), findsWidgets);
     });
@@ -266,7 +266,7 @@ void main() {
           KoiPositionedTextElement(x: 10, y: 10, text: 'Label Text'),
         ],
       );
-      final widget = KoiPreviewRenderer.build(doc);
+      final widget = KoiPreviewRenderer.build(document: doc, paperWidthPx: 384);
       await tester.pumpWidget(MaterialApp(home: Scaffold(body: widget)));
       expect(find.text('Label Text'), findsOneWidget);
     });
@@ -283,7 +283,7 @@ void main() {
           ),
         ],
       );
-      final widget = KoiPreviewRenderer.build(doc);
+      final widget = KoiPreviewRenderer.build(document: doc, paperWidthPx: 384);
       await tester.pumpWidget(MaterialApp(home: Scaffold(body: widget)));
       expect(find.text('BC123'), findsOneWidget);
     });
@@ -300,7 +300,7 @@ void main() {
           ),
         ],
       );
-      final widget = KoiPreviewRenderer.build(doc);
+      final widget = KoiPreviewRenderer.build(document: doc, paperWidthPx: 384);
       await tester.pumpWidget(MaterialApp(home: Scaffold(body: widget)));
       expect(find.byType(Stack), findsWidgets);
     });
@@ -312,7 +312,7 @@ void main() {
           KoiLabelBoxElement(x: 5, y: 5, width: 50, height: 30),
         ],
       );
-      final widget = KoiPreviewRenderer.build(doc);
+      final widget = KoiPreviewRenderer.build(document: doc, paperWidthPx: 384);
       await tester.pumpWidget(MaterialApp(home: Scaffold(body: widget)));
       expect(find.byType(Stack), findsWidgets);
     });
@@ -324,14 +324,14 @@ void main() {
           KoiLabelReverseElement(x: 10, y: 10, width: 30, height: 20),
         ],
       );
-      final widget = KoiPreviewRenderer.build(doc);
+      final widget = KoiPreviewRenderer.build(document: doc, paperWidthPx: 384);
       await tester.pumpWidget(MaterialApp(home: Scaffold(body: widget)));
       expect(find.byType(Stack), findsWidgets);
     });
 
     testWidgets('renders empty label document', (tester) async {
       const doc = KoiLabelDocument(elements: []);
-      final widget = KoiPreviewRenderer.build(doc);
+      final widget = KoiPreviewRenderer.build(document: doc, paperWidthPx: 384);
       await tester.pumpWidget(MaterialApp(home: Scaffold(body: widget)));
       expect(find.byType(Stack), findsWidgets);
     });
@@ -357,7 +357,7 @@ void main() {
           KoiLabelReverseElement(x: 10, y: 10, width: 50, height: 20),
         ],
       );
-      final widget = KoiPreviewRenderer.build(doc);
+      final widget = KoiPreviewRenderer.build(document: doc, paperWidthPx: 384);
       await tester.pumpWidget(MaterialApp(home: Scaffold(body: widget)));
       expect(find.text('标题'), findsOneWidget);
       expect(find.text('BC-001'), findsOneWidget);
@@ -368,7 +368,8 @@ void main() {
         elements: [KoiPositionedTextElement(x: 0, y: 0, text: 'Color Test')],
       );
       final widget = KoiPreviewRenderer.build(
-        doc,
+        document: doc,
+        paperWidthPx: 384,
         backgroundColor: Colors.black,
         textColor: Colors.white,
       );
@@ -385,7 +386,7 @@ void main() {
           ),
         ],
       );
-      final widget = KoiPreviewRenderer.build(doc);
+      final widget = KoiPreviewRenderer.build(document: doc, paperWidthPx: 384);
       await tester.pumpWidget(MaterialApp(home: Scaffold(body: widget)));
       expect(find.byType(Stack), findsWidgets);
     });

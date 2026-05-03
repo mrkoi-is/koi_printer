@@ -475,20 +475,6 @@ class KoiPreviewRenderer {
   // 工具方法
   // ═══════════════════════════════════════════════════════════
 
-  static double _sizeToFontSize(KoiTextSize size) {
-    // 严格按照打印机点阵 (dots) 匹配像素，基准为 24x24
-    return switch (size) {
-      KoiTextSize.size1 => 24,
-      KoiTextSize.size2 => 48,
-      KoiTextSize.size3 => 72,
-      KoiTextSize.size4 => 96,
-      KoiTextSize.size5 => 120,
-      KoiTextSize.size6 => 144,
-      KoiTextSize.size7 => 168,
-      KoiTextSize.size8 => 192,
-    };
-  }
-
   static AlignmentGeometry _align(KoiTextAlign align) {
     return switch (align) {
       KoiTextAlign.left => Alignment.centerLeft,
