@@ -96,23 +96,39 @@ class KoiPreviewRenderer {
   }
 
   static Widget _flowText(KoiTextElement e, Color color, String fontFamily) {
-    final fontSize = _sizeToFontSize(e.size);
+    final wScale = (e.widthSize?.value ?? e.size.value).toDouble();
+    final hScale = (e.heightSize?.value ?? e.size.value).toDouble();
+    
+    // 基础字体大小 (基于点阵的 24 Dots)
+    const baseFontSize = 24.0;
+    final stretchX = wScale / hScale;
+
+    Widget textWidget = Text(
+      e.text,
+      style: TextStyle(
+        fontFamily: fontFamily,
+        fontSize: baseFontSize * hScale,
+        fontWeight: e.bold ? FontWeight.bold : FontWeight.normal,
+        letterSpacing: fontFamily == 'monospace' ? -0.5 : 0,
+        decoration:
+            e.underline ? TextDecoration.underline : TextDecoration.none,
+        color: e.reverse ? Colors.white : color,
+        backgroundColor: e.reverse ? color : null,
+      ),
+    );
+
+    if (stretchX != 1.0) {
+      textWidget = Transform.scale(
+        scaleX: stretchX,
+        alignment: _align(e.align),
+        child: textWidget,
+      );
+    }
+
     return Container(
       alignment: _align(e.align),
       padding: const EdgeInsets.symmetric(vertical: 2),
-      child: Text(
-        e.text,
-        style: TextStyle(
-          fontFamily: fontFamily,
-          fontSize: fontSize,
-          fontWeight: e.bold ? FontWeight.bold : FontWeight.normal,
-          letterSpacing: fontFamily == 'monospace' ? -0.5 : 0,
-          decoration:
-              e.underline ? TextDecoration.underline : TextDecoration.none,
-          color: e.reverse ? Colors.white : color,
-          backgroundColor: e.reverse ? color : null,
-        ),
-      ),
+      child: textWidget,
     );
   }
 
