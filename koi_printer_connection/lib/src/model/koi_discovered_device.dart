@@ -4,6 +4,7 @@ import 'package:koi_printer_connection/src/model/koi_connection_types.dart';
 /// 扫描到的设备信息。
 /// Represents a discovered printer device.
 class KoiDiscoveredDevice {
+  /// Constant constructor.
   const KoiDiscoveredDevice({
     required this.name,
     required this.deviceId,

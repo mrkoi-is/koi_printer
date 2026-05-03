@@ -1,0 +1,46 @@
+Analyzing koi_printer_connection...                             
+
+   info • The referenced name isn't visible in scope • lib/koi_printer_connection.dart:3:12 • comment_references
+   info • The referenced name isn't visible in scope • lib/koi_printer_connection.dart:4:37 • comment_references
+   info • The referenced name isn't visible in scope • lib/koi_printer_connection.dart:5:20 • comment_references
+   info • The referenced name isn't visible in scope • lib/koi_printer_connection.dart:7:14 • comment_references
+   info • Sort directive sections alphabetically • lib/koi_printer_connection.dart:16:1 • directives_ordering
+   info • Sort directive sections alphabetically • lib/koi_printer_connection.dart:29:1 • directives_ordering
+   info • Missing documentation for a public member • lib/src/adapter/koi_ble_adapter.dart:20:3 • public_member_api_docs
+   info • 'Future'-returning calls in a non-'async' function • lib/src/adapter/koi_ble_adapter.dart:79:13 • discarded_futures
+   info • 'connecting' is deprecated and shouldn't be used. Android & iOS dont stream this state. You can delete • lib/src/adapter/koi_ble_adapter.dart:82:41 • deprecated_member_use
+   info • 'disconnecting' is deprecated and shouldn't be used. Android & iOS dont stream this state. You can delete • lib/src/adapter/koi_ble_adapter.dart:84:41 • deprecated_member_use
+   info • Catch clause should use 'on' to specify the type of exception being caught • lib/src/adapter/koi_ble_adapter.dart:99:7 • avoid_catches_without_on_clauses
+   info • Catch clause should use 'on' to specify the type of exception being caught • lib/src/adapter/koi_ble_adapter.dart:148:7 • avoid_catches_without_on_clauses
+   info • Catch clause should use 'on' to specify the type of exception being caught • lib/src/adapter/koi_ble_adapter.dart:158:7 • avoid_catches_without_on_clauses
+   info • Catch clause should use 'on' to specify the type of exception being caught • lib/src/adapter/koi_ble_adapter.dart:214:7 • avoid_catches_without_on_clauses
+   info • Missing documentation for a public member • lib/src/adapter/koi_classic_bt_adapter.dart:16:3 • public_member_api_docs
+   info • Missing documentation for a public member • lib/src/adapter/koi_network_adapter.dart:15:3 • public_member_api_docs
+   info • Catch clause should use 'on' to specify the type of exception being caught • lib/src/adapter/koi_network_adapter.dart:71:7 • avoid_catches_without_on_clauses
+   info • Catch clause should use 'on' to specify the type of exception being caught • lib/src/adapter/koi_network_adapter.dart:83:7 • avoid_catches_without_on_clauses
+   info • Use 'forEach' and a tear-off rather than a 'for' loop to apply a function to every element • lib/src/adapter/koi_network_adapter.dart:96:5 • prefer_foreach
+   info • Missing documentation for a public member • lib/src/adapter/koi_usb_adapter.dart:16:3 • public_member_api_docs
+   info • Missing documentation for a public member • lib/src/model/koi_connection_config.dart:4:9 • public_member_api_docs
+   info • Missing documentation for a public member • lib/src/model/koi_connection_config.dart:43:23 • public_member_api_docs
+   info • Missing documentation for a public member • lib/src/model/koi_connection_policy.dart:4:9 • public_member_api_docs
+   info • Missing documentation for a public member • lib/src/model/koi_discovered_device.dart:7:9 • public_member_api_docs
+   info • The method '==' should not be overridden in classes not annotated with '@immutable' • lib/src/model/koi_discovered_device.dart:39:3 • avoid_equals_and_hash_code_on_mutable_classes
+   info • The method 'hashCode' should not be overridden in classes not annotated with '@immutable' • lib/src/model/koi_discovered_device.dart:46:3 • avoid_equals_and_hash_code_on_mutable_classes
+   info • 'Future'-returning calls in a non-'async' function • lib/src/scanner/koi_ble_scanner.dart:26:23 • discarded_futures
+   info • 'Future'-returning calls in a non-'async' function • lib/src/scanner/koi_ble_scanner.dart:48:37 • discarded_futures
+   info • 'Future'-returning calls in a non-'async' function • lib/src/scanner/koi_ble_scanner.dart:49:18 • discarded_futures
+   info • 'Future'-returning calls in a non-'async' function • lib/src/scanner/koi_ble_scanner.dart:51:22 • discarded_futures
+   info • 'Future'-returning calls in a non-'async' function • lib/src/scanner/koi_ble_scanner.dart:59:18 • discarded_futures
+   info • 'Future'-returning calls in a non-'async' function • lib/src/scanner/koi_ble_scanner.dart:60:25 • discarded_futures
+   info • Catch clause should use 'on' to specify the type of exception being caught • lib/src/scanner/koi_ble_scanner.dart:70:7 • avoid_catches_without_on_clauses
+   info • Missing an 'await' for the 'Future' computed by this expression • lib/src/scanner/koi_classic_bt_scanner.dart:47:44 • unawaited_futures
+   info • Closure should be a tearoff • lib/src/scanner/koi_classic_bt_scanner.dart:50:27 • unnecessary_lambdas
+   info • Missing an 'await' for the 'Future' computed by this expression • lib/src/scanner/koi_network_scanner.dart:32:44 • unawaited_futures
+   info • Closure should be a tearoff • lib/src/scanner/koi_network_scanner.dart:35:27 • unnecessary_lambdas
+   info • Catch clause should use 'on' to specify the type of exception being caught • lib/src/scanner/koi_network_scanner.dart:59:7 • avoid_catches_without_on_clauses
+warning • Unused import: 'package:koi_printer_connection/src/model/koi_connection_types.dart' • lib/src/scanner/koi_usb_scanner.dart:4:8 • unused_import
+   info • 'Future'-returning calls in a non-'async' function • lib/src/scanner/koi_usb_scanner.dart:26:61 • discarded_futures
+   info • 'Future'-returning calls in a non-'async' function • lib/src/scanner/koi_usb_scanner.dart:27:44 • discarded_futures
+   info • The value of the argument is redundant because it matches the default value • test/koi_printer_connection_test.dart:24:14 • avoid_redundant_argument_values
+   info • The value of the argument is redundant because it matches the default value • test/koi_printer_connection_test.dart:142:24 • avoid_redundant_argument_values
+

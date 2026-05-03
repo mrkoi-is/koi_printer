@@ -15,11 +15,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-flutter:
-  plugin:
-    platforms:
-      android:
-      ios:
   koi_printer_command:
     path: ../koi_printer_command
   koi_printer_connection:

@@ -1,0 +1,41 @@
+Analyzing koi_printer_command...
+
+warning - test/koi_json_serialization_test.dart:478:76 - The type argument(s) of 'List' can't be inferred. Use explicit type argument(s) for 'List'. - inference_failure_on_collection_literal
+warning - test/koi_json_serialization_test.dart:484:77 - The type argument(s) of 'List' can't be inferred. Use explicit type argument(s) for 'List'. - inference_failure_on_collection_literal
+warning - test/koi_json_serialization_test.dart:493:21 - The type argument(s) of 'List' can't be inferred. Use explicit type argument(s) for 'List'. - inference_failure_on_collection_literal
+warning - test/koi_json_serialization_test.dart:503:21 - The type argument(s) of 'List' can't be inferred. Use explicit type argument(s) for 'List'. - inference_failure_on_collection_literal
+   info - lib/src/model/koi_types.dart:1:8 - The imported package 'meta' isn't a dependency of the importing package. Try adding a dependency for 'meta' in the 'pubspec.yaml' file. - depend_on_referenced_packages
+   info - lib/src/model/koi_types.dart:63:21 - Missing documentation for a public member. Try adding documentation for the member. - public_member_api_docs
+   info - lib/src/model/koi_types.dart:63:27 - Missing documentation for a public member. Try adding documentation for the member. - public_member_api_docs
+   info - lib/src/model/koi_types.dart:63:35 - Missing documentation for a public member. Try adding documentation for the member. - public_member_api_docs
+   info - lib/src/model/koi_types.dart:263:22 - Missing documentation for a public member. Try adding documentation for the member. - public_member_api_docs
+   info - lib/src/model/koi_types.dart:263:30 - Missing documentation for a public member. Try adding documentation for the member. - public_member_api_docs
+   info - lib/src/model/koi_types.dart:268:22 - Missing documentation for a public member. Try adding documentation for the member. - public_member_api_docs
+   info - lib/src/model/koi_types.dart:268:30 - Missing documentation for a public member. Try adding documentation for the member. - public_member_api_docs
+   info - lib/src/model/koi_types.dart:268:38 - Missing documentation for a public member. Try adding documentation for the member. - public_member_api_docs
+   info - lib/src/model/koi_types.dart:268:46 - Missing documentation for a public member. Try adding documentation for the member. - public_member_api_docs
+   info - lib/src/model/koi_types.dart:268:54 - Missing documentation for a public member. Try adding documentation for the member. - public_member_api_docs
+   info - lib/src/model/koi_types.dart:268:62 - Missing documentation for a public member. Try adding documentation for the member. - public_member_api_docs
+   info - lib/src/renderer/koi_cpcl_renderer.dart:74:81 - The line length exceeds the 80-character limit. Try breaking the line across multiple lines. - lines_longer_than_80_chars
+   info - lib/src/renderer/koi_esc_pos_renderer.dart:107:5 - Unnecessary duplication of receiver. Try using a cascade to avoid the duplication. - cascade_invocations
+   info - lib/src/renderer/koi_esc_pos_renderer.dart:110:5 - Unnecessary duplication of receiver. Try using a cascade to avoid the duplication. - cascade_invocations
+   info - lib/src/renderer/koi_esc_pos_renderer.dart:180:9 - The addition of multiple elements could be inlined. Try using the spread operator ('...') to inline the addition. - prefer_spread_collections
+   info - lib/src/renderer/koi_esc_pos_renderer.dart:278:81 - The line length exceeds the 80-character limit. Try breaking the line across multiple lines. - lines_longer_than_80_chars
+   info - lib/src/renderer/koi_esc_pos_renderer.dart:296:9 - The addition of multiple elements could be inlined. Try using the spread operator ('...') to inline the addition. - prefer_spread_collections
+   info - lib/src/renderer/koi_esc_pos_renderer.dart:313:5 - Unnecessary duplication of receiver. Try using a cascade to avoid the duplication. - cascade_invocations
+   info - lib/src/renderer/koi_esc_pos_renderer.dart:316:5 - Unnecessary duplication of receiver. Try using a cascade to avoid the duplication. - cascade_invocations
+   info - lib/src/renderer/koi_esc_pos_renderer.dart:351:5 - Unnecessary duplication of receiver. Try using a cascade to avoid the duplication. - cascade_invocations
+   info - lib/src/renderer/koi_esc_pos_renderer.dart:352:5 - Unnecessary duplication of receiver. Try using a cascade to avoid the duplication. - cascade_invocations
+   info - lib/src/renderer/koi_esc_pos_renderer.dart:355:5 - Unnecessary duplication of receiver. Try using a cascade to avoid the duplication. - cascade_invocations
+   info - lib/src/renderer/koi_esc_pos_renderer.dart:365:81 - The line length exceeds the 80-character limit. Try breaking the line across multiple lines. - lines_longer_than_80_chars
+   info - lib/src/renderer/koi_esc_pos_renderer.dart:378:81 - The line length exceeds the 80-character limit. Try breaking the line across multiple lines. - lines_longer_than_80_chars
+   info - lib/src/renderer/koi_esc_pos_renderer.dart:383:9 - The addition of multiple elements could be inlined. Try using the spread operator ('...') to inline the addition. - prefer_spread_collections
+   info - lib/src/renderer/koi_esc_pos_renderer.dart:466:81 - The line length exceeds the 80-character limit. Try breaking the line across multiple lines. - lines_longer_than_80_chars
+   info - lib/src/renderer/koi_esc_pos_renderer.dart:473:9 - The addition of multiple list items could be inlined. Try adding the items to the list literal directly. - prefer_inlined_adds
+   info - lib/src/renderer/koi_esc_pos_renderer.dart:541:9 - Unnecessary duplication of receiver. Try using a cascade to avoid the duplication. - cascade_invocations
+   info - lib/src/renderer/koi_tspl_renderer.dart:53:15 - Missing whitespace between adjacent strings. Try adding whitespace between the strings. - missing_whitespace_between_adjacent_strings
+   info - lib/src/renderer/koi_tspl_renderer.dart:61:15 - Missing whitespace between adjacent strings. Try adding whitespace between the strings. - missing_whitespace_between_adjacent_strings
+   info - lib/src/renderer/koi_tspl_renderer.dart:69:15 - Missing whitespace between adjacent strings. Try adding whitespace between the strings. - missing_whitespace_between_adjacent_strings
+   info - test/koi_renderer_test.dart:268:81 - The line length exceeds the 80-character limit. Try breaking the line across multiple lines. - lines_longer_than_80_chars
+
+37 issues found.

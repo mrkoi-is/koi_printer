@@ -1,6 +1,7 @@
 /// 连接配置。
 /// Configuration for establishing a printer connection.
 class KoiConnectionConfig {
+  /// Constant constructor.
   const KoiConnectionConfig({
     required this.deviceName,
     required this.deviceId,
@@ -40,6 +41,7 @@ class KoiConnectionConfig {
   /// 连接超时时间。
   final Duration connectionTimeout;
 
+  /// Method.
   KoiConnectionConfig copyWith({
     String? deviceName,
     String? deviceId,

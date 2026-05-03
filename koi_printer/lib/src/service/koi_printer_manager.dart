@@ -28,6 +28,7 @@ import 'package:koi_printer/src/template/koi_print_template.dart';
 /// );
 /// ```
 class KoiPrinterManager {
+  /// Method.
   KoiPrinterManager({
     required this.storage,
     KoiPrinterAdapter? ticketAdapter,

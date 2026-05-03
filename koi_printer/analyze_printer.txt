@@ -1,0 +1,117 @@
+Analyzing koi_printer...                                        
+
+   info • 'activeColor' is deprecated and shouldn't be used. Use activeThumbColor instead. This feature was deprecated after v3.31.0-2.0.pre • example/lib/src/screens/koi_print_settings_screen.dart:118:13 • deprecated_member_use
+   info • 'activeColor' is deprecated and shouldn't be used. Use activeThumbColor instead. This feature was deprecated after v3.31.0-2.0.pre • example/lib/src/screens/koi_print_settings_screen.dart:134:13 • deprecated_member_use
+   info • Unnecessary use of multiple underscores • example/lib/src/screens/koi_scanner_screen.dart:103:37 • unnecessary_underscores
+   info • The imported package 'koi_printer_command' isn't a dependency of the importing package • example/lib/src/template/demo/koi_simple_label_template.dart:2:8 • depend_on_referenced_packages
+  error • Classes can only extend other classes • example/lib/src/template/demo/koi_simple_label_template.dart:6:38 • extends_non_class
+warning • The getter doesn't override an inherited getter • example/lib/src/template/demo/koi_simple_label_template.dart:10:14 • override_on_non_overriding_member
+warning • The getter doesn't override an inherited getter • example/lib/src/template/demo/koi_simple_label_template.dart:13:14 • override_on_non_overriding_member
+warning • The method doesn't override an inherited method • example/lib/src/template/demo/koi_simple_label_template.dart:16:20 • override_on_non_overriding_member
+   info • The imported package 'koi_printer_command' isn't a dependency of the importing package • example/lib/src/template/demo/koi_simple_receipt_template.dart:2:8 • depend_on_referenced_packages
+  error • Classes can only extend other classes • example/lib/src/template/demo/koi_simple_receipt_template.dart:6:40 • extends_non_class
+warning • The getter doesn't override an inherited getter • example/lib/src/template/demo/koi_simple_receipt_template.dart:10:14 • override_on_non_overriding_member
+warning • The getter doesn't override an inherited getter • example/lib/src/template/demo/koi_simple_receipt_template.dart:13:14 • override_on_non_overriding_member
+warning • The method doesn't override an inherited method • example/lib/src/template/demo/koi_simple_receipt_template.dart:16:20 • override_on_non_overriding_member
+   info • Unnecessary braces in a string interpolation • example/lib/src/template/ticket/koi_delivery_note_template.dart:121:28 • unnecessary_brace_in_string_interps
+   info • The imported package 'koi_printer_command' isn't a dependency of the importing package • example/lib/src/template/ticket/koi_payment_request_template.dart:2:8 • depend_on_referenced_packages
+  error • Classes can only extend other classes • example/lib/src/template/ticket/koi_payment_request_template.dart:6:41 • extends_non_class
+warning • The getter doesn't override an inherited getter • example/lib/src/template/ticket/koi_payment_request_template.dart:10:14 • override_on_non_overriding_member
+warning • The getter doesn't override an inherited getter • example/lib/src/template/ticket/koi_payment_request_template.dart:13:14 • override_on_non_overriding_member
+warning • The method doesn't override an inherited method • example/lib/src/template/ticket/koi_payment_request_template.dart:16:20 • override_on_non_overriding_member
+   info • The imported package 'koi_printer_command' isn't a dependency of the importing package • example/lib/src/template/ticket/koi_refund_ticket_template.dart:2:8 • depend_on_referenced_packages
+  error • Classes can only extend other classes • example/lib/src/template/ticket/koi_refund_ticket_template.dart:6:39 • extends_non_class
+warning • The getter doesn't override an inherited getter • example/lib/src/template/ticket/koi_refund_ticket_template.dart:10:14 • override_on_non_overriding_member
+warning • The getter doesn't override an inherited getter • example/lib/src/template/ticket/koi_refund_ticket_template.dart:13:14 • override_on_non_overriding_member
+warning • The method doesn't override an inherited method • example/lib/src/template/ticket/koi_refund_ticket_template.dart:16:20 • override_on_non_overriding_member
+   info • Angle brackets will be interpreted as HTML • example/lib/src/template/ticket/koi_sender_ticket_template.dart:6:39 • unintended_html_in_doc_comment
+   info • The referenced name isn't visible in scope • lib/koi_printer.dart:4:8 • comment_references
+   info • The referenced name isn't visible in scope • lib/koi_printer.dart:5:8 • comment_references
+   info • The referenced name isn't visible in scope • lib/koi_printer.dart:6:8 • comment_references
+   info • The referenced name isn't visible in scope • lib/koi_printer.dart:7:8 • comment_references
+   info • The referenced name isn't visible in scope • lib/koi_printer.dart:8:8 • comment_references
+   info • The referenced name isn't visible in scope • lib/koi_printer.dart:9:8 • comment_references
+   info • Sort directive sections alphabetically • lib/koi_printer.dart:33:1 • directives_ordering
+   info • Sort directive sections alphabetically • lib/koi_printer.dart:36:1 • directives_ordering
+   info • Sort directive sections alphabetically • lib/koi_printer.dart:42:1 • directives_ordering
+   info • Missing documentation for a public member • lib/src/config/koi_print_config.dart:5:9 • public_member_api_docs
+   info • Missing documentation for a public member • lib/src/config/koi_print_config.dart:16:21 • public_member_api_docs
+   info • Missing documentation for a public member • lib/src/config/koi_print_config.dart:30:9 • public_member_api_docs
+   info • Missing documentation for a public member • lib/src/config/koi_print_config.dart:73:18 • public_member_api_docs
+   info • Missing documentation for a public member • lib/src/config/koi_user_preferences.dart:8:3 • public_member_api_docs
+   info • Sort directive sections alphabetically • lib/src/koi_printer_service.dart:6:1 • directives_ordering
+   info • The value of the argument is redundant because it matches the default value • lib/src/koi_printer_service.dart:84:66 • avoid_redundant_argument_values
+   info • Catch clause should use 'on' to specify the type of exception being caught • lib/src/koi_printer_service.dart:105:7 • avoid_catches_without_on_clauses
+   info • The value of the argument is redundant because it matches the default value • lib/src/koi_printer_service.dart:110:22 • avoid_redundant_argument_values
+   info • Missing documentation for a public member • lib/src/koi_template_engine.dart:17:9 • public_member_api_docs
+   info • Missing documentation for a public member • lib/src/model/koi_printer_profile.dart:21:9 • public_member_api_docs
+   info • Missing documentation for a public member • lib/src/model/koi_printer_profile.dart:39:16 • public_member_api_docs
+   info • Missing documentation for a public member • lib/src/model/koi_printer_profile.dart:40:16 • public_member_api_docs
+   info • Missing documentation for a public member • lib/src/model/koi_printer_profile.dart:41:16 • public_member_api_docs
+   info • Missing documentation for a public member • lib/src/model/koi_printer_profile.dart:42:34 • public_member_api_docs
+   info • Missing documentation for a public member • lib/src/model/koi_printer_profile.dart:43:33 • public_member_api_docs
+   info • Missing documentation for a public member • lib/src/model/koi_printer_profile.dart:44:13 • public_member_api_docs
+   info • Missing documentation for a public member • lib/src/model/koi_printer_profile.dart:45:13 • public_member_api_docs
+   info • Missing documentation for a public member • lib/src/model/koi_printer_profile.dart:46:13 • public_member_api_docs
+   info • Missing documentation for a public member • lib/src/model/koi_printer_profile.dart:47:14 • public_member_api_docs
+   info • Missing documentation for a public member • lib/src/model/koi_printer_profile.dart:48:14 • public_member_api_docs
+   info • Missing documentation for a public member • lib/src/model/koi_printer_profile.dart:49:29 • public_member_api_docs
+   info • Missing documentation for a public member • lib/src/model/koi_printer_profile.dart:50:14 • public_member_api_docs
+   info • Missing documentation for a public member • lib/src/model/koi_printer_profile.dart:51:17 • public_member_api_docs
+   info • Missing documentation for a public member • lib/src/model/koi_printer_profile.dart:52:14 • public_member_api_docs
+   info • Missing documentation for a public member • lib/src/model/koi_printer_profile.dart:53:25 • public_member_api_docs
+   info • Constructor declarations should be before non-constructor declarations • lib/src/model/koi_printer_profile.dart:55:11 • sort_constructors_first
+   info • Missing documentation for a public member • lib/src/model/koi_printer_profile.dart:55:29 • public_member_api_docs
+   info • Missing documentation for a public member • lib/src/model/koi_printer_profile.dart:79:24 • public_member_api_docs
+   info • Missing documentation for a public member • lib/src/model/koi_printer_profile.dart:117:3 • public_member_api_docs
+warning • Unused import: 'dart:typed_data' • lib/src/preview/koi_preview_renderer.dart:1:8 • unused_import
+warning • The value of the local variable 'totalRatio' isn't used • lib/src/preview/koi_preview_renderer.dart:113:11 • unused_local_variable
+   info • The value of the argument is redundant because it matches the default value • lib/src/preview/koi_preview_renderer.dart:242:28 • avoid_redundant_argument_values
+   info • Sort directive sections alphabetically • lib/src/service/koi_print_job_queue.dart:7:1 • directives_ordering
+   info • Missing documentation for a public member • lib/src/service/koi_print_job_queue.dart:12:3 • public_member_api_docs
+   info • Missing documentation for a public member • lib/src/service/koi_print_job_queue.dart:35:3 • public_member_api_docs
+   info • The value of the argument is redundant because it matches the default value • lib/src/service/koi_print_job_queue.dart:94:66 • avoid_redundant_argument_values
+   info • Catch clause should use 'on' to specify the type of exception being caught • lib/src/service/koi_print_job_queue.dart:114:7 • avoid_catches_without_on_clauses
+   info • The value of the argument is redundant because it matches the default value • lib/src/service/koi_print_job_queue.dart:116:64 • avoid_redundant_argument_values
+   info • Sort directive sections alphabetically • lib/src/service/koi_printer_manager.dart:6:1 • directives_ordering
+   info • Missing documentation for a public member • lib/src/service/koi_printer_manager.dart:31:3 • public_member_api_docs
+   info • Catch clause should use 'on' to specify the type of exception being caught • lib/src/service/koi_printer_manager.dart:205:7 • avoid_catches_without_on_clauses
+   info • Catch clause should use 'on' to specify the type of exception being caught • lib/src/service/koi_printer_manager.dart:225:7 • avoid_catches_without_on_clauses
+   info • Missing documentation for a public member • lib/src/storage/koi_printer_storage.dart:10:9 • public_member_api_docs
+   info • Missing documentation for a public member • lib/src/storage/koi_printer_storage.dart:25:24 • public_member_api_docs
+   info • Constructor declarations should be before non-constructor declarations • lib/src/storage/koi_printer_storage.dart:31:11 • sort_constructors_first
+   info • Missing documentation for a public member • lib/src/storage/koi_printer_storage.dart:31:25 • public_member_api_docs
+   info • Missing documentation for a public member • lib/src/storage/koi_printer_storage.dart:40:10 • public_member_api_docs
+   info • Constructor declarations should be before non-constructor declarations • lib/src/storage/koi_printer_storage.dart:42:11 • sort_constructors_first
+   info • Missing documentation for a public member • lib/src/storage/koi_printer_storage.dart:42:25 • public_member_api_docs
+   info • Missing documentation for a public member • lib/src/storage/koi_printer_storage.dart:50:3 • public_member_api_docs
+   info • Catch clause should use 'on' to specify the type of exception being caught • lib/src/storage/koi_printer_storage.dart:73:7 • avoid_catches_without_on_clauses
+   info • Catch clause should use 'on' to specify the type of exception being caught • lib/src/storage/koi_printer_storage.dart:95:7 • avoid_catches_without_on_clauses
+   info • Sort directive sections alphabetically • lib/src/template/koi_print_template.dart:2:1 • directives_ordering
+warning • Publishable packages can't have 'path' dependencies • pubspec.yaml:19:5 • invalid_dependency
+warning • Publishable packages can't have 'path' dependencies • pubspec.yaml:21:5 • invalid_dependency
+   info • The value of the argument is redundant because it matches the default value • test/koi_preview_test.dart:66:44 • avoid_redundant_argument_values
+   info • The value of the argument is redundant because it matches the default value • test/koi_preview_test.dart:182:20 • avoid_redundant_argument_values
+   info • Use 'const' with the constructor to improve performance • test/koi_preview_test.dart:194:19 • prefer_const_constructors
+   info • The value of the argument is redundant because it matches the default value • test/koi_preview_test.dart:208:41 • avoid_redundant_argument_values
+   info • The value of the argument is redundant because it matches the default value • test/koi_preview_test.dart:283:19 • avoid_redundant_argument_values
+   info • The value of the argument is redundant because it matches the default value • test/koi_preview_test.dart:314:76 • avoid_redundant_argument_values
+   info • The value of the argument is redundant because it matches the default value • test/koi_preview_test.dart:350:19 • avoid_redundant_argument_values
+   info • Unnecessary 'const' keyword • test/koi_printer_test.dart:33:11 • unnecessary_const
+   info • Unnecessary duplication of receiver • test/koi_printer_test.dart:441:7 • cascade_invocations
+   info • Unnecessary duplication of receiver • test/koi_profile_test.dart:158:7 • cascade_invocations
+   info • Unnecessary duplication of receiver • test/koi_profile_test.dart:169:7 • cascade_invocations
+   info • Unnecessary duplication of receiver • test/koi_profile_test.dart:181:7 • cascade_invocations
+   info • Unnecessary duplication of receiver • test/koi_profile_test.dart:196:7 • cascade_invocations
+   info • Unnecessary duplication of receiver • test/koi_profile_test.dart:203:7 • cascade_invocations
+   info • Unnecessary duplication of receiver • test/koi_profile_test.dart:209:7 • cascade_invocations
+   info • Unnecessary duplication of receiver • test/koi_profile_test.dart:216:7 • cascade_invocations
+   info • Unnecessary duplication of receiver • test/koi_profile_test.dart:222:7 • cascade_invocations
+   info • Unnecessary duplication of receiver • test/koi_profile_test.dart:237:7 • cascade_invocations
+   info • Unnecessary duplication of receiver • test/koi_profile_test.dart:251:7 • cascade_invocations
+   info • The value of the argument is redundant because it matches the default value • test/koi_profile_test.dart:306:23 • avoid_redundant_argument_values
+   info • The value of the argument is redundant because it matches the default value • test/koi_profile_test.dart:445:57 • avoid_redundant_argument_values
+   info • The value of the argument is redundant because it matches the default value • test/koi_service_test.dart:55:23 • avoid_redundant_argument_values
+   info • The value of the argument is redundant because it matches the default value • test/koi_service_test.dart:246:23 • avoid_redundant_argument_values
+   info • Unnecessary duplication of receiver • test/koi_service_test.dart:544:7 • cascade_invocations
+

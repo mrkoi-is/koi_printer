@@ -3,4 +3,4 @@ include: package:very_good_analysis/analysis_options.yaml
 linter:
   rules:
     # 初期暂关公开API文档要求, Phase 6 打开
-    public_member_api_docs: false
+    public_member_api_docs: true

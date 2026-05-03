@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:koi_printer_command/koi_printer_command.dart';
 
@@ -110,7 +108,6 @@ class KoiPreviewRenderer {
   }
 
   static Widget _flowTextRow(KoiTextRowElement e, Color color) {
-    final totalRatio = e.columns.fold<int>(0, (s, c) => s + c.ratio);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 1),
       child: Row(
