@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:koi_printer_connection/src/adapter/koi_usb_adapter.dart';
 import 'package:koi_printer_connection/src/model/koi_discovered_device.dart';
 
 /// USB 打印机扫描器 — 平台通道桥接。

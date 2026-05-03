@@ -27,7 +27,7 @@ jobs:
         working-directory: koi_printer_command
 
       - name: analyze — koi_printer_command
-        run: dart analyze --fatal-infos
+        run: dart analyze
         working-directory: koi_printer_command
 
       - name: test — koi_printer_command

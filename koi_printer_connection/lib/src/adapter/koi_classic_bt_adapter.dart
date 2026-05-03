@@ -13,7 +13,6 @@ import 'package:koi_printer_connection/src/model/koi_connection_types.dart';
 /// 使用 MethodChannel 调用原生经典蓝牙 API。
 /// 来源: 旧 XIIBluetoothSerialPrinter (87 LOC)
 class KoiClassicBtAdapter implements KoiPrinterAdapter {
-  /// Method.
   KoiClassicBtAdapter();
 
   static const _channel = MethodChannel('koi_printer_connection/classic_bt');

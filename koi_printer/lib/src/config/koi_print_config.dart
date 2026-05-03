@@ -2,7 +2,6 @@ import 'package:koi_printer_command/koi_printer_command.dart';
 
 /// 渲染器配置 — 从旧 XIIPrinterConfig 中拆出的渲染层字段。
 class KoiRendererConfig {
-  /// Constant constructor.
   const KoiRendererConfig({
     this.protocol = KoiCommandProtocol.escPos,
     this.qrStrategy = KoiQrRenderStrategy.normal,
@@ -14,7 +13,6 @@ class KoiRendererConfig {
   /// QR 码渲染策略。
   final KoiQrRenderStrategy qrStrategy;
 
-  /// Method.
   KoiRendererConfig copyWith({
     KoiCommandProtocol? protocol,
     KoiQrRenderStrategy? qrStrategy,
@@ -29,7 +27,6 @@ class KoiRendererConfig {
 /// 打印配置 — 从旧 XIIPrinterConfig + XIIPrintSettings 拆出的业务层字段。
 /// 来源: 旧 XIIPrinterConfig + XIIPrintSettings
 class KoiPrintConfig {
-  /// Constant constructor.
   const KoiPrintConfig({
     this.deviceRole = KoiDeviceRole.ticketDesktop,
     this.paperSize = KoiPaperSize.mm80,
@@ -73,7 +70,6 @@ class KoiPrintConfig {
   /// 打印份数。
   final int copies;
 
-  /// Method.
   KoiPrintConfig copyWith({
     KoiDeviceRole? deviceRole,
     KoiPaperSize? paperSize,

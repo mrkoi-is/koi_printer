@@ -5,7 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// 来源: 旧 XIIPrintSettings (176 LOC, Singleton)
 /// 改进: 构造函数注入 (无 Singleton), 使用 Dart 3 enum。
 class KoiUserPreferences {
-  /// Method.
   KoiUserPreferences(this._prefs);
 
   final SharedPreferences _prefs;

@@ -3,19 +3,15 @@ import 'package:koi_printer_command/koi_printer_command.dart';
 
 /// 简单标签 Demo 模板。
 /// 展示 TSPL/CPCL 坐标定位布局的最简上手示例。
-class KoiSimpleLabelTemplate extends KoiPrintTemplate {
+class KoiSimpleLabelTemplate implements KoiLabelTemplate<Map<String, dynamic>> {
   const KoiSimpleLabelTemplate();
 
   @override
-  String get templateId => 'simple_label';
-
-  @override
-  String get displayName => '简单标签 (Demo)';
-
-  @override
-  KoiPrintDocument build(Map<String, dynamic> data) {
-    return KoiLabelDocument(
-      elements: [
+  List<KoiLabelDocument> build(Map<String, dynamic> data, KoiPrintConfig config) {
+    return [
+      KoiLabelDocument(
+        name: '简单标签',
+        elements: [
         // 标签尺寸设置 (100mm x 60mm, 3mm 间距)
         const KoiLabelSetupElement(widthMm: 100, heightMm: 60, gapMm: 3),
 
@@ -60,6 +56,6 @@ class KoiSimpleLabelTemplate extends KoiPrintTemplate {
         // 打印
         const KoiLabelPrintElement(),
       ],
-    );
+    )];
   }
 }

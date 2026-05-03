@@ -3,19 +3,16 @@ import 'package:koi_printer_command/koi_printer_command.dart';
 
 /// 退票模板。
 /// 打印退款/退货小票，含退款金额和原单号。
-class KoiRefundTicketTemplate extends KoiPrintTemplate {
+class KoiRefundTicketTemplate implements KoiTicketTemplate<Map<String, dynamic>> {
   const KoiRefundTicketTemplate();
 
   @override
-  String get templateId => 'refund_ticket';
-
-  @override
-  String get displayName => '退票';
-
-  @override
-  KoiPrintDocument build(Map<String, dynamic> data) {
-    return KoiTicketDocument(
-      elements: [
+  List<KoiTicketDocument> build(Map<String, dynamic> data, KoiPrintConfig config) {
+    return [
+      KoiTicketDocument(
+        name: '退票',
+        paperSize: config.paperSize,
+        elements: [
         // 标题
         const KoiTextElement(
           text: '退  款  凭  证',
@@ -90,6 +87,6 @@ class KoiRefundTicketTemplate extends KoiPrintTemplate {
         const KoiSpacerElement(lines: 2),
         const KoiCutElement(),
       ],
-    );
+    )];
   }
 }

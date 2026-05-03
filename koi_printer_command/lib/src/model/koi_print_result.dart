@@ -16,8 +16,6 @@ sealed class KoiPrintResult {
 
 /// 打印成功。
 class KoiPrintSuccess extends KoiPrintResult {
-  /// Documented.
-  /// Constant constructor.
   const KoiPrintSuccess({this.documentName, this.bytesSent = 0});
 
   /// 打印的文档名称。
@@ -30,7 +28,6 @@ class KoiPrintSuccess extends KoiPrintResult {
 /// 打印失败。
 /// KoiPrintFailure.
 class KoiPrintFailure extends KoiPrintResult {
-  /// Constant constructor.
   const KoiPrintFailure({
     required this.error,
     this.errorCode,

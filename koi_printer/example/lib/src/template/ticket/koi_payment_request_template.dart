@@ -3,19 +3,16 @@ import 'package:koi_printer_command/koi_printer_command.dart';
 
 /// 交款申请模板。
 /// 用于 TMS 场景下司机向财务交款的凭证打印。
-class KoiPaymentRequestTemplate extends KoiPrintTemplate {
+class KoiPaymentRequestTemplate implements KoiTicketTemplate<Map<String, dynamic>> {
   const KoiPaymentRequestTemplate();
 
   @override
-  String get templateId => 'payment_request';
-
-  @override
-  String get displayName => '交款申请';
-
-  @override
-  KoiPrintDocument build(Map<String, dynamic> data) {
-    return KoiTicketDocument(
-      elements: [
+  List<KoiTicketDocument> build(Map<String, dynamic> data, KoiPrintConfig config) {
+    return [
+      KoiTicketDocument(
+        name: '交款申请',
+        paperSize: config.paperSize,
+        elements: [
         // 标题
         const KoiTextElement(
           text: '交  款  申  请  单',
@@ -89,6 +86,6 @@ class KoiPaymentRequestTemplate extends KoiPrintTemplate {
         const KoiSpacerElement(lines: 2),
         const KoiCutElement(),
       ],
-    );
+    )];
   }
 }

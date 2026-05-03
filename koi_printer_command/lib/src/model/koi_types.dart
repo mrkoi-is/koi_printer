@@ -19,8 +19,6 @@ enum KoiCommandProtocol {
 /// Paper size — standard presets or custom dimensions.
 @immutable
 class KoiPaperSize {
-  /// Documented.
-  /// Constant constructor.
   const KoiPaperSize({required this.widthDots, required this.widthMm});
 
   /// 自定义尺寸 (架构文档 §7.1)。
@@ -57,45 +55,26 @@ class KoiPaperSize {
 }
 
 /// 文本对齐方式。
-/// Documented.
 /// Text alignment for flow-layout elements.
 /// KoiTextAlign.
-/// Documented.
 /// KoiTextAlign.
 enum KoiTextAlign { left, center, right }
 
 /// 文本大小 (1-8 倍)。
-/// Documented.
 /// Text size multiplier, maps to ESC/POS GS ! command.
 /// KoiTextSize.
 enum KoiTextSize {
-  /// Documented.
-  /// Method.
-  /// Method.
   size1(value: 1),
-  /// Documented.
-  /// Method.
-  /// Method.
   size2(value: 2),
-  /// Documented.
-  /// Method.
-  /// Method.
   size3(value: 3),
-  /// Method.
   size4(value: 4),
-  /// Method.
-  /// Method.
   size5(value: 5),
-  /// Method.
   size6(value: 6),
-  /// Method.
   size7(value: 7),
-  /// Method.
   size8(value: 8);
 
   const KoiTextSize({required this.value});
 
-  /// Field.
   final int value;
 }
 
@@ -126,100 +105,62 @@ enum KoiQrRenderStrategy {
 
   /// 芝科 XT-423 专用指令 (GBK 编码)
   zk,
- /// Documented.
 
-  /// Method.
   /// 降级为图片打印 (zxing → image → raster)
-  /// Documented.
   img,
- /// Documented.
 
-  /// Documented.
   /// 降级为条形码
-  /// Documented.
   barcode,
-/// Documented.
 }
- /// Documented.
 
 /// QR 码大小 (1-8)。
 /// QR code module size.
 enum KoiQrSize {
-  /// Documented.
-  /// Method.
   size1(value: 1),
-  /// Method.
   size2(value: 2),
-  /// Method.
   size3(value: 3),
-  /// Method.
   size4(value: 4),
-  /// Method.
   size5(value: 5),
-  /// Method.
   size6(value: 6),
-  /// Method.
   size7(value: 7),
-  /// Method.
   size8(value: 8);
 
   const KoiQrSize({required this.value});
 
-  /// Field.
-  /// Field.
   final int value;
 }
 
 /// QR 纠错等级。
 /// QR error correction level.
 enum KoiQrCorrection {
-  /// Documented.
   /// Recovery Capacity 7%
-  /// Method.
   low(value: 48),
- /// Documented.
 
-  /// Documented.
   /// Recovery Capacity 15%
-  /// Method.
   medium(value: 49),
- /// Documented.
 
-  /// Documented.
   /// Recovery Capacity 25%
-  /// Method.
   quartile(value: 50),
- /// Documented.
 
   /// Recovery Capacity 30%
   high(value: 51);
 
   const KoiQrCorrection({required this.value});
 
-  /// Field.
   final int value;
 }
 
 /// 条码类型。
 /// Barcode symbology types.
 enum KoiBarcodeType {
-  /// Documented.
   upcA,
-  /// Documented.
   upcE,
-  /// Documented.
   jan13,
-  /// Documented.
   jan8,
-  /// Documented.
   code39,
-  /// Documented.
   itf,
-  /// Documented.
   codabar,
-  /// Documented.
   code93,
-  /// Documented.
   code128,
 }
 
@@ -229,12 +170,10 @@ enum KoiDeviceRole {
   /// 小票台式打印机
   ticketDesktop,
 
-  /// Documented.
   /// 小票便携打印机
   ticketPortable,
 
   /// 标签台式打印机
-  /// Documented.
   labelDesktop,
 
   /// 标签便携打印机
@@ -261,13 +200,11 @@ enum KoiDelayProfile {
 /// Print style — normal or enlarged text.
 ///
 /// 来源: 旧 XIISenderPrintStyle
-/// Documented.
 /// KoiPrintStyle.
 /// KoiPrintStyle.
 enum KoiPrintStyle { normal, large }
 
 /// 标签样式 (6种公司样式)。
-/// Documented.
 /// Label style — 6 company-specific label layouts.
 /// KoiLabelStyle.
 /// KoiLabelStyle.

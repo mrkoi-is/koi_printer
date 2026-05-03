@@ -18,7 +18,6 @@ import 'package:koi_printer_connection/koi_printer_connection.dart';
 /// final strategy = profile?.bestQrStrategy ?? KoiQrRenderStrategy.normal;
 /// ```
 class KoiPrinterProfile {
-  /// Constant constructor.
   const KoiPrinterProfile({
     required this.id,
     required this.name,
@@ -37,38 +36,22 @@ class KoiPrinterProfile {
     this.delayProfile = KoiDelayProfile.normal,
   });
 
-  /// Field.
   final String id;
-  /// Field.
   final String name;
-  /// Field.
   final String vendor;
-  /// Field.
   final List<KoiCommandProtocol> protocols;
-  /// Field.
   final List<KoiConnectionType> connections;
-  /// Field.
   final int paperWidthMm;
-  /// Field.
   final int dotsPerLine;
-  /// Field.
   final int dpi;
-  /// Field.
   final bool supportsCut;
-  /// Field.
   final bool supportsQrCode;
-  /// Field.
   final KoiQrRenderStrategy bestQrStrategy;
-  /// Field.
   final bool supportsChinese;
-  /// Field.
   final String? characteristicFilter;
-  /// Field.
   final int? maxMtu;
-  /// Field.
   final KoiDelayProfile delayProfile;
 
-  /// Method.
   factory KoiPrinterProfile.fromJson(Map<String, dynamic> j) {
     return KoiPrinterProfile(
       id: j['id'] as String,
@@ -93,7 +76,6 @@ class KoiPrinterProfile {
     );
   }
 
-  /// Method.
   Map<String, dynamic> toJson() => {
     'id': id,
     'name': name,
@@ -132,7 +114,6 @@ class KoiPrinterProfile {
 
 /// 打印机能力数据库。
 class KoiPrinterProfileDb {
-  /// Method.
   KoiPrinterProfileDb();
 
   final List<KoiPrinterProfile> _profiles = [];

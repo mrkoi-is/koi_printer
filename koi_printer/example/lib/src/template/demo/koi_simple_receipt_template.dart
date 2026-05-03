@@ -3,19 +3,16 @@ import 'package:koi_printer_command/koi_printer_command.dart';
 
 /// 简单收据 Demo 模板。
 /// 面向新开发者的最简单上手示例，展示核心元素用法。
-class KoiSimpleReceiptTemplate extends KoiPrintTemplate {
+class KoiSimpleReceiptTemplate implements KoiTicketTemplate<Map<String, dynamic>> {
   const KoiSimpleReceiptTemplate();
 
   @override
-  String get templateId => 'simple_receipt';
-
-  @override
-  String get displayName => '简单收据 (Demo)';
-
-  @override
-  KoiPrintDocument build(Map<String, dynamic> data) {
-    return KoiTicketDocument(
-      elements: [
+  List<KoiTicketDocument> build(Map<String, dynamic> data, KoiPrintConfig config) {
+    return [
+      KoiTicketDocument(
+        name: '简单收据',
+        paperSize: config.paperSize,
+        elements: [
         // 店铺名称 — 居中大字
         const KoiTextElement(
           text: 'Mr.Koi Store',
@@ -72,6 +69,6 @@ class KoiSimpleReceiptTemplate extends KoiPrintTemplate {
         const KoiSpacerElement(lines: 2),
         const KoiCutElement(),
       ],
-    );
+    )];
   }
 }

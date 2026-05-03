@@ -13,7 +13,6 @@ import 'package:koi_printer_connection/src/model/koi_connection_types.dart';
 ///
 /// 来源: 旧 XIIUSBPrinter (175 LOC)
 class KoiUsbAdapter implements KoiPrinterAdapter {
-  /// Method.
   KoiUsbAdapter();
 
   static const _channel = MethodChannel('koi_printer_connection/usb');
