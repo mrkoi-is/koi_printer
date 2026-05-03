@@ -636,7 +636,9 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
 
   /// 图片光栅化 — 来源: 旧 _toRasterFormat。
   List<int> _toRasterFormat(img.Image imgSrc) {
-    final image = img.Image.from(imgSrc);
+    // 强制转换为 8-bit RGBA 格式。如果载入的是 1-bit PNG 等非常规格式，
+    // getBytes 的内部长度将不符合预期，导致光栅数据被截断，使得打印机永久等待剩余字节而卡死。
+    final image = imgSrc.convert(format: img.Format.uint8, numChannels: 4);
     final widthPx = image.width;
     final heightPx = image.height;
 
