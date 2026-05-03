@@ -101,26 +101,40 @@ class KoiPreviewRenderer {
     
     // 基础字体大小 (基于点阵的 24 Dots)
     const baseFontSize = 24.0;
-    final stretchX = wScale / hScale;
+    
+    // 强制按宽度拉伸比例计算 fontSize，以确保 Flutter 文本换行策略与物理打印机的水平点阵限制完全一致。
+    final fontSize = baseFontSize * wScale;
+    
+    // 计算为了达到目标高度，需要对文本进行的垂直物理拉伸比例。
+    final stretchY = hScale / wScale;
 
     Widget textWidget = Text(
       e.text,
+      textAlign: _textAlign(e.align),
       style: TextStyle(
         fontFamily: fontFamily,
-        fontSize: baseFontSize * hScale,
+        fontSize: fontSize,
         fontWeight: e.bold ? FontWeight.bold : FontWeight.normal,
         letterSpacing: fontFamily == 'monospace' ? -0.5 : 0,
-        decoration:
-            e.underline ? TextDecoration.underline : TextDecoration.none,
+        decoration: e.underline ? TextDecoration.underline : TextDecoration.none,
         color: e.reverse ? Colors.white : color,
         backgroundColor: e.reverse ? color : null,
       ),
     );
 
-    if (stretchX != 1.0) {
+    if (stretchY != 1.0) {
+      // 通过 Transform.scale 仅进行垂直渲染拉伸
       textWidget = Transform.scale(
-        scaleX: stretchX,
-        alignment: _align(e.align),
+        scaleY: stretchY,
+        alignment: Alignment.center,
+        child: textWidget,
+      );
+      
+      // 通过 Align.heightFactor 动态调整排版高度，使其与垂直拉伸后的视觉高度完全一致，避免组件重叠。
+      textWidget = Align(
+        alignment: Alignment.center,
+        heightFactor: stretchY,
+        widthFactor: 1.0,
         child: textWidget,
       );
     }
