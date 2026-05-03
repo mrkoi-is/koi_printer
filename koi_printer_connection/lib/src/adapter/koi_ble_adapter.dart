@@ -157,24 +157,28 @@ class KoiBleAdapter implements KoiPrinterAdapter {
     try {
       final services = await _device!.discoverServices();
 
-      for (final service in services) {
-        // 匹配指定 service UUID
-        if (_config?.serviceUuid != null &&
-            service.uuid.toString() != _config!.serviceUuid) {
-          continue;
-        }
+      final hasConfigUuid = _config?.serviceUuid != null || _config?.characteristicUuid != null;
 
-        for (final c in service.characteristics) {
-          // 查找可写特征
-          if (c.properties.write || c.properties.writeWithoutResponse) {
-            // 如果有指定 characteristic UUID, 需要匹配
-            if (_config?.characteristicUuid != null &&
-                c.uuid.toString() != _config!.characteristicUuid) {
-              continue;
+      if (hasConfigUuid) {
+        for (final service in services) {
+          // 匹配指定 service UUID
+          if (_config?.serviceUuid != null &&
+              service.uuid.toString() != _config!.serviceUuid) {
+            continue;
+          }
+
+          for (final c in service.characteristics) {
+            // 查找可写特征
+            if (c.properties.write || c.properties.writeWithoutResponse) {
+              // 如果有指定 characteristic UUID, 需要匹配
+              if (_config?.characteristicUuid != null &&
+                  c.uuid.toString() != _config!.characteristicUuid) {
+                continue;
+              }
+              _characteristic = c;
+              _updateState(KoiConnectionState.ready);
+              return;
             }
-            _characteristic = c;
-            _updateState(KoiConnectionState.ready);
-            return;
           }
         }
       }
