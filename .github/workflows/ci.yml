@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  analyze_and_test:
+    name: Analyze & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.29.x'
+          channel: 'stable'
+          cache: true
+
+      # ── koi_printer_command (纯 Dart) ──────────────────────────
+      - name: pub get — koi_printer_command
+        run: dart pub get
+        working-directory: koi_printer_command
+
+      - name: analyze — koi_printer_command
+        run: dart analyze --fatal-infos
+        working-directory: koi_printer_command
+
+      - name: test — koi_printer_command
+        run: dart test
+        working-directory: koi_printer_command
+
+      # ── koi_printer_connection ─────────────────────────────────
+      - name: pub get — koi_printer_connection
+        run: flutter pub get
+        working-directory: koi_printer_connection
+
+      - name: analyze — koi_printer_connection
+        run: flutter analyze
+        working-directory: koi_printer_connection
+
+      - name: test — koi_printer_connection
+        run: flutter test
+        working-directory: koi_printer_connection
+
+      # ── koi_printer ────────────────────────────────────────────
+      - name: pub get — koi_printer
+        run: flutter pub get
+        working-directory: koi_printer
+
+      - name: analyze — koi_printer
+        run: flutter analyze
+        working-directory: koi_printer
+
+      - name: test — koi_printer
+        run: flutter test
+        working-directory: koi_printer

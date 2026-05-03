@@ -3,7 +3,9 @@ description: >
   Print document model and command renderers for koi_printer.
   Supports ESC/POS, TSPL, and CPCL protocols.
 version: 0.1.0
-homepage: https://github.com/mrkoi/koi_printer
+repository: https://github.com/mrkoi-is/koi_printer/tree/main/koi_printer_command
+homepage: https://github.com/mrkoi-is/koi_printer
+issue_tracker: https://github.com/mrkoi-is/koi_printer/issues
 
 environment:
   sdk: ^3.7.0

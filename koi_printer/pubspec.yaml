@@ -1,10 +1,12 @@
 name: koi_printer
-publish_to: none
-description: >
-  Facade package for koi_printer ecosystem.
-  Combines command rendering, connection management, and template engine.
+description: >-
+  Flutter printer SDK for ESC/POS, TSPL, CPCL protocols.
+  Supports BLE, Classic Bluetooth, TCP/IP, and USB connections
+  with template engine and WYSIWYG preview.
 version: 0.1.0
-homepage: https://github.com/mrkoi/koi_printer
+repository: https://github.com/mrkoi-is/koi_printer/tree/main/koi_printer
+homepage: https://github.com/mrkoi-is/koi_printer
+issue_tracker: https://github.com/mrkoi-is/koi_printer/issues
 
 environment:
   sdk: ^3.7.0
@@ -13,6 +15,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+flutter:
+  plugin:
+    platforms:
+      android:
+      ios:
   koi_printer_command:
     path: ../koi_printer_command
   koi_printer_connection:
