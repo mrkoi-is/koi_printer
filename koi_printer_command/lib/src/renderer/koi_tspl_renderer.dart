@@ -116,7 +116,7 @@ class KoiTsplRenderer implements KoiCommandRenderer {
       if (image == null) return [];
 
       if (element.width != null && image.width > element.width!) {
-        image = img.copyResize(image, width: element.width!);
+        image = img.copyResize(image, width: element.width);
       }
 
       img.grayscale(image);
@@ -133,7 +133,7 @@ class KoiTsplRenderer implements KoiCommandRenderer {
             if (px < image.width) {
               final pixel = image.getPixel(px, y);
               if (pixel.luminance < 128) {
-                byte |= (0x80 >> bit);
+                byte |= 0x80 >> bit;
               }
             }
           }

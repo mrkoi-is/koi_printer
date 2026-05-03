@@ -127,7 +127,7 @@ class KoiCpclRenderer implements KoiCommandRenderer {
       if (image == null) return [];
 
       if (element.width != null && image.width > element.width!) {
-        image = img.copyResize(image, width: element.width!);
+        image = img.copyResize(image, width: element.width);
       }
 
       img.grayscale(image);
@@ -144,7 +144,7 @@ class KoiCpclRenderer implements KoiCommandRenderer {
             if (px < image.width) {
               final pixel = image.getPixel(px, y);
               if (pixel.luminance < 128) {
-                byte |= (0x80 >> bit);
+                byte |= 0x80 >> bit;
               }
             }
           }
@@ -158,6 +158,7 @@ class KoiCpclRenderer implements KoiCommandRenderer {
       return [
         <int>[...header, ...bitmapData, 0x0D, 0x0A],
       ];
+      // 位图解码可能抛出多种异常类型 (image, codec 等)，统一忽略以保证打印流程不中断。
       // ignore: avoid_catches_without_on_clauses
     } catch (_) {
       return [];

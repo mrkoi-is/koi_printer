@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:gbk_codec/gbk_codec.dart';
@@ -162,10 +163,7 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
   // ══════════════════════════════════════════════════════════
 
   List<int> _renderText(KoiTextElement element, KoiPaperSize paperSize) {
-    return <int>[]
-      ..addAll(_alignCmd(element.align))
-      ..addAll(
-        _styleCmd(
+    return <int>[..._alignCmd(element.align), ..._styleCmd(
           bold: element.bold,
           underline: element.underline,
           underlineStyle: element.underlineStyle,
@@ -174,10 +172,11 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
           widthSize: element.widthSize,
           heightSize: element.heightSize,
           font: element.font,
-        ),
-      )
-      ..addAll(_encodeText(element.text))
-      ..addAll(_newLine)
+        ), ..._encodeText(element.text), ..._newLine]
+      
+      
+      
+      
       ..addAll(_resetStyle());
   }
 
@@ -276,28 +275,24 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
     final textBytes = latin1.encode(element.data);
     final dataLen = textBytes.length + 3;
 
-    return <int>[]
-      ..addAll(_alignCmd(element.align))
-      // FN 167: 设置 QR 模块大小
-      ..addAll([..._cmdQrHeader, 0x03, 0x00, 0x31, 0x43, element.size.value])
-      // FN 169: 设置纠错等级
-      ..addAll([
-        ..._cmdQrHeader,
+    return <int>[..._alignCmd(element.align), ..._cmdQrHeader, 0x03, 0x00, 0x31, 0x43, element.size.value, ..._cmdQrHeader,
         0x03,
         0x00,
         0x31,
         0x45,
-        element.correction.value,
-      ])
-      // FN 180: 存储数据
-      ..addAll([
-        ..._cmdQrHeader,
+        element.correction.value, ..._cmdQrHeader,
         dataLen & 0xFF,
         (dataLen >> 8) & 0xFF,
         0x31,
         0x50,
-        0x30,
-      ])
+        0x30]
+      
+      // FN 167: 设置 QR 模块大小
+      
+      // FN 169: 设置纠错等级
+      
+      // FN 180: 存储数据
+      
       ..addAll(textBytes)
       // FN 182: 获取大小信息
       ..addAll([..._cmdQrHeader, 0x03, 0x00, 0x31, 0x52, 0x30])
@@ -367,11 +362,11 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
   List<int> _qrOriginal(KoiQrCodeElement element) {
     final textBytes = latin1.encode(element.data);
 
-    return <int>[]
-      ..addAll([_esc, 0x61, 0x01]) // 居中
-      ..addAll([_gs, 0x77, element.size.value]) // QR 大小
-      ..addAll([_gs, 0x6B, 0x61, 0x06, 0x02, textBytes.length, 0x00])
-      ..addAll(textBytes);
+    return <int>[_esc, 0x61, 0x01, _gs, 0x77, element.size.value, _gs, 0x6B, 0x61, 0x06, 0x02, textBytes.length, 0x00, ...textBytes]
+       // 居中
+       // QR 大小
+      
+      ;
   }
 
   /// 芝科 XT-423 — GBK 编码。
@@ -380,11 +375,11 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
     final textBytes = gbk_bytes.encode(element.data);
     final strLen = textBytes.length;
 
-    return <int>[]
-      ..addAll([_esc, 0x61, 0x01]) // 居中
-      ..addAll([_gs, 0x77, element.size.value]) // 条码宽度
-      ..addAll([_gs, 0x5A, 0x02])
-      ..addAll([_esc, 0x5A, 0x00, 0x01, 0x00, strLen & 0x00FF, strLen ~/ 256])
+    return <int>[_esc, 0x61, 0x01, _gs, 0x77, element.size.value, _gs, 0x5A, 0x02, _esc, 0x5A, 0x00, 0x01, 0x00, strLen & 0x00FF, strLen ~/ 256]
+       // 居中
+       // 条码宽度
+      
+      
       ..addAll(textBytes);
   }
 
@@ -443,7 +438,8 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
       // zxing / image 库均可能因数据过长等原因异常, 统一降级为文本。
       // ignore: avoid_catches_without_on_clauses
     } catch (e, st) {
-      print('QR Error: $e\n$st');
+      // QR 生成失败时记录日志，由于 renderer 内部无注入 logger，使用 dart:developer log 降级。
+      log('QR Error: $e\n$st', name: 'KoiEscPosRenderer', error: e);
       // 降级: 如果 QR 生成失败, 输出纯文本占位
       return _renderText(
         KoiTextElement(text: '[QR:${element.data}]', align: element.align),
@@ -467,13 +463,13 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
     final barcodeData = latin1.encode(element.data);
     final barcodeType = _barcodeTypeValue(element.type);
 
-    return <int>[]
-      ..addAll(_alignCmd(element.align))
+    return <int>[..._alignCmd(element.align), _gs, 0x48, _hriPositionValue(element.textPosition), _gs, 0x66, if (element.font == KoiFontType.fontB) 1 else 0, _gs, 0x68, element.height & 0xFF]
+      
       // HRI 文字位置
-      ..addAll([_gs, 0x48, _hriPositionValue(element.textPosition)])
+      
       // HRI 字体选择
-      ..addAll([_gs, 0x66, element.font == KoiFontType.fontB ? 1 : 0])
-      ..addAll([_gs, 0x68, element.height & 0xFF]) // 条码高度
+      
+       // 条码高度
       ..addAll([_gs, 0x77, element.width & 0xFF]) // 条码宽度
       ..addAll([_gs, 0x6B, barcodeType, barcodeData.length])
       ..addAll(barcodeData);
@@ -559,7 +555,8 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
       // 图片解码/处理可能抛出多种异常类型, 统一忽略以保证打印流程不中断。
       // ignore: avoid_catches_without_on_clauses
     } catch (e, st) {
-      print('Image Decode Error: $e\n$st');
+      // Renderer 内部无 logger 依赖，使用 dart:developer log 记录图片解码错误。
+      log('Image Decode Error: $e\n$st', name: 'KoiEscPosRenderer', error: e);
       // 图片解码失败, 跳过
     }
 
@@ -692,9 +689,8 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
     required KoiUnderlineStyle underlineStyle,
     required bool reverse,
     required KoiTextSize size,
-    KoiTextSize? widthSize,
+    required KoiFontType font, KoiTextSize? widthSize,
     KoiTextSize? heightSize,
-    required KoiFontType font,
   }) {
     final bytes = <int>[];
 
@@ -710,7 +706,7 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
       bytes.addAll([
         _esc,
         0x2D,
-        underlineStyle == KoiUnderlineStyle.thick ? 2 : 1,
+        if (underlineStyle == KoiUnderlineStyle.thick) 2 else 1,
       ]);
     } else if (underline) {
       bytes.addAll(_cmdUnderlineOn);

@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
-import 'package:test/test.dart';
 import 'package:koi_printer_command/koi_printer_command.dart';
+import 'package:test/test.dart';
 
 void main() {
   group('KoiTicketElement JSON 序列化', () {
@@ -46,7 +46,6 @@ void main() {
           KoiTextColumn(text: '商品', ratio: 3),
           KoiTextColumn(
             text: '价格',
-            ratio: 1,
             align: KoiTextAlign.right,
             bold: true,
           ),
@@ -203,7 +202,7 @@ void main() {
     });
 
     test('CutElement default mode round-trip', () {
-      const original = KoiCutElement(mode: KoiCutMode.full);
+      const original = KoiCutElement();
       final json = koiTicketElementToJson(original);
       expect(json.containsKey('mode'), false);
       final restored = koiTicketElementFromJson(json) as KoiCutElement;

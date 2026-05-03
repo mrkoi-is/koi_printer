@@ -12,17 +12,17 @@ void main() {
 
   group('Renderer protocol getter', () {
     test('EscPosRenderer returns escPos', () {
-      final renderer = KoiEscPosRenderer();
+      const renderer = KoiEscPosRenderer();
       expect(renderer.protocol, KoiCommandProtocol.escPos);
     });
 
     test('TsplRenderer returns tspl', () {
-      final renderer = KoiTsplRenderer();
+      const renderer = KoiTsplRenderer();
       expect(renderer.protocol, KoiCommandProtocol.tspl);
     });
 
     test('CpclRenderer returns cpcl', () {
-      final renderer = KoiCpclRenderer();
+      const renderer = KoiCpclRenderer();
       expect(renderer.protocol, KoiCommandProtocol.cpcl);
     });
   });
@@ -35,7 +35,7 @@ void main() {
     late KoiEscPosRenderer renderer;
 
     setUp(() {
-      renderer = KoiEscPosRenderer();
+      renderer = const KoiEscPosRenderer();
     });
 
     test('renders empty document, chunks contain ESC @ init', () {
@@ -95,7 +95,7 @@ void main() {
     test('renders BarcodeElement, output contains GS k', () {
       const doc = KoiTicketDocument(
         elements: [
-          KoiBarcodeElement(data: '123456789012', type: KoiBarcodeType.code128),
+          KoiBarcodeElement(data: '123456789012'),
         ],
       );
 
@@ -191,11 +191,10 @@ void main() {
             columns: [
               KoiTextColumn(
                 text: 'LongTextThatWillBeTruncatedSinceItExceedsWidth',
-                ratio: 1,
               ),
-              KoiTextColumn(text: 'L', ratio: 1, align: KoiTextAlign.left),
-              KoiTextColumn(text: 'R', ratio: 1, align: KoiTextAlign.right),
-              KoiTextColumn(text: 'C', ratio: 1, align: KoiTextAlign.center),
+              KoiTextColumn(text: 'L'),
+              KoiTextColumn(text: 'R', align: KoiTextAlign.right),
+              KoiTextColumn(text: 'C', align: KoiTextAlign.center),
             ],
           ),
         ],
@@ -256,7 +255,6 @@ void main() {
         elements: [
           KoiTicketImageElement(
             imageBytes: imgBytes,
-            renderMode: KoiImageRenderMode.raster,
             width: -1, // copyResize(-1) throws
           ),
         ],
@@ -295,7 +293,7 @@ void main() {
     test('renders CashDrawerElement', () {
       const doc = KoiTicketDocument(
         elements: [
-          KoiCashDrawerElement(pin: KoiCashDrawerPin.pin2),
+          KoiCashDrawerElement(),
           KoiCashDrawerElement(pin: KoiCashDrawerPin.pin5),
         ],
       );
@@ -326,9 +324,8 @@ void main() {
             KoiTextElement(
               text: 'UnderlineBool',
               underline: true,
-              underlineStyle: KoiUnderlineStyle.none,
             ),
-            KoiTextElement(text: 'Kanji测试', font: KoiFontType.fontA),
+            KoiTextElement(text: 'Kanji测试'),
           ],
         );
         final chunks = renderer.render(doc);
@@ -362,7 +359,7 @@ void main() {
     late KoiTsplRenderer renderer;
 
     setUp(() {
-      renderer = KoiTsplRenderer();
+      renderer = const KoiTsplRenderer();
     });
 
     test('renders label document, output contains SIZE command', () {
@@ -370,7 +367,7 @@ void main() {
         elements: [
           KoiLabelSetupElement(widthMm: 60, heightMm: 40, gapMm: 3),
           KoiPositionedTextElement(x: 10, y: 10, text: 'Test'),
-          KoiLabelPrintElement(copies: 1),
+          KoiLabelPrintElement(),
         ],
       );
 
@@ -405,7 +402,7 @@ void main() {
             heightMm: 40,
             gapMm: 3,
             density: 8,
-            speed: 2.0,
+            speed: 2,
             referenceX: 10,
             referenceY: 10,
             codepage: '437',
@@ -413,11 +410,10 @@ void main() {
           KoiPositionedBarcodeElement(
             x: 10,
             y: 10,
-            type: '128',
             height: 50,
             data: '123',
           ),
-          KoiLabelBoxElement(x: 10, y: 10, width: 20, height: 20, thickness: 2),
+          KoiLabelBoxElement(x: 10, y: 10, width: 20, height: 20),
           KoiLabelReverseElement(x: 10, y: 10, width: 20, height: 20),
           KoiLabelLineElement(x: 10, y: 10, width: 20, height: 20),
           KoiLabelPrintElement(copies: 2, sets: 2),
@@ -528,7 +524,7 @@ void main() {
     late KoiCpclRenderer renderer;
 
     setUp(() {
-      renderer = KoiCpclRenderer();
+      renderer = const KoiCpclRenderer();
     });
 
     test('renders label document, output starts with ! command', () {
@@ -536,7 +532,7 @@ void main() {
         elements: [
           KoiLabelSetupElement(widthMm: 60, heightMm: 40),
           KoiPositionedTextElement(x: 10, y: 10, text: 'Label'),
-          KoiLabelPrintElement(copies: 1),
+          KoiLabelPrintElement(),
         ],
       );
 
@@ -550,7 +546,7 @@ void main() {
 
     test('renders label with speed setup', () {
       const doc = KoiLabelDocument(
-        elements: [KoiLabelSetupElement(widthMm: 60, heightMm: 40, speed: 3.0)],
+        elements: [KoiLabelSetupElement(widthMm: 60, heightMm: 40, speed: 3)],
       );
       final chunks = renderer.render(doc);
       final output = String.fromCharCodes(chunks.expand((c) => c).toList());
@@ -571,7 +567,7 @@ void main() {
           ),
           KoiPositionedTextElement(x: 0, y: 0, text: 'R180', rotation: 180),
           KoiPositionedTextElement(x: 0, y: 0, text: 'R270', rotation: 270),
-          KoiPositionedTextElement(x: 0, y: 0, text: 'R0', rotation: 0),
+          KoiPositionedTextElement(x: 0, y: 0, text: 'R0'),
         ],
       );
       final chunks = renderer.render(doc);
@@ -591,12 +587,11 @@ void main() {
           KoiPositionedBarcodeElement(
             x: 10,
             y: 10,
-            type: '128',
             height: 50,
             data: 'ABC',
           ),
           KoiPositionedQrCodeElement(x: 20, y: 20, cellSize: 4, data: 'QR'),
-          KoiLabelBoxElement(x: 5, y: 5, width: 50, height: 50, thickness: 2),
+          KoiLabelBoxElement(x: 5, y: 5, width: 50, height: 50),
           KoiLabelReverseElement(x: 10, y: 10, width: 30, height: 30),
           KoiLabelLineElement(x: 0, y: 0, width: 100, height: 1),
           KoiLabelForEachElement(listKey: 'items', templates: []),

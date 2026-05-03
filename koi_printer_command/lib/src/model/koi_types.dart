@@ -1,3 +1,5 @@
+import 'package:meta/meta.dart';
+
 /// 打印指令协议类型。
 /// Print command protocol types.
 enum KoiCommandProtocol {
@@ -15,14 +17,9 @@ enum KoiCommandProtocol {
 /// Paper size for ticket printers.
 /// 纸张尺寸。
 /// Paper size — standard presets or custom dimensions.
+@immutable
 class KoiPaperSize {
   const KoiPaperSize({required this.widthDots, required this.widthMm});
-
-  /// 80mm 宽 (576 dots, 台式)
-  static const mm80 = KoiPaperSize(widthDots: 576, widthMm: 80);
-
-  /// 58mm 宽 (384 dots, 便携)
-  static const mm58 = KoiPaperSize(widthDots: 384, widthMm: 58);
 
   /// 自定义尺寸 (架构文档 §7.1)。
   /// [widthMm] 宽度 (mm), [dpi] 分辨率 (默认 203)。
@@ -30,6 +27,12 @@ class KoiPaperSize {
     final widthDots = (widthMm * dpi / 25.4).round();
     return KoiPaperSize(widthDots: widthDots, widthMm: widthMm);
   }
+
+  /// 80mm 宽 (576 dots, 台式)
+  static const mm80 = KoiPaperSize(widthDots: 576, widthMm: 80);
+
+  /// 58mm 宽 (384 dots, 便携)
+  static const mm58 = KoiPaperSize(widthDots: 384, widthMm: 58);
 
   /// 以 dots 为单位的纸张宽度。
   final int widthDots;

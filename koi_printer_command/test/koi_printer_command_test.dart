@@ -65,8 +65,8 @@ void main() {
 
     test('equality and hashCode', () {
       final size1 = KoiPaperSize.custom(80);
-      final size2 = KoiPaperSize(widthDots: 639, widthMm: 80);
-      final size3 = KoiPaperSize(widthDots: 600, widthMm: 80);
+      const size2 = KoiPaperSize(widthDots: 639, widthMm: 80);
+      const size3 = KoiPaperSize(widthDots: 600, widthMm: 80);
 
       expect(size1, equals(size2));
       expect(size1.hashCode, equals(size2.hashCode));
@@ -148,7 +148,6 @@ void main() {
     test('KoiPrintFailure stores error and retryable flag', () {
       const result = KoiPrintFailure(
         error: 'Connection lost',
-        isRetryable: true,
       );
       expect(result.error, 'Connection lost');
       expect(result.isRetryable, true);
@@ -186,7 +185,6 @@ void main() {
         elements: [
           KoiQrCodeElement(
             data: 'https://test.com',
-            strategy: KoiQrRenderStrategy.normal,
           ),
         ],
       );
@@ -403,6 +401,7 @@ void main() {
 
   group('KoiPrintResult sealed coverage', () {
     test('KoiPrintSuccess defaults', () {
+      // KoiPrintSuccess 默认用例测试非常量路径以提升覆盖率。
       // ignore: prefer_const_constructors
       final result = KoiPrintSuccess();
       expect(result.bytesSent, 0);
@@ -410,6 +409,7 @@ void main() {
     });
 
     test('KoiPrintFailure non-retryable', () {
+      // KoiPrintFailure 默认用例测试非常量路径以提升覆盖率。
       // ignore: prefer_const_constructors
       final result = KoiPrintFailure(
         error: 'Fatal',
