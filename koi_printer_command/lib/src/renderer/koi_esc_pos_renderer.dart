@@ -634,65 +634,40 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
     return bytes;
   }
 
-  /// 图片光栅化 — 来源: 旧 _toRasterFormat。
-  List<int> _toRasterFormat(img.Image imgSrc) {
-    // 强制转换为 8-bit RGBA 格式。如果载入的是 1-bit PNG 等非常规格式，
-    // getBytes 的内部长度将不符合预期，导致光栅数据被截断，使得打印机永久等待剩余字节而卡死。
-    final image = imgSrc.convert(format: img.Format.uint8, numChannels: 4);
+  /// 图片光栅化 — 单次遍历 O(N) 高效实现。
+  /// 支持任意格式的 img.Image (含调色板、单色、透明背景等)，无需内存复制与格式转换。
+  List<int> _toRasterFormat(img.Image image) {
     final widthPx = image.width;
     final heightPx = image.height;
 
-    img.grayscale(image);
-    img.invert(image);
+    // 目标宽度必须是 8 的倍数 (1 byte = 8 dots)
+    final targetWidth = (widthPx + 7) ~/ 8 * 8;
+    final rasterBytes = <int>[];
 
-    // 提取单通道并处理透明度
-    final oneChannelBytes = <int>[];
-    final buffer = image.getBytes(order: img.ChannelOrder.rgba);
-    for (var i = 0; i < buffer.length; i += 4) {
-      final r = buffer[i];
-      final a = buffer[i + 3];
+    for (var y = 0; y < heightPx; y++) {
+      for (var x = 0; x < targetWidth; x += 8) {
+        var byteVal = 0;
+        for (var bit = 0; bit < 8; bit++) {
+          final realX = x + bit;
+          if (realX < widthPx) {
+            final p = image.getPixel(realX, y);
+            
+            // 计算灰度值 (Luminance: 0.299*R + 0.587*G + 0.114*B)
+            final lum = (p.r * 299 + p.g * 587 + p.b * 114) ~/ 1000;
 
-      // 如果像素透明度低于阈值，强制当作白色背景处理 (即反转后的 0，不打印点)。
-      // 否则由于 invert 操作会将透明的 (0,0,0,0) 翻转为 (255,255,255,0)，
-      // 导致打印机将透明背景全部打成全黑方块，瞬间高耗电引发硬件重启/蓝牙断开。
-      if (a < 128) {
-        oneChannelBytes.add(0);
-      } else {
-        oneChannelBytes.add(r);
-      }
-    }
-
-    // 补齐到 8 的倍数
-    if (widthPx % 8 != 0) {
-      final targetWidth = (widthPx + 8) - (widthPx % 8);
-      final missingPx = targetWidth - widthPx;
-      final extra = Uint8List(missingPx);
-      for (var i = 0; i < heightPx; i++) {
-        final pos = (i * widthPx + widthPx) + i * missingPx;
-        oneChannelBytes.insertAll(pos, extra);
-      }
-    }
-
-    return _packBitsIntoBytes(oneChannelBytes);
-  }
-
-  /// 将每 8 个像素值打包为 1 个字节。
-  List<int> _packBitsIntoBytes(List<int> bytes) {
-    const pxPerLine = 8;
-    const threshold = 127;
-    final result = <int>[];
-
-    for (var i = 0; i < bytes.length; i += pxPerLine) {
-      var newVal = 0;
-      for (var j = 0; j < pxPerLine; j++) {
-        if (i + j < bytes.length && bytes[i + j] > threshold) {
-          newVal |= 1 << (pxPerLine - 1 - j);
+            // 热敏打印逻辑:
+            // 1. 忽略透明像素 (alpha < 128 当作白纸)
+            // 2. 较暗的像素打印黑点 (luminance < 128 打点)
+            if (p.a >= 128 && lum < 128) {
+              byteVal |= (1 << (7 - bit));
+            }
+          }
         }
+        rasterBytes.add(byteVal);
       }
-      result.add(newVal);
     }
 
-    return result;
+    return rasterBytes;
   }
 
   // ══════════════════════════════════════════════════════════
