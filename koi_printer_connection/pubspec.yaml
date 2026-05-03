@@ -1,0 +1,20 @@
+name: koi_printer_connection
+description: >
+  Printer connection adapters for koi_printer.
+  Supports BLE, Classic Bluetooth, TCP/IP, and USB.
+version: 0.1.0
+homepage: https://github.com/mrkoi/koi_printer
+
+environment:
+  sdk: ^3.7.0
+  flutter: ">=3.27.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_blue_plus: ^1.35.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  very_good_analysis: ^10.2.0

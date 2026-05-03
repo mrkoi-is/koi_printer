@@ -1,0 +1,22 @@
+{
+	"folders": [
+		{
+			"path": "koi_printer"
+		},
+		{
+			"path": "koi_printer_command"
+		},
+		{
+			"path": "koi_printer_connection"
+		},
+		{
+			"path": "Q5BT"
+		},
+		{
+			"path": "docs"
+		},
+		{
+			"path": "TP805"
+		}
+	]
+}

@@ -1,0 +1,218 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:koi_printer_connection/src/adapter/koi_printer_adapter.dart';
+import 'package:koi_printer_connection/src/model/koi_connection_config.dart';
+import 'package:koi_printer_connection/src/model/koi_connection_policy.dart';
+import 'package:koi_printer_connection/src/model/koi_connection_types.dart';
+
+/// BLE 适配器 — 使用 flutter_blue_plus。
+/// BLE adapter implementation using flutter_blue_plus.
+///
+/// 功能:
+/// - 自动发现 Service / Characteristic
+/// - MTU 感知分块发送 (旧 writeBytes 逻辑)
+/// - 连接状态监听
+///
+/// 来源: 旧 XIIBluetoothPrinter (349 LOC) 的核心逻辑。
+class KoiBleAdapter implements KoiPrinterAdapter {
+  KoiBleAdapter();
+
+  BluetoothDevice? _device;
+  BluetoothCharacteristic? _characteristic;
+  KoiConnectionConfig? _config;
+  int _mtu = 512;
+
+  final StreamController<KoiConnectionState> _stateController =
+      StreamController<KoiConnectionState>.broadcast();
+
+  KoiConnectionState _state = KoiConnectionState.disconnected;
+
+  StreamSubscription<BluetoothConnectionState>? _connectionSub;
+  StreamSubscription<int>? _mtuSub;
+
+  @override
+  KoiConnectionState get state => _state;
+
+  @override
+  Stream<KoiConnectionState> get stateStream => _stateController.stream;
+
+  final StreamController<KoiPrinterHardwareState> _hwStateController =
+      StreamController<KoiPrinterHardwareState>.broadcast();
+
+  @override
+  Stream<KoiPrinterHardwareState> get hardwareStateStream =>
+      _hwStateController.stream;
+
+  @override
+  KoiConnectionPolicy get policy => KoiConnectionPolicy.aggressive;
+
+  @override
+  KoiConnectionType get connectionType => KoiConnectionType.ble;
+
+  @override
+  KoiConnectionConfig? get config => _config;
+
+  @override
+  bool get isReady => _state == KoiConnectionState.ready;
+
+  @override
+  Future<KoiPrinterHardwareState> queryHardwareState() async {
+    // TODO(maxlee): 发送 DLE EOT 状态查询指令并解析响应。
+    return KoiPrinterHardwareState.unknown;
+  }
+
+  @override
+  Future<bool> connect(KoiConnectionConfig config) async {
+    _config = config;
+    _updateState(KoiConnectionState.connecting);
+
+    try {
+      _device = BluetoothDevice.fromId(config.deviceId);
+      _mtu = config.mtu;
+
+      // 监听连接状态变化
+      _connectionSub = _device!.connectionState.listen((bleState) {
+        switch (bleState) {
+          case BluetoothConnectionState.connected:
+            _discoverServices();
+          case BluetoothConnectionState.disconnected:
+            _updateState(KoiConnectionState.disconnected);
+          case BluetoothConnectionState.connecting:
+            _updateState(KoiConnectionState.connecting);
+          case BluetoothConnectionState.disconnecting:
+            _updateState(KoiConnectionState.disconnecting);
+        }
+      });
+
+      // 监听 MTU 变化
+      _mtuSub = _device!.mtu.listen((mtu) {
+        if (mtu > 0) {
+          _mtu = mtu;
+          debugPrint('KoiBleAdapter: MTU updated to $_mtu');
+        }
+      });
+
+      await _device!.connect(timeout: config.connectionTimeout);
+      return true;
+    } catch (e) {
+      debugPrint('KoiBleAdapter: connect error: $e');
+      _updateState(KoiConnectionState.disconnected);
+      return false;
+    }
+  }
+
+  /// 发现服务和特征。
+  Future<void> _discoverServices() async {
+    _updateState(KoiConnectionState.discovering);
+
+    try {
+      final services = await _device!.discoverServices();
+
+      for (final service in services) {
+        // 匹配指定 service UUID
+        if (_config?.serviceUuid != null &&
+            service.uuid.toString() != _config!.serviceUuid) {
+          continue;
+        }
+
+        for (final c in service.characteristics) {
+          // 查找可写特征
+          if (c.properties.write || c.properties.writeWithoutResponse) {
+            // 如果有指定 characteristic UUID, 需要匹配
+            if (_config?.characteristicUuid != null &&
+                c.uuid.toString() != _config!.characteristicUuid) {
+              continue;
+            }
+            _characteristic = c;
+            _updateState(KoiConnectionState.ready);
+            return;
+          }
+        }
+      }
+
+      // 未找到匹配特征 — 尝试使用第一个可写特征
+      for (final service in services) {
+        for (final c in service.characteristics) {
+          if (c.properties.write || c.properties.writeWithoutResponse) {
+            _characteristic = c;
+            _updateState(KoiConnectionState.ready);
+            return;
+          }
+        }
+      }
+
+      debugPrint('KoiBleAdapter: No writable characteristic found');
+      _updateState(KoiConnectionState.connected);
+    } catch (e) {
+      debugPrint('KoiBleAdapter: discoverServices error: $e');
+      _updateState(KoiConnectionState.connected);
+    }
+  }
+
+  @override
+  Future<void> disconnect() async {
+    try {
+      await _device?.disconnect();
+    } catch (e) {
+      debugPrint('KoiBleAdapter: disconnect error: $e');
+    }
+    _updateState(KoiConnectionState.disconnected);
+  }
+
+  @override
+  Future<void> sendChunks(List<List<int>> chunks) async {
+    if (_characteristic == null) {
+      throw StateError(
+        'BLE characteristic not discovered. Call connect first.',
+      );
+    }
+
+    for (final chunk in chunks) {
+      await _writeWithMtuChunking(chunk);
+    }
+  }
+
+  /// 按 MTU 分块写入。
+  /// 来源: 旧 XIIBluetoothPrinter.writeBytes() 的核心逻辑。
+  Future<void> _writeWithMtuChunking(List<int> data) async {
+    // BLE 实际可写大小 = MTU - 3 (ATT 头部)
+    final chunkSize = _mtu - 3;
+    if (chunkSize <= 0) return;
+
+    for (var offset = 0; offset < data.length; offset += chunkSize) {
+      final end = (offset + chunkSize > data.length)
+          ? data.length
+          : offset + chunkSize;
+      final piece = data.sublist(offset, end);
+
+      try {
+        await _characteristic!.write(
+          piece,
+          withoutResponse: _characteristic!.properties.writeWithoutResponse,
+        );
+      } catch (e) {
+        debugPrint('KoiBleAdapter: write error at offset $offset: $e');
+        rethrow;
+      }
+    }
+  }
+
+  void _updateState(KoiConnectionState newState) {
+    _state = newState;
+    _stateController.add(newState);
+  }
+
+  @override
+  Future<void> dispose() async {
+    await _connectionSub?.cancel();
+    await _mtuSub?.cancel();
+    await _stateController.close();
+    try {
+      await _device?.disconnect();
+    } catch (_) {
+      // 忽略 dispose 时的断连错误。
+    }
+  }
+}

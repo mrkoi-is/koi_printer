@@ -1,0 +1,25 @@
+name: koi_printer
+publish_to: none
+description: >
+  Facade package for koi_printer ecosystem.
+  Combines command rendering, connection management, and template engine.
+version: 0.1.0
+homepage: https://github.com/mrkoi/koi_printer
+
+environment:
+  sdk: ^3.7.0
+  flutter: ">=3.27.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  koi_printer_command:
+    path: ../koi_printer_command
+  koi_printer_connection:
+    path: ../koi_printer_connection
+  shared_preferences: ^2.5.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  very_good_analysis: ^10.2.0
