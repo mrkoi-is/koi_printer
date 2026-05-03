@@ -1,61 +1,77 @@
-name: CI
+name: Koi Printer Ecosystem CI
 
 on:
   push:
-    branches: [main, develop]
+    branches: [ "main" ]
   pull_request:
-    branches: [main]
+    branches: [ "main" ]
 
 jobs:
   analyze_and_test:
-    name: Analyze & Test
+    name: Analyze and Test Packages
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.29.x'
           channel: 'stable'
-          cache: true
 
-      # ── koi_printer_command (纯 Dart) ──────────────────────────
-      - name: pub get — koi_printer_command
+      - name: Get dependencies (koi_printer_command)
+        working-directory: koi_printer_command
         run: dart pub get
-        working-directory: koi_printer_command
 
-      - name: analyze — koi_printer_command
+      - name: Get dependencies (koi_printer_connection)
+        working-directory: koi_printer_connection
+        run: flutter pub get
+
+      - name: Get dependencies (koi_printer)
+        working-directory: koi_printer
+        run: flutter pub get
+
+      - name: Get dependencies (koi_printer/example)
+        working-directory: koi_printer/example
+        run: flutter pub get
+
+      - name: Verify Formatting (koi_printer_command)
+        working-directory: koi_printer_command
+        run: dart format --output=none --set-exit-if-changed .
+
+      - name: Verify Formatting (koi_printer_connection)
+        working-directory: koi_printer_connection
+        run: dart format --output=none --set-exit-if-changed .
+
+      - name: Verify Formatting (koi_printer)
+        working-directory: koi_printer
+        run: dart format --output=none --set-exit-if-changed .
+
+      - name: Analyze (koi_printer_command)
+        working-directory: koi_printer_command
         run: dart analyze
-        working-directory: koi_printer_command
 
-      - name: test — koi_printer_command
+      - name: Analyze (koi_printer_connection)
+        working-directory: koi_printer_connection
+        run: flutter analyze
+
+      - name: Analyze (koi_printer)
+        working-directory: koi_printer
+        run: flutter analyze
+
+      - name: Analyze (koi_printer/example)
+        working-directory: koi_printer/example
+        run: flutter analyze
+
+      - name: Run Tests (koi_printer_command)
+        working-directory: koi_printer_command
         run: dart test
-        working-directory: koi_printer_command
 
-      # ── koi_printer_connection ─────────────────────────────────
-      - name: pub get — koi_printer_connection
-        run: flutter pub get
+      - name: Run Tests (koi_printer_connection)
         working-directory: koi_printer_connection
-
-      - name: analyze — koi_printer_connection
-        run: flutter analyze
-        working-directory: koi_printer_connection
-
-      - name: test — koi_printer_connection
         run: flutter test
-        working-directory: koi_printer_connection
 
-      # ── koi_printer ────────────────────────────────────────────
-      - name: pub get — koi_printer
-        run: flutter pub get
+      - name: Run Tests (koi_printer)
         working-directory: koi_printer
-
-      - name: analyze — koi_printer
-        run: flutter analyze
-        working-directory: koi_printer
-
-      - name: test — koi_printer
         run: flutter test
-        working-directory: koi_printer
