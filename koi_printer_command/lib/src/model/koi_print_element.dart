@@ -149,9 +149,14 @@ class KoiSpacerElement extends KoiTicketElement {
 
 /// 切纸元素。
 class KoiCutElement extends KoiTicketElement {
-  const KoiCutElement({this.mode = KoiCutMode.full});
+  const KoiCutElement({this.mode = KoiCutMode.full, this.feedLines = 6});
 
   final KoiCutMode mode;
+
+  /// 切纸前自动走纸行数。
+  /// 打印头与切刀之间存在物理距离, 需要先走纸若干行, 确保内容完全越过切刀位置后再切。
+  /// 设为 0 表示不自动走纸 (调用方需自行控制)。
+  final int feedLines;
 }
 
 /// 蜂鸣器元素。

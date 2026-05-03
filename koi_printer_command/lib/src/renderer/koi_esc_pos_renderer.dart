@@ -741,10 +741,20 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
   }
 
   List<int> _renderCut(KoiCutElement element) {
-    return switch (element.mode) {
+    final bytes = <int>[];
+
+    // 切纸前自动走纸: 打印头到切刀有物理距离, 需要先走纸确保内容越过切刀位置。
+    // 与旧版 SDK (emptyLines before cut) 逻辑一致。
+    if (element.feedLines > 0) {
+      bytes.addAll([..._cmdFeedN, element.feedLines & 0xFF]);
+    }
+
+    bytes.addAll(switch (element.mode) {
       KoiCutMode.full => _cmdCutFull,
       KoiCutMode.partial => _cmdCutPartial,
-    };
+    });
+
+    return bytes;
   }
 
   // ══════════════════════════════════════════════════════════
