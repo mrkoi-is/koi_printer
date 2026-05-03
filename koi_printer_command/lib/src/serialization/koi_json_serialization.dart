@@ -159,15 +159,17 @@ KoiPrintDocument koiPrintDocumentFromJson(Map<String, dynamic> json) {
     'ticket' => KoiTicketDocument(
       paperSize: _parsePaperSize(json['paperSize']),
       name: json['name'] as String?,
-      elements: (json['elements'] as List)
-          .map((e) => koiTicketElementFromJson(e as Map<String, dynamic>))
-          .toList(),
+      elements:
+          (json['elements'] as List)
+              .map((e) => koiTicketElementFromJson(e as Map<String, dynamic>))
+              .toList(),
     ),
     'label' => KoiLabelDocument(
       name: json['name'] as String?,
-      elements: (json['elements'] as List)
-          .map((e) => koiLabelElementFromJson(e as Map<String, dynamic>))
-          .toList(),
+      elements:
+          (json['elements'] as List)
+              .map((e) => koiLabelElementFromJson(e as Map<String, dynamic>))
+              .toList(),
     ),
     _ => throw FormatException('未知文档类型: $docType'),
   };
@@ -201,12 +203,14 @@ Map<String, dynamic> _textToJson(KoiTextElement e) => {
 KoiTextElement _textFromJson(Map<String, dynamic> j) => KoiTextElement(
   text: j['text'] as String,
   size: _enumByName(KoiTextSize.values, j['size'], KoiTextSize.size1),
-  widthSize: j['widthSize'] != null
-      ? _enumByName(KoiTextSize.values, j['widthSize'], KoiTextSize.size1)
-      : null,
-  heightSize: j['heightSize'] != null
-      ? _enumByName(KoiTextSize.values, j['heightSize'], KoiTextSize.size1)
-      : null,
+  widthSize:
+      j['widthSize'] != null
+          ? _enumByName(KoiTextSize.values, j['widthSize'], KoiTextSize.size1)
+          : null,
+  heightSize:
+      j['heightSize'] != null
+          ? _enumByName(KoiTextSize.values, j['heightSize'], KoiTextSize.size1)
+          : null,
   align: _enumByName(KoiTextAlign.values, j['align'], KoiTextAlign.left),
   bold: j['bold'] as bool? ?? false,
   reverse: j['reverse'] as bool? ?? false,
@@ -234,9 +238,10 @@ Map<String, dynamic> _columnToJson(KoiTextColumn c) => {
 };
 
 KoiTextRowElement _textRowFromJson(Map<String, dynamic> j) => KoiTextRowElement(
-  columns: (j['columns'] as List)
-      .map((c) => _columnFromJson(c as Map<String, dynamic>))
-      .toList(),
+  columns:
+      (j['columns'] as List)
+          .map((c) => _columnFromJson(c as Map<String, dynamic>))
+          .toList(),
 );
 
 KoiTextColumn _columnFromJson(Map<String, dynamic> j) => KoiTextColumn(
@@ -409,9 +414,10 @@ Map<String, dynamic> _ticketForEachToJson(KoiTicketForEachElement e) => {
 KoiTicketForEachElement _ticketForEachFromJson(Map<String, dynamic> j) =>
     KoiTicketForEachElement(
       listKey: j['listKey'] as String,
-      templates: (j['templates'] as List)
-          .map((e) => koiTicketElementFromJson(e as Map<String, dynamic>))
-          .toList(),
+      templates:
+          (j['templates'] as List)
+              .map((e) => koiTicketElementFromJson(e as Map<String, dynamic>))
+              .toList(),
     );
 
 // ═══════════════════════════════════════════════════════════
@@ -612,9 +618,10 @@ Map<String, dynamic> _labelForEachToJson(KoiLabelForEachElement e) => {
 KoiLabelForEachElement _labelForEachFromJson(Map<String, dynamic> j) =>
     KoiLabelForEachElement(
       listKey: j['listKey'] as String,
-      templates: (j['templates'] as List)
-          .map((e) => koiLabelElementFromJson(e as Map<String, dynamic>))
-          .toList(),
+      templates:
+          (j['templates'] as List)
+              .map((e) => koiLabelElementFromJson(e as Map<String, dynamic>))
+              .toList(),
     );
 
 // ═══════════════════════════════════════════════════════════

@@ -51,9 +51,7 @@ void main() {
     });
 
     test('enqueue with not-ready adapter returns failure', () async {
-      final adapter = MockPrinterAdapter(
-        initialState: KoiConnectionState.disconnected,
-      );
+      final adapter = MockPrinterAdapter();
       final queue = KoiPrintJobQueue(adapter: adapter);
 
       final job = KoiPrintJob(
@@ -242,9 +240,7 @@ void main() {
     });
 
     test('print with disconnected adapter returns failure', () async {
-      final adapter = MockPrinterAdapter(
-        initialState: KoiConnectionState.disconnected,
-      );
+      final adapter = MockPrinterAdapter();
       final service = KoiPrinterService(
         protocol: KoiCommandProtocol.escPos,
         connectionType: KoiConnectionType.ble,

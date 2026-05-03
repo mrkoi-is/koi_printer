@@ -63,7 +63,7 @@ void main() {
     testWidgets('renders TextElement with all sizes', (tester) async {
       const doc = KoiTicketDocument(
         elements: [
-          KoiTextElement(text: 'S1', size: KoiTextSize.size1),
+          KoiTextElement(text: 'S1'),
           KoiTextElement(text: 'S2', size: KoiTextSize.size2),
           KoiTextElement(text: 'S3', size: KoiTextSize.size3),
           KoiTextElement(text: 'S4', size: KoiTextSize.size4),
@@ -179,7 +179,6 @@ void main() {
         elements: [
           KoiTicketImageElement(
             imageBytes: pngBytes,
-            align: KoiTextAlign.center,
           ),
         ],
       );
@@ -191,23 +190,23 @@ void main() {
     testWidgets('renders complex document with multiple elements', (
       tester,
     ) async {
-      final doc = KoiTicketDocument(
+      const doc = KoiTicketDocument(
         elements: [
-          const KoiTextElement(
+          KoiTextElement(
             text: 'Header',
             bold: true,
             align: KoiTextAlign.center,
           ),
-          const KoiDividerElement(),
-          const KoiTextRowElement(
+          KoiDividerElement(),
+          KoiTextRowElement(
             columns: [
               KoiTextColumn(text: 'Item', ratio: 6),
               KoiTextColumn(text: '10.00', ratio: 6, align: KoiTextAlign.right),
             ],
           ),
-          const KoiSpacerElement(lines: 1),
-          const KoiQrCodeElement(data: 'https://pay.example.com'),
-          const KoiCutElement(),
+          KoiSpacerElement(),
+          KoiQrCodeElement(data: 'https://pay.example.com'),
+          KoiCutElement(),
         ],
       );
       final widget = KoiPreviewRenderer.build(doc);
@@ -280,7 +279,6 @@ void main() {
             x: 10,
             y: 10,
             data: 'BC123',
-            type: '128',
             height: 50,
           ),
         ],
@@ -311,7 +309,7 @@ void main() {
       const doc = KoiLabelDocument(
         elements: [
           KoiLabelSetupElement(widthMm: 60, heightMm: 40),
-          KoiLabelBoxElement(x: 5, y: 5, width: 50, height: 30, thickness: 2),
+          KoiLabelBoxElement(x: 5, y: 5, width: 50, height: 30),
         ],
       );
       final widget = KoiPreviewRenderer.build(doc);
@@ -347,7 +345,6 @@ void main() {
             x: 5,
             y: 30,
             data: 'BC-001',
-            type: '128',
             height: 40,
           ),
           KoiPositionedQrCodeElement(

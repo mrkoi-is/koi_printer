@@ -1,5 +1,5 @@
-import 'package:koi_printer_command/koi_printer_command.dart';
 import 'package:koi_printer/src/config/koi_print_config.dart';
+import 'package:koi_printer_command/koi_printer_command.dart';
 
 /// 小票打印模板抽象接口。
 /// Abstract template interface for building ticket documents.

@@ -163,21 +163,22 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
   // ══════════════════════════════════════════════════════════
 
   List<int> _renderText(KoiTextElement element, KoiPaperSize paperSize) {
-    return <int>[..._alignCmd(element.align), ..._styleCmd(
-          bold: element.bold,
-          underline: element.underline,
-          underlineStyle: element.underlineStyle,
-          reverse: element.reverse,
-          size: element.size,
-          widthSize: element.widthSize,
-          heightSize: element.heightSize,
-          font: element.font,
-        ), ..._encodeText(element.text), ..._newLine]
-      
-      
-      
-      
-      ..addAll(_resetStyle());
+    return <int>[
+      ..._alignCmd(element.align),
+      ..._styleCmd(
+        bold: element.bold,
+        underline: element.underline,
+        underlineStyle: element.underlineStyle,
+        reverse: element.reverse,
+        size: element.size,
+        widthSize: element.widthSize,
+        heightSize: element.heightSize,
+        font: element.font,
+      ),
+      ..._encodeText(element.text),
+      ..._newLine,
+      ..._resetStyle(),
+    ];
   }
 
   // ══════════════════════════════════════════════════════════
@@ -255,9 +256,10 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
     KoiQrRenderStrategy profileStrategy,
   ) {
     // 优先级: 元素级别显式指定 > profile 策略 > 默认
-    final strategy = element.strategy != KoiQrRenderStrategy.normal
-        ? element.strategy
-        : profileStrategy;
+    final strategy =
+        element.strategy != KoiQrRenderStrategy.normal
+            ? element.strategy
+            : profileStrategy;
 
     return switch (strategy) {
       KoiQrRenderStrategy.normal => [_qrNormal(element)],
@@ -275,29 +277,46 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
     final textBytes = latin1.encode(element.data);
     final dataLen = textBytes.length + 3;
 
-    return <int>[..._alignCmd(element.align), ..._cmdQrHeader, 0x03, 0x00, 0x31, 0x43, element.size.value, ..._cmdQrHeader,
-        0x03,
-        0x00,
-        0x31,
-        0x45,
-        element.correction.value, ..._cmdQrHeader,
-        dataLen & 0xFF,
-        (dataLen >> 8) & 0xFF,
-        0x31,
-        0x50,
-        0x30]
-      
-      // FN 167: 设置 QR 模块大小
-      
-      // FN 169: 设置纠错等级
-      
-      // FN 180: 存储数据
-      
-      ..addAll(textBytes)
-      // FN 182: 获取大小信息
-      ..addAll([..._cmdQrHeader, 0x03, 0x00, 0x31, 0x52, 0x30])
-      // FN 181: 打印 QR 码
-      ..addAll([..._cmdQrHeader, 0x03, 0x00, 0x31, 0x51, 0x30]);
+    return <int>[
+      ..._alignCmd(element.align),
+      ..._cmdQrHeader,
+      0x03,
+      0x00,
+      0x31,
+      0x43,
+      element.size.value,
+      ..._cmdQrHeader,
+      0x03,
+      0x00,
+      0x31,
+      0x45,
+      element.correction.value,
+      ..._cmdQrHeader,
+      dataLen & 0xFF,
+      (dataLen >> 8) & 0xFF,
+      0x31,
+      0x50,
+      0x30,
+      ...textBytes,
+      ..._cmdQrHeader,
+      0x03,
+      0x00,
+      0x31,
+      0x52,
+      0x30,
+      ..._cmdQrHeader,
+      0x03,
+      0x00,
+      0x31,
+      0x51,
+      0x30,
+    ]
+    // FN 167: 设置 QR 模块大小
+    // FN 169: 设置纠错等级
+    // FN 180: 存储数据
+    // FN 182: 获取大小信息
+    // FN 181: 打印 QR 码
+    ;
   }
 
   /// V1 老台式机 — 需分块发送 (partition)。
@@ -340,9 +359,8 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
     // 数据分块 (每 20 字节一块)
     const chunkSize = 20;
     for (var i = 0; i < textBytes.length; i += chunkSize) {
-      final end = (i + chunkSize > textBytes.length)
-          ? textBytes.length
-          : i + chunkSize;
+      final end =
+          (i + chunkSize > textBytes.length) ? textBytes.length : i + chunkSize;
       chunks.add(textBytes.sublist(i, end).toList());
     }
 
@@ -362,11 +380,25 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
   List<int> _qrOriginal(KoiQrCodeElement element) {
     final textBytes = latin1.encode(element.data);
 
-    return <int>[_esc, 0x61, 0x01, _gs, 0x77, element.size.value, _gs, 0x6B, 0x61, 0x06, 0x02, textBytes.length, 0x00, ...textBytes]
-       // 居中
-       // QR 大小
-      
-      ;
+    return <int>[
+      _esc,
+      0x61,
+      0x01,
+      _gs,
+      0x77,
+      element.size.value,
+      _gs,
+      0x6B,
+      0x61,
+      0x06,
+      0x02,
+      textBytes.length,
+      0x00,
+      ...textBytes,
+    ]
+    // 居中
+    // QR 大小
+    ;
   }
 
   /// 芝科 XT-423 — GBK 编码。
@@ -375,12 +407,28 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
     final textBytes = gbk_bytes.encode(element.data);
     final strLen = textBytes.length;
 
-    return <int>[_esc, 0x61, 0x01, _gs, 0x77, element.size.value, _gs, 0x5A, 0x02, _esc, 0x5A, 0x00, 0x01, 0x00, strLen & 0x00FF, strLen ~/ 256]
-       // 居中
-       // 条码宽度
-      
-      
-      ..addAll(textBytes);
+    return <int>[
+      _esc,
+      0x61,
+      0x01,
+      _gs,
+      0x77,
+      element.size.value,
+      _gs,
+      0x5A,
+      0x02,
+      _esc,
+      0x5A,
+      0x00,
+      0x01,
+      0x00,
+      strLen & 0x00FF,
+      strLen ~/ 256,
+      ...textBytes,
+    ]
+    // 居中
+    // 条码宽度
+    ;
   }
 
   /// 降级为图片 — 使用 zxing2 生成 QR 矩阵, 转 image 库光栅化。
@@ -463,16 +511,31 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
     final barcodeData = latin1.encode(element.data);
     final barcodeType = _barcodeTypeValue(element.type);
 
-    return <int>[..._alignCmd(element.align), _gs, 0x48, _hriPositionValue(element.textPosition), _gs, 0x66, if (element.font == KoiFontType.fontB) 1 else 0, _gs, 0x68, element.height & 0xFF]
-      
-      // HRI 文字位置
-      
-      // HRI 字体选择
-      
-       // 条码高度
-      ..addAll([_gs, 0x77, element.width & 0xFF]) // 条码宽度
-      ..addAll([_gs, 0x6B, barcodeType, barcodeData.length])
-      ..addAll(barcodeData);
+    return <int>[
+      ..._alignCmd(element.align),
+      _gs,
+      0x48,
+      _hriPositionValue(element.textPosition),
+      _gs,
+      0x66,
+      if (element.font == KoiFontType.fontB) 1 else 0,
+      _gs,
+      0x68,
+      element.height & 0xFF,
+      _gs,
+      0x77,
+      element.width & 0xFF,
+      _gs,
+      0x6B,
+      barcodeType,
+      barcodeData.length,
+      ...barcodeData,
+    ]
+    // HRI 文字位置
+    // HRI 字体选择
+    // 条码高度
+    // 条码宽度
+    ;
   }
 
   int _hriPositionValue(KoiBarcodeTextPosition pos) {
@@ -689,7 +752,8 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
     required KoiUnderlineStyle underlineStyle,
     required bool reverse,
     required KoiTextSize size,
-    required KoiFontType font, KoiTextSize? widthSize,
+    required KoiFontType font,
+    KoiTextSize? widthSize,
     KoiTextSize? heightSize,
   }) {
     final bytes = <int>[];

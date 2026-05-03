@@ -1,39 +1,26 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# koi_printer_connection
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages).
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages).
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+The connection layer for the `koi_printer` ecosystem.
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+This package acts as an abstraction layer for various printer hardware connections. It shields the upper business layers from the complexities of managing physical connections, MTU chunking, and auto-reconnection logic.
 
-## Getting started
+Supported Adapters:
+* **`KoiBleAdapter`**: Bluetooth Low Energy (BLE) using `flutter_blue_plus`.
+* **`KoiClassicBtAdapter`**: Classic Bluetooth (SPP) using `flutter_bluetooth_serial`.
+* **`KoiNetworkAdapter`**: TCP/IP Network printing via raw Dart Sockets.
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+Supported Scanners:
+* **`KoiKeyboardScanner`**: Global hardware keyboard interceptor for physical POS Barcode/QR scanners.
+* **`KoiBleScanner` / `KoiClassicBtScanner` / `KoiNetworkScanner`**: Discover nearby printers.
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+This package is intended to be used with `koi_printer`. You do not need to construct adapters manually unless you are building a custom implementation.
 
 ```dart
-const like = 'sample';
+final adapter = KoiBleAdapter();
+await adapter.connect(KoiConnectionConfig(deviceId: '00:11:22:33:44:55'));
+await adapter.sendChunks([[0x1B, 0x40]]); // ESC @ (Initialize printer)
 ```
-
-## Additional information
-
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.

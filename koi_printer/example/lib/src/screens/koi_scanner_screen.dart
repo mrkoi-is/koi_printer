@@ -8,8 +8,7 @@ import 'package:koi_printer/koi_printer.dart';
 ///
 /// 迁移自: xii_bluetooth_discover_screen (BLE) +
 ///         xii_bluetooth_serial_discover_screen (SPP) +
-///         xii_network_discover_screen (TCP) +
-///         xii_usb_discover_screen (USB)
+///         xii_network_discover_screen (TCP)
 class KoiScannerScreen extends StatefulWidget {
   const KoiScannerScreen({super.key, required this.connectionType});
 
@@ -52,8 +51,6 @@ class _KoiScannerScreenState extends State<KoiScannerScreen> {
         stream = KoiClassicBtScanner().scan();
       case KoiConnectionType.network:
         stream = KoiNetworkScanner().scan(subnet: '192.168.1');
-      case KoiConnectionType.usb:
-        stream = KoiUsbScanner().scan();
     }
 
     _scanSub = stream.listen(
@@ -74,7 +71,6 @@ class _KoiScannerScreenState extends State<KoiScannerScreen> {
       KoiConnectionType.ble => '扫描 BLE 设备',
       KoiConnectionType.classicBluetooth => '扫描经典蓝牙',
       KoiConnectionType.network => '扫描网络打印机',
-      KoiConnectionType.usb => '扫描 USB 设备',
     };
 
     return Scaffold(
@@ -100,7 +96,7 @@ class _KoiScannerScreenState extends State<KoiScannerScreen> {
             )
           : ListView.separated(
               itemCount: _devices.length,
-              separatorBuilder: (_, __) => const Divider(height: 1),
+              separatorBuilder: (_, _) => const Divider(height: 1),
               itemBuilder: (context, index) {
                 final device = _devices[index];
                 return ListTile(
@@ -123,7 +119,6 @@ class _KoiScannerScreenState extends State<KoiScannerScreen> {
       KoiConnectionType.ble => Icons.bluetooth,
       KoiConnectionType.classicBluetooth => Icons.bluetooth_audio,
       KoiConnectionType.network => Icons.wifi,
-      KoiConnectionType.usb => Icons.usb,
     };
   }
 }

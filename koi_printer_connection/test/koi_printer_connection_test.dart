@@ -21,7 +21,6 @@ void main() {
       const original = KoiConnectionConfig(
         deviceName: 'Printer A',
         deviceId: 'id-1',
-        mtu: 512,
       );
       final copy = original.copyWith(mtu: 256, autoReconnect: true);
       expect(copy.mtu, 256);
@@ -57,14 +56,13 @@ void main() {
 
   group('KoiConnectionType', () {
     test('has 4 expected values', () {
-      expect(KoiConnectionType.values.length, 4);
+      expect(KoiConnectionType.values.length, 3);
       expect(
         KoiConnectionType.values,
         containsAll([
           KoiConnectionType.ble,
           KoiConnectionType.classicBluetooth,
           KoiConnectionType.network,
-          KoiConnectionType.usb,
         ]),
       );
     });
@@ -139,7 +137,6 @@ void main() {
     test('delayForRetry linear returns fixed delay', () {
       const p = KoiConnectionPolicy(
         retryDelay: Duration(milliseconds: 100),
-        retryStrategy: KoiRetryStrategy.linear,
       );
       expect(p.delayForRetry(0), const Duration(milliseconds: 100));
       expect(p.delayForRetry(1), const Duration(milliseconds: 100));
@@ -228,15 +225,6 @@ void main() {
       expect(adapter.state, KoiConnectionState.disconnected);
       expect(adapter.isReady, false);
       expect(adapter.connectionType, KoiConnectionType.classicBluetooth);
-    });
-  });
-
-  group('KoiUsbAdapter', () {
-    test('initial state is disconnected', () {
-      final adapter = KoiUsbAdapter();
-      expect(adapter.state, KoiConnectionState.disconnected);
-      expect(adapter.isReady, false);
-      expect(adapter.connectionType, KoiConnectionType.usb);
     });
   });
 }

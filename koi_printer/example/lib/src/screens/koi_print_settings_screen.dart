@@ -115,7 +115,7 @@ class _KoiPrintSettingsScreenState extends State<KoiPrintSettingsScreen> {
           SwitchListTile(
             title: const Text('按联切纸'),
             subtitle: const Text('每联打完后自动切纸'),
-            activeColor: Colors.orange,
+            activeThumbColor: Colors.orange,
             value: prefs.isCutEnabled(KoiCutBehavior.cutPerCopy),
             onChanged: (v) async {
               await prefs.setCutEnabled(
@@ -131,7 +131,7 @@ class _KoiPrintSettingsScreenState extends State<KoiPrintSettingsScreen> {
           SwitchListTile(
             title: const Text('结尾切纸'),
             subtitle: const Text('整单打完后切纸'),
-            activeColor: Colors.orange,
+            activeThumbColor: Colors.orange,
             value: prefs.isCutEnabled(KoiCutBehavior.cutAtEnd),
             onChanged: (v) async {
               await prefs.setCutEnabled(

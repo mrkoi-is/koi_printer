@@ -30,7 +30,7 @@ void main() {
               ),
             ],
           ),
-          const KoiDividerElement(),
+          KoiDividerElement(),
         ],
       );
 
@@ -209,11 +209,6 @@ void main() {
         KoiConnectionType.classicBluetooth,
       );
       expect(adapter, isA<KoiClassicBtAdapter>());
-    });
-
-    test('creates UsbAdapter for usb connection', () {
-      final adapter = KoiPrinterFactory.createAdapter(KoiConnectionType.usb);
-      expect(adapter, isA<KoiUsbAdapter>());
     });
   });
 

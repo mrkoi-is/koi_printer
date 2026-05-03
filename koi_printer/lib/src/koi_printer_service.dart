@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:koi_printer_command/koi_printer_command.dart';
-import 'package:koi_printer_connection/koi_printer_connection.dart';
 import 'package:koi_printer/src/koi_printer_factory.dart';
 import 'package:koi_printer/src/koi_template_engine.dart';
+import 'package:koi_printer_command/koi_printer_command.dart';
+import 'package:koi_printer_connection/koi_printer_connection.dart';
 
 /// 打印服务 — 组合 command + connection 的完整打印流程。
 /// High-level printer service combining rendering, connection, and template
@@ -81,7 +81,7 @@ class KoiPrinterService {
     int copies = 1,
   }) async {
     if (!_adapter.isReady) {
-      return const KoiPrintFailure(error: '打印机未连接', isRetryable: true);
+      return const KoiPrintFailure(error: '打印机未连接');
     }
 
     try {
@@ -107,7 +107,6 @@ class KoiPrinterService {
       return KoiPrintFailure(
         documentName: document.name,
         error: e.toString(),
-        isRetryable: true,
       );
     }
   }

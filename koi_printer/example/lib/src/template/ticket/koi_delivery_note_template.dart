@@ -117,10 +117,7 @@ class KoiDeliveryNoteTemplate
 
       // 货物
       const KoiTextElement(text: '货物'),
-      KoiTextElement(
-        text: '$cargoInfo 共${cargoCount}件',
-        size: KoiTextSize.size2,
-      ),
+      KoiTextElement(text: '$cargoInfo 共$cargoCount件', size: KoiTextSize.size2),
 
       const KoiDividerElement(),
     ];

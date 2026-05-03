@@ -32,7 +32,7 @@ class KoiNetworkScanner {
       if (!controller.isClosed) controller.close();
     }
 
-    controller.onListen = () => scanAll();
+    controller.onListen = scanAll;
 
     return controller.stream;
   }

@@ -3,7 +3,7 @@ import 'package:koi_printer/koi_printer.dart';
 /// TMS 寄件小票模板 — 客户联 & 存根联。
 /// 1:1 迁移自旧 XIISenderTicketPapper (245 LOC)。
 ///
-/// 数据字段来自 XIITMSTicketInfo 对象, 传入 Map<String, dynamic>。
+/// 数据字段来自 XIITMSTicketInfo 对象, 传入 `Map<String, dynamic>`。
 class KoiSenderTicketTemplate
     implements KoiTicketTemplate<Map<String, dynamic>> {
   const KoiSenderTicketTemplate();

@@ -11,3 +11,4 @@ export 'label/koi_sender_label_template.dart';
 
 export 'demo/koi_simple_receipt_template.dart';
 export 'demo/koi_simple_label_template.dart';
+export 'demo/koi_dynamic_template_demo.dart';

@@ -5,7 +5,7 @@
 ## 架构组成
 
 - **`koi_printer_command`** (纯 Dart): 打印指令集、数据模型 (`KoiPrintElement` / `KoiPrintDocument`)、以及各协议渲染器 (`ESC/POS`, `TSPL`, `CPCL`) 和 JSON 序列化功能。
-- **`koi_printer_connection`** (Plugin): 硬件通信聚合层，支持蓝牙 (`KoiBleAdapter`, `KoiClassicBtAdapter`)、局域网 (`KoiNetworkAdapter`) 以及 USB (`KoiUsbAdapter`)，自带自动分发大包延迟与心跳重连。
+- **`koi_printer_connection`** (Plugin): 硬件通信聚合层，支持蓝牙 (`KoiBleAdapter`, `KoiClassicBtAdapter`)、局域网 (`KoiNetworkAdapter`) 以及全局扫码枪键盘监听 (`KoiKeyboardScanner`)，自带自动分发大包延迟与心跳重连。
 - **`koi_printer`** (当前包): 面向业务开发的终极门面。
 
 ## 核心能力 (Phase 1-6)

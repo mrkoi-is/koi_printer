@@ -1,14 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:koi_printer_command/koi_printer_command.dart';
-import 'package:koi_printer_connection/koi_printer_connection.dart';
 import 'package:koi_printer/src/config/koi_print_config.dart';
 import 'package:koi_printer/src/koi_printer_factory.dart';
 import 'package:koi_printer/src/koi_template_engine.dart';
 import 'package:koi_printer/src/service/koi_print_job_queue.dart';
 import 'package:koi_printer/src/storage/koi_printer_storage.dart';
 import 'package:koi_printer/src/template/koi_print_template.dart';
+import 'package:koi_printer_command/koi_printer_command.dart';
+import 'package:koi_printer_connection/koi_printer_connection.dart';
 
 /// 打印机管理器 — 同时管理小票机 + 标签机。
 /// Dual-printer manager supporting ticket + label printers simultaneously.
@@ -143,9 +143,10 @@ class KoiPrinterManager {
     required KoiPrintConfig config,
     Map<String, List<Map<String, String>>>? templateData,
   }) async {
-    final expanded = templateData != null
-        ? _templateEngine.expandTicket(document, templateData)
-        : document;
+    final expanded =
+        templateData != null
+            ? _templateEngine.expandTicket(document, templateData)
+            : document;
     return _enqueueTicket([expanded], config);
   }
 

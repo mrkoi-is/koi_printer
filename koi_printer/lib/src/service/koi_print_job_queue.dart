@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:flutter/foundation.dart';
-import 'package:koi_printer_command/koi_printer_command.dart';
-import 'package:koi_printer_connection/koi_printer_connection.dart';
 import 'package:koi_printer/src/config/koi_print_config.dart';
 import 'package:koi_printer/src/koi_printer_factory.dart';
+import 'package:koi_printer_command/koi_printer_command.dart';
+import 'package:koi_printer_connection/koi_printer_connection.dart';
 
 /// 打印任务。
 class KoiPrintJob {
@@ -91,7 +91,7 @@ class KoiPrintJobQueue {
   /// 执行单个打印任务。
   Future<KoiPrintResult> _executeJob(KoiPrintJob job) async {
     if (adapter == null || !adapter!.isReady) {
-      return const KoiPrintFailure(error: '打印机未连接', isRetryable: true);
+      return const KoiPrintFailure(error: '打印机未连接');
     }
 
     try {
@@ -113,7 +113,7 @@ class KoiPrintJobQueue {
       return KoiPrintSuccess(bytesSent: totalBytes);
     } catch (e) {
       debugPrint('KoiPrintJobQueue: job error: $e');
-      return KoiPrintFailure(error: e.toString(), isRetryable: true);
+      return KoiPrintFailure(error: e.toString());
     }
   }
 

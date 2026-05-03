@@ -104,6 +104,7 @@ class _PreviewScreenState extends State<PreviewScreen> {
   int _templateIndex = 0;
 
   final _templates = [
+    ('TMS 动态模板 (JSON+Engine)', const KoiDynamicTemplateDemo()),
     ('寄件小票 (多联)', const KoiSenderTicketTemplate()),
     ('到件小票', const KoiReceiverTicketTemplate()),
     ('交接单', const KoiDeliveryNoteTemplate()),

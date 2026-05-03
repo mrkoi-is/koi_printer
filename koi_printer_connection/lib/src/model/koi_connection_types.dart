@@ -31,7 +31,4 @@ enum KoiConnectionType {
 
   /// TCP/IP 网络连接。
   network,
-
-  /// USB 连接。
-  usb,
 }

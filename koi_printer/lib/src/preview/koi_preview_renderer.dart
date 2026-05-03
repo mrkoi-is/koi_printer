@@ -61,9 +61,10 @@ class KoiPreviewRenderer {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
-        children: document.elements
-            .map((e) => _flowElement(e, textColor, paperWidthPx))
-            .toList(),
+        children:
+            document.elements
+                .map((e) => _flowElement(e, textColor, paperWidthPx))
+                .toList(),
       ),
     );
   }
@@ -97,9 +98,8 @@ class KoiPreviewRenderer {
           fontFamily: 'monospace',
           fontSize: fontSize,
           fontWeight: e.bold ? FontWeight.bold : FontWeight.normal,
-          decoration: e.underline
-              ? TextDecoration.underline
-              : TextDecoration.none,
+          decoration:
+              e.underline ? TextDecoration.underline : TextDecoration.none,
           color: e.reverse ? Colors.white : color,
           backgroundColor: e.reverse ? color : null,
         ),
@@ -111,22 +111,23 @@ class KoiPreviewRenderer {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 1),
       child: Row(
-        children: e.columns.map((col) {
-          return Expanded(
-            flex: col.ratio,
-            child: Text(
-              col.text,
-              textAlign: _textAlign(col.align),
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontFamily: 'monospace',
-                fontSize: 13,
-                fontWeight: col.bold ? FontWeight.bold : FontWeight.normal,
-                color: color,
-              ),
-            ),
-          );
-        }).toList(),
+        children:
+            e.columns.map((col) {
+              return Expanded(
+                flex: col.ratio,
+                child: Text(
+                  col.text,
+                  textAlign: _textAlign(col.align),
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontFamily: 'monospace',
+                    fontSize: 13,
+                    fontWeight: col.bold ? FontWeight.bold : FontWeight.normal,
+                    color: color,
+                  ),
+                ),
+              );
+            }).toList(),
       ),
     );
   }
@@ -236,7 +237,6 @@ class KoiPreviewRenderer {
                 border: Border(
                   top: BorderSide(
                     color: color.withValues(alpha: 0.3),
-                    style: BorderStyle.solid,
                   ),
                 ),
               ),
@@ -286,9 +286,10 @@ class KoiPreviewRenderer {
         ],
       ),
       child: Stack(
-        children: document.elements
-            .map((e) => _positionedElement(e, textColor, scale))
-            .toList(),
+        children:
+            document.elements
+                .map((e) => _positionedElement(e, textColor, scale))
+                .toList(),
       ),
     );
   }

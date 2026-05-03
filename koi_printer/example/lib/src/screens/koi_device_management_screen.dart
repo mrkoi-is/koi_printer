@@ -148,7 +148,6 @@ class _DeviceTile extends StatelessWidget {
       KoiConnectionType.ble => Icons.bluetooth,
       KoiConnectionType.classicBluetooth => Icons.bluetooth_audio,
       KoiConnectionType.network => Icons.wifi,
-      KoiConnectionType.usb => Icons.usb,
     };
   }
 }
@@ -195,14 +194,6 @@ class _AddDeviceButton extends StatelessWidget {
               onTap: () {
                 Navigator.pop(ctx);
                 onSelected(KoiConnectionType.network);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.usb),
-              title: const Text('USB'),
-              onTap: () {
-                Navigator.pop(ctx);
-                onSelected(KoiConnectionType.usb);
               },
             ),
           ],

@@ -184,7 +184,7 @@ void main() {
           name: 'Custom',
           vendor: 'Me',
           protocols: [KoiCommandProtocol.escPos],
-          connections: [KoiConnectionType.usb],
+          connections: [KoiConnectionType.network],
         ),
       );
       expect(db.profiles.length, 1);
@@ -303,7 +303,6 @@ void main() {
                 x: 10,
                 y: 10,
                 data: '{{barcode}}',
-                type: '128',
                 height: 50,
               ),
             ],
@@ -442,7 +441,7 @@ void main() {
           KoiTicketForEachElement(
             listKey: 'items',
             templates: [
-              KoiBarcodeElement(data: '{{code}}', type: KoiBarcodeType.code128),
+              KoiBarcodeElement(data: '{{code}}'),
             ],
           ),
         ],

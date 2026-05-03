@@ -19,7 +19,7 @@ class KoiTemplateEngine {
   /// 展开小票文档中的 [KoiTicketForEachElement]。
   KoiTicketDocument expandTicket(
     KoiTicketDocument document,
-    Map<String, List<Map<String, dynamic>>> data,
+    Map<String, dynamic> data,
   ) {
     final expandedElements = <KoiTicketElement>[];
 
@@ -27,7 +27,7 @@ class KoiTemplateEngine {
       if (element is KoiTicketForEachElement) {
         expandedElements.addAll(_expandTicketForEach(element, data));
       } else {
-        expandedElements.add(element);
+        expandedElements.add(_substituteTicketElement(element, data));
       }
     }
 
@@ -41,7 +41,7 @@ class KoiTemplateEngine {
   /// 展开标签文档中的 [KoiLabelForEachElement]。
   KoiLabelDocument expandLabel(
     KoiLabelDocument document,
-    Map<String, List<Map<String, dynamic>>> data,
+    Map<String, dynamic> data,
   ) {
     final expandedElements = <KoiLabelElement>[];
 
@@ -49,7 +49,7 @@ class KoiTemplateEngine {
       if (element is KoiLabelForEachElement) {
         expandedElements.addAll(_expandLabelForEach(element, data));
       } else {
-        expandedElements.add(element);
+        expandedElements.add(_substituteLabelElement(element, data));
       }
     }
 
@@ -60,15 +60,15 @@ class KoiTemplateEngine {
 
   List<KoiTicketElement> _expandTicketForEach(
     KoiTicketForEachElement forEach,
-    Map<String, List<Map<String, dynamic>>> data,
+    Map<String, dynamic> data,
   ) {
-    final collection = data[forEach.listKey];
+    final collection = data[forEach.listKey] as List?;
     if (collection == null || collection.isEmpty) return [];
 
     final result = <KoiTicketElement>[];
     for (final item in collection) {
       for (final template in forEach.templates) {
-        result.add(_substituteTicketElement(template, item));
+        result.add(_substituteTicketElement(template, item as Map<String, dynamic>));
       }
     }
     return result;
@@ -92,17 +92,18 @@ class KoiTemplateEngine {
         font: element.font,
       ),
       KoiTextRowElement() => KoiTextRowElement(
-        columns: element.columns
-            .map(
-              (col) => KoiTextColumn(
-                text: _substitute(col.text, item),
-                ratio: col.ratio,
-                align: col.align,
-                bold: col.bold,
-                containsChinese: col.containsChinese,
-              ),
-            )
-            .toList(),
+        columns:
+            element.columns
+                .map(
+                  (col) => KoiTextColumn(
+                    text: _substitute(col.text, item),
+                    ratio: col.ratio,
+                    align: col.align,
+                    bold: col.bold,
+                    containsChinese: col.containsChinese,
+                  ),
+                )
+                .toList(),
       ),
       KoiBarcodeElement() => KoiBarcodeElement(
         data: _substitute(element.data, item),
@@ -129,15 +130,15 @@ class KoiTemplateEngine {
 
   List<KoiLabelElement> _expandLabelForEach(
     KoiLabelForEachElement forEach,
-    Map<String, List<Map<String, dynamic>>> data,
+    Map<String, dynamic> data,
   ) {
-    final collection = data[forEach.listKey];
+    final collection = data[forEach.listKey] as List?;
     if (collection == null || collection.isEmpty) return [];
 
     final result = <KoiLabelElement>[];
     for (final item in collection) {
       for (final template in forEach.templates) {
-        result.add(_substituteLabelElement(template, item));
+        result.add(_substituteLabelElement(template, item as Map<String, dynamic>));
       }
     }
     return result;

@@ -13,6 +13,18 @@ class KoiDeviceInfo {
     required this.connectionType,
   });
 
+  factory KoiDeviceInfo.fromMap(Map<String, dynamic> map) {
+    return KoiDeviceInfo(
+      name: map['name'] as String,
+      address: map['address'] as String,
+      connectionType:
+          KoiConnectionType.values[map['connectionType'] as int? ?? 0],
+    );
+  }
+
+  factory KoiDeviceInfo.fromJson(String source) =>
+      KoiDeviceInfo.fromMap(json.decode(source) as Map<String, dynamic>);
+
   /// 设备名称。
   final String name;
 
@@ -28,19 +40,7 @@ class KoiDeviceInfo {
     'connectionType': connectionType.index,
   };
 
-  factory KoiDeviceInfo.fromMap(Map<String, dynamic> map) {
-    return KoiDeviceInfo(
-      name: map['name'] as String,
-      address: map['address'] as String,
-      connectionType:
-          KoiConnectionType.values[map['connectionType'] as int? ?? 0],
-    );
-  }
-
   String toJson() => json.encode(toMap());
-
-  factory KoiDeviceInfo.fromJson(String source) =>
-      KoiDeviceInfo.fromMap(json.decode(source) as Map<String, dynamic>);
 }
 
 /// 打印机存储 — 持久化已绑定设备 + 设备配置。

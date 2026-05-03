@@ -27,7 +27,6 @@ class KoiPrinterFactory {
       KoiConnectionType.ble => KoiBleAdapter(),
       KoiConnectionType.classicBluetooth => KoiClassicBtAdapter(),
       KoiConnectionType.network => KoiNetworkAdapter(),
-      KoiConnectionType.usb => KoiUsbAdapter(),
     };
   }
 }

@@ -36,6 +36,32 @@ class KoiPrinterProfile {
     this.delayProfile = KoiDelayProfile.normal,
   });
 
+  factory KoiPrinterProfile.fromJson(Map<String, dynamic> j) {
+    return KoiPrinterProfile(
+      id: j['id'] as String,
+      name: j['name'] as String,
+      vendor: j['vendor'] as String? ?? '',
+      protocols:
+          (j['protocols'] as List? ?? [])
+              .map((e) => KoiCommandProtocol.values.byName(e as String))
+              .toList(),
+      connections:
+          (j['connections'] as List? ?? [])
+              .map((e) => KoiConnectionType.values.byName(e as String))
+              .toList(),
+      paperWidthMm: j['paperWidthMm'] as int? ?? 80,
+      dotsPerLine: j['dotsPerLine'] as int? ?? 576,
+      dpi: j['dpi'] as int? ?? 203,
+      supportsCut: j['supportsCut'] as bool? ?? true,
+      supportsQrCode: j['supportsQrCode'] as bool? ?? true,
+      bestQrStrategy: _parseStrategy(j['bestQrStrategy']),
+      supportsChinese: j['supportsChinese'] as bool? ?? true,
+      characteristicFilter: j['characteristicFilter'] as String?,
+      maxMtu: j['maxMtu'] as int?,
+      delayProfile: _parseDelay(j['delayProfile']),
+    );
+  }
+
   final String id;
   final String name;
   final String vendor;
@@ -51,30 +77,6 @@ class KoiPrinterProfile {
   final String? characteristicFilter;
   final int? maxMtu;
   final KoiDelayProfile delayProfile;
-
-  factory KoiPrinterProfile.fromJson(Map<String, dynamic> j) {
-    return KoiPrinterProfile(
-      id: j['id'] as String,
-      name: j['name'] as String,
-      vendor: j['vendor'] as String? ?? '',
-      protocols: (j['protocols'] as List? ?? [])
-          .map((e) => KoiCommandProtocol.values.byName(e as String))
-          .toList(),
-      connections: (j['connections'] as List? ?? [])
-          .map((e) => KoiConnectionType.values.byName(e as String))
-          .toList(),
-      paperWidthMm: j['paperWidthMm'] as int? ?? 80,
-      dotsPerLine: j['dotsPerLine'] as int? ?? 576,
-      dpi: j['dpi'] as int? ?? 203,
-      supportsCut: j['supportsCut'] as bool? ?? true,
-      supportsQrCode: j['supportsQrCode'] as bool? ?? true,
-      bestQrStrategy: _parseStrategy(j['bestQrStrategy']),
-      supportsChinese: j['supportsChinese'] as bool? ?? true,
-      characteristicFilter: j['characteristicFilter'] as String?,
-      maxMtu: j['maxMtu'] as int?,
-      delayProfile: _parseDelay(j['delayProfile']),
-    );
-  }
 
   Map<String, dynamic> toJson() => {
     'id': id,

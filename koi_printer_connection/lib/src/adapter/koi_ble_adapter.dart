@@ -182,9 +182,8 @@ class KoiBleAdapter implements KoiPrinterAdapter {
     if (chunkSize <= 0) return;
 
     for (var offset = 0; offset < data.length; offset += chunkSize) {
-      final end = (offset + chunkSize > data.length)
-          ? data.length
-          : offset + chunkSize;
+      final end =
+          (offset + chunkSize > data.length) ? data.length : offset + chunkSize;
       final piece = data.sublist(offset, end);
 
       try {

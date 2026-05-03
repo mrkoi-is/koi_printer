@@ -1,39 +1,31 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# koi_printer_command
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages).
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages).
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+The low-level instruction set and rendering engine for the `koi_printer` ecosystem.
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+This package provides a pure Dart abstraction over various printer protocols. It is completely decoupled from any connection or physical transport layer, meaning it can be run on Flutter apps, CLI tools, or Dart backend servers.
 
-## Getting started
+Supported Protocols:
+* **ESC/POS**: Standard receipt thermal printers (e.g., Xprinter, Gprinter).
+* **TSPL**: Standard label printers (e.g., TSC, Xprinter Label).
+* **CPCL**: Mobile label printers (e.g., Zebra, HPRT).
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+## Architecture
+
+1. **`KoiPrintElement`**: Abstract UI building blocks (Text, Barcode, QrCode, Image).
+2. **`KoiPrintDocument`**: A collection of elements defining a complete ticket or label.
+3. **`KoiCommandRenderer`**: Translates a `KoiPrintDocument` into a raw `List<int>` byte stream tailored for a specific protocol.
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
-
 ```dart
-const like = 'sample';
+final document = KoiPrintDocument.ticket(elements: [
+  KoiTextElement(text: 'Hello World', bold: true, size: KoiTextSize.size2),
+  KoiCutElement(),
+]);
+
+final renderer = KoiEscPosRenderer();
+final bytes = await renderer.render(document);
+// Send bytes to printer adapter...
 ```
-
-## Additional information
-
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
