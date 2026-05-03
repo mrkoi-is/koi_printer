@@ -40,8 +40,8 @@ const List<int> _cmdFontB = [_esc, 0x4D, 0x01]; // ESC M 1
 const List<int> _cmdSizePrefix = [_gs, 0x21]; // GS ! n
 
 // 切纸
-const List<int> _cmdCutFull = [_gs, 0x56, 0x00]; // GS V 0
-const List<int> _cmdCutPartial = [_gs, 0x56, 0x01]; // GS V 1
+const List<int> _cmdCutFull = [_gs, 0x56, 0x30]; // GS V '0'
+const List<int> _cmdCutPartial = [_gs, 0x56, 0x31]; // GS V '1'
 
 // 换行
 const _newLine = [0x0A]; // \n
