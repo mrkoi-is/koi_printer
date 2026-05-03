@@ -47,6 +47,34 @@ class KoiTestTicketTemplate implements KoiTicketTemplate<void> {
       const KoiTextElement(text: '>> 带下划线 Underline', underline: true),
       const KoiSpacerElement(lines: 1),
 
+      const KoiTextElement(text: '异形缩放测试:'),
+      const KoiTextElement(
+        text: '>> 宽度拉伸 (Width: x2)',
+        widthSize: KoiTextSize.size2,
+        heightSize: KoiTextSize.size1,
+      ),
+      const KoiTextElement(
+        text: '>> 高度拉伸 (Height: x2)',
+        widthSize: KoiTextSize.size1,
+        heightSize: KoiTextSize.size2,
+      ),
+      const KoiSpacerElement(lines: 1),
+
+      const KoiTextElement(text: '控制指令测试:'),
+      const KoiTextElement(text: '>> 蜂鸣器 (Beep x2)'),
+      const KoiBeepElement(count: 2, durationMs: 100),
+      const KoiTextElement(text: '>> 弹钱箱 (Cash Drawer)'),
+      const KoiCashDrawerElement(pin: KoiCashDrawerPin.pin2),
+      const KoiTextElement(text: '>> 注入原始空指令 (Raw Bytes)'),
+      const KoiRawBytesElement([0x00]), // NUL
+      const KoiSpacerElement(lines: 1),
+
+      const KoiTextElement(text: '左边距测试:'),
+      const KoiLeftMarginElement(dots: 48), // 缩进一段距离
+      const KoiTextElement(text: '>> 缩进了 48 Dots 的文本'),
+      const KoiLeftMarginElement(dots: 0), // 恢复
+      const KoiSpacerElement(lines: 1),
+
       const KoiTextElement(text: '切纸测试 (全切)'),
       const KoiCutElement(mode: KoiCutMode.full),
     ];
