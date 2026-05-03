@@ -643,11 +643,21 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
     img.grayscale(image);
     img.invert(image);
 
-    // 提取单通道
+    // 提取单通道并处理透明度
     final oneChannelBytes = <int>[];
     final buffer = image.getBytes(order: img.ChannelOrder.rgba);
     for (var i = 0; i < buffer.length; i += 4) {
-      oneChannelBytes.add(buffer[i]);
+      final r = buffer[i];
+      final a = buffer[i + 3];
+
+      // 如果像素透明度低于阈值，强制当作白色背景处理 (即反转后的 0，不打印点)。
+      // 否则由于 invert 操作会将透明的 (0,0,0,0) 翻转为 (255,255,255,0)，
+      // 导致打印机将透明背景全部打成全黑方块，瞬间高耗电引发硬件重启/蓝牙断开。
+      if (a < 128) {
+        oneChannelBytes.add(0);
+      } else {
+        oneChannelBytes.add(r);
+      }
     }
 
     // 补齐到 8 的倍数
