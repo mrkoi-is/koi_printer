@@ -137,9 +137,9 @@ class _PreviewScreenState extends State<PreviewScreen> {
     final dynamicTemplate = templateTuple.$2 as dynamic;
     final docs = (templateTuple.$1 == '功能测试页')
         ? dynamicTemplate.build(null, effectiveConfig)
-              as List<KoiTicketDocument>
+              as List<KoiPrintDocument>
         : dynamicTemplate.build(_mockData, effectiveConfig)
-              as List<KoiTicketDocument>;
+              as List<KoiPrintDocument>;
 
     return Scaffold(
       appBar: AppBar(
