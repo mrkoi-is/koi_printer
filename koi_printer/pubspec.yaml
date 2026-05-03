@@ -1,7 +1,7 @@
 name: koi_printer
 description: >-
   Flutter printer SDK for ESC/POS, TSPL, CPCL protocols.
-  Supports BLE, Classic Bluetooth, TCP/IP, and USB connections
+  Supports BLE, Classic Bluetooth, and TCP/IP connections
   with template engine and WYSIWYG preview.
 version: 0.1.0
 publish_to: none

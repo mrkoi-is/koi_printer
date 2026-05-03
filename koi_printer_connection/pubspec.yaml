@@ -1,7 +1,7 @@
 name: koi_printer_connection
 description: >
   Printer connection adapters for koi_printer.
-  Supports BLE, Classic Bluetooth, TCP/IP, and USB.
+  Supports BLE, Classic Bluetooth, and TCP/IP.
 version: 0.1.0
 repository: https://github.com/mrkoi-is/koi_printer/tree/main/koi_printer_connection
 homepage: https://github.com/mrkoi-is/koi_printer

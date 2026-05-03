@@ -18,12 +18,27 @@
 
 ## 如何使用 (Quick Start)
 
-参考 `example/` 工程。示例应用内直接封装了 TMS 系统的以下 9 个业务实体模板及预览编辑器：
-- `KoiSenderTicketTemplate` (多联)
-- `KoiReceiverTicketTemplate`
-- `KoiDeliveryNoteTemplate` / `KoiDepositTemplate` / `KoiFinanceTicketTemplate`
-- `KoiSenderLabelTemplate` (支持 6 种布局样式)
-- ...等
+通过全新的 JSON 动态解析方案，您无需编写任何 Flutter UI 代码即可下发和更新小票排版。
+
+### 1. 动态模板解析与打印
+
+这是最强大的用法：后台直接下发 JSON，App 仅做渲染壳。
+
+```dart
+// 1. 获取服务器下发的 JSON 模板 (可以实现在线 OTA 更新排版)
+final String jsonStr = await fetchTemplateFromJson('SENDER_TICKET');
+final KoiTicketDocument templateDoc = koiPrintDocumentFromJsonString(jsonStr) as KoiTicketDocument;
+
+// 2. 将真实业务数据喂给模板引擎，替换 {{waybillNo}} 等占位符
+final engine = KoiTemplateEngine();
+final KoiTicketDocument finalDoc = engine.expandTicket(templateDoc, {
+  "waybillNo": "YT123456",
+  "items": [{"name": "商品A", "count": 2}]
+});
+
+// 3. 安全打印并进队列
+await manager.printDocument(finalDoc);
+```
 
 ### 扫描并连接
 
@@ -45,21 +60,16 @@ await manager.init();
 await manager.connectTicketPrinter('XX:XX:XX:XX:XX', KoiConnectionType.ble);
 ```
 
-### 打印业务单据
+### 3. 所见即所得的预览
+
+开发和调试时，可以直接把文档渲染到屏幕上：
 
 ```dart
-final data = { "waybillNo": "YT1234", "items": [{"name":"衣服","count":1}] };
-
-// 业务模板和独立配置
-final template = KoiSenderTicketTemplate();
-final config = KoiPrintConfig(copies: 2, cutBehavior: KoiCutBehavior.cutPerCopy);
-
-// 丢入管理器，安全执行 (自动处理重试与拥塞)
-await manager.printUsingTemplate<Map<String, dynamic>>(
-  data, 
-  template,
-  config: config,
-);
+// 在 Widget 的 build 方法中直接预览
+@override
+Widget build(BuildContext context) {
+  return KoiPreviewRenderer.build(finalDoc, paperWidthPx: 380);
+}
 ```
 
 ## TMS 系统升级指南 (Migration from xii_bluetooth)
