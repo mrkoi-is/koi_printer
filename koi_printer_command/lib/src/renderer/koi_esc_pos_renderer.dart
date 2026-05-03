@@ -595,7 +595,25 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
 
       bytes.addAll(_alignCmd(element.align));
 
-      if (element.renderMode == KoiImageRenderMode.graphics) {
+      if (element.renderMode == KoiImageRenderMode.bitImage) {
+        // ESC * (传统列格式位图)
+        final lineHeight = 24; // 24-dot mode (high density)
+        final blobs = _toColumnFormat(image, lineHeight);
+        final densityByte = 33; // m=33 (24-dot double density)
+        
+        bytes.addAll([0x1B, 0x33, 0x10]); // ESC 3 16 (设置行间距为16)
+        
+        for (final blob in blobs) {
+          bytes
+            ..addAll([0x1B, 0x2A]) // ESC *
+            ..add(densityByte)
+            ..addAll(_intLowHigh(image.width, 2))
+            ..addAll(blob)
+            ..addAll(_newLine);
+        }
+        
+        bytes.addAll([0x1B, 0x32]); // ESC 2 (恢复默认行间距)
+      } else if (element.renderMode == KoiImageRenderMode.graphics) {
         // GS ( L — FN_112 (新标准图形模式)
         final dataLen = widthBytes * image.height + 10;
         bytes
@@ -673,6 +691,36 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
     }
 
     return rasterBytes;
+  }
+
+  /// 图片列格式化 (ESC * 专用)
+  List<List<int>> _toColumnFormat(img.Image imgSrc, int lineHeight) {
+    final image = imgSrc.convert(format: img.Format.uint8, numChannels: 4);
+    final widthPx = image.width;
+    final heightPx = image.height;
+    final blobs = <List<int>>[];
+    
+    for (int y = 0; y < heightPx; y += lineHeight) {
+      final blob = <int>[];
+      for (int x = 0; x < widthPx; ++x) {
+        for (int b = 0; b < lineHeight ~/ 8; ++b) {
+          int byteVal = 0;
+          for (int bit = 0; bit < 8; ++bit) {
+            final realY = y + b * 8 + bit;
+            if (realY < heightPx) {
+              final p = image.getPixel(x, realY);
+              final lum = (p.r * 299 + p.g * 587 + p.b * 114) ~/ 1000;
+              if (p.a >= 128 && lum < 128) {
+                byteVal |= (1 << (7 - bit));
+              }
+            }
+          }
+          blob.add(byteVal);
+        }
+      }
+      blobs.add(blob);
+    }
+    return blobs;
   }
 
   // ══════════════════════════════════════════════════════════

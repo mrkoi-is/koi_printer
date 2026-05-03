@@ -259,6 +259,9 @@ enum KoiUnderlineStyle {
 /// 图片渲染模式。
 /// Image rendering mode for ESC/POS printers.
 enum KoiImageRenderMode {
+  /// ESC * — 传统列格式位图 (兼容性最好，针对老式打印机)
+  bitImage,
+
   /// GS v 0 — 光栅位图格式 (广泛兼容, 但已标记 obsolete)
   raster,
 
