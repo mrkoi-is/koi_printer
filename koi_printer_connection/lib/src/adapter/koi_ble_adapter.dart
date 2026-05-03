@@ -94,7 +94,32 @@ class KoiBleAdapter implements KoiPrinterAdapter {
         }
       });
 
-      await _device!.connect(timeout: config.connectionTimeout);
+      try {
+        // 先确保断开之前的僵尸连接，预防 Android GATT 133 错误
+        await _device!.disconnect();
+      } catch (_) {}
+
+      try {
+        await _device!.connect(
+          timeout: config.connectionTimeout,
+          autoConnect: config.autoReconnect,
+          mtu: config.mtu,
+        );
+      } catch (e) {
+        final err = e.toString();
+        if (err.contains('133') || err.contains('ANDROID_SPECIFIC_ERROR')) {
+          debugPrint('KoiBleAdapter: caught 133 error, retrying in 500ms...');
+          await Future<void>.delayed(const Duration(milliseconds: 500));
+          await _device!.connect(
+            timeout: config.connectionTimeout,
+            autoConnect: config.autoReconnect,
+            mtu: config.mtu,
+          );
+        } else {
+          rethrow;
+        }
+      }
+      
       return true;
     } catch (e) {
       debugPrint('KoiBleAdapter: connect error: $e');

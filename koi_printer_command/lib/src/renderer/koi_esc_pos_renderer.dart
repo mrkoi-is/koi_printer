@@ -195,7 +195,8 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
     final buffer = StringBuffer();
     for (final col in element.columns) {
       final colWidth = (charsPerLine * col.ratio / totalRatio).floor();
-      final text = col.text;
+      // 预处理: 将半角 ¥ 提前替换为全角 ￥，保证这里的排版字符宽度计算和底层的安全编码宽度绝对一致
+      final text = col.text.replaceAll('¥', '￥');
 
       // 计算文本实际宽度 (中文字符占2格)
       var textWidth = 0;
@@ -508,8 +509,15 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
   // ══════════════════════════════════════════════════════════
 
   List<int> _renderBarcode(KoiBarcodeElement element) {
-    final barcodeData = latin1.encode(element.data);
+    List<int> barcodeData = latin1.encode(element.data);
     final barcodeType = _barcodeTypeValue(element.type);
+
+    if (element.type == KoiBarcodeType.code128) {
+      // CODE128 needs a starting code set. '{B' is usually a safe default for standard ASCII.
+      if (barcodeData.isEmpty || barcodeData[0] != 0x7B) {
+        barcodeData = [0x7B, 0x42, ...barcodeData];
+      }
+    }
 
     return <int>[
       ..._alignCmd(element.align),
@@ -710,7 +718,11 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
     var isInKanjiMode = false;
 
     for (var i = 0; i < text.length; i++) {
-      final ch = text[i];
+      var ch = text[i];
+      // 将半角 ¥ (U+00A5) 替换为全角 ￥ (U+FFE5) 以保证 GBK 安全编码，防止单字节 0xA5 导致打印机解析奔溃
+      if (ch == '¥') {
+        ch = '￥';
+      }
       final isChinese = ch.codeUnitAt(0) > 255;
 
       if (isChinese && !isInKanjiMode) {

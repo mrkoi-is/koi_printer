@@ -14,9 +14,9 @@ class KoiDynamicTemplateDemo implements KoiTicketTemplate<Map<String, dynamic>> 
   "name": "TMS 寄件小票 (JSON动态渲染)",
   "elements": [
     { "type": "text", "text": "TMS 智慧物流", "size": "size2", "align": "center", "bold": true },
-    { "type": "text", "text": "================================================" },
-    { "type": "text", "text": "发货: {{senderCity}}  >>>  收货: {{receiverCity}}", "bold": true, "size": "size2" },
-    { "type": "text", "text": "================================================" },
+    { "type": "divider", "char": "=" },
+    { "type": "text", "text": "发货: {{senderCity}} >>> 收货: {{receiverCity}}", "bold": true, "size": "size2" },
+    { "type": "divider", "char": "=" },
     { "type": "textRow", "columns": [
       { "text": "运单号: {{waybillNo}}" },
       { "text": "操作员: {{driver}}" }
@@ -24,7 +24,7 @@ class KoiDynamicTemplateDemo implements KoiTicketTemplate<Map<String, dynamic>> 
     { "type": "text", "text": "收件人: {{receiverName}} [{{receiverInfo}}]" },
     { "type": "text", "text": "寄件人: {{senderName}}" },
     { "type": "text", "text": "收货地址: {{address}}" },
-    { "type": "text", "text": "------------------------------------------------" },
+    { "type": "divider", "char": "-" },
     { "type": "text", "text": "商品清单: (共 {{totalPackages}} 件)" },
     { "type": "ticketForEach", "listKey": "items", "templates": [
       { "type": "textRow", "columns": [
@@ -33,7 +33,7 @@ class KoiDynamicTemplateDemo implements KoiTicketTemplate<Map<String, dynamic>> 
         { "text": "{{weight}}kg", "align": "right" }
       ]}
     ]},
-    { "type": "text", "text": "------------------------------------------------" },
+    { "type": "divider", "char": "-" },
     { "type": "textRow", "columns": [
       { "text": "合计金额:" },
       { "text": "¥{{amount}}", "align": "right", "bold": true }
