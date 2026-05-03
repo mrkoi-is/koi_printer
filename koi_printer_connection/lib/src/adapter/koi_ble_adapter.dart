@@ -179,9 +179,17 @@ class KoiBleAdapter implements KoiPrinterAdapter {
         }
       }
 
-      // 未找到匹配特征 — 尝试使用第一个可写特征
+      // 未找到匹配特征 — 尝试使用第一个可写特征 (跳过标准的系统服务)
       for (final service in services) {
+        if (_isSystemUuid(service.uuid.toString())) {
+          continue;
+        }
+        
         for (final c in service.characteristics) {
+          if (_isSystemUuid(c.uuid.toString())) {
+            continue;
+          }
+          
           if (c.properties.write || c.properties.writeWithoutResponse) {
             _characteristic = c;
             _updateState(KoiConnectionState.ready);
@@ -197,6 +205,21 @@ class KoiBleAdapter implements KoiPrinterAdapter {
       _updateState(KoiConnectionState.connected);
     }
   }
+
+  /// 判断是否为标准的 BLE SIG 系统服务/特征 (如 GAP, GATT, Device Info)
+  /// 避免将打印数据误发到 Device Name (2A00) 等特征上。
+  bool _isSystemUuid(String uuid) {
+    final lower = uuid.toLowerCase();
+    // 检查是否基于标准蓝牙 BASE_UUID
+    if (lower.endsWith('-0000-1000-8000-00805f9b34fb')) {
+      // 18xx 对应系统 Service (如 1800 GAP, 180A Device Information)
+      if (lower.startsWith('000018')) return true;
+      // 2Axx 对应系统 Characteristic (如 2A00 Device Name)
+      if (lower.startsWith('00002a')) return true;
+    }
+    return false;
+  }
+
 
   @override
   Future<void> disconnect() async {
