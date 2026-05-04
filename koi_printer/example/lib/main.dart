@@ -36,12 +36,17 @@ void main() async {
   final sharedPrefs = await SharedPreferences.getInstance();
   final storage = KoiPrinterStorage(sharedPrefs);
   final prefs = KoiUserPreferences(sharedPrefs);
+  
+  // Initialize Printer Manager and Auto-Connect
+  final manager = KoiPrinterManager(storage: storage);
+  manager.startAutoConnect();
 
   runApp(
     MultiProvider(
       providers: [
         Provider.value(value: storage),
         Provider.value(value: prefs),
+        ChangeNotifierProvider.value(value: manager),
       ],
       child: const KoiPrinterExampleApp(),
     ),
@@ -340,7 +345,7 @@ class _PreviewScreenState extends State<PreviewScreen> {
         onPressed: () {
           if (globalTicketDevices.isNotEmpty) {
             final device = globalTicketDevices.first;
-            executePrintJob(context, device, docs);
+            executePrintJob(context, device, docs, false);
           } else {
             ScaffoldMessenger.of(
               context,

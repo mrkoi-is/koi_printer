@@ -73,6 +73,10 @@ class KoiBleAdapter implements KoiPrinterAdapter {
       _device = BluetoothDevice.fromId(config.deviceId);
       _mtu = config.mtu;
 
+      // 清理旧订阅防止内存泄漏
+      await _connectionSub?.cancel();
+      await _mtuSub?.cancel();
+
       // 监听连接状态变化
       _connectionSub = _device!.connectionState.listen((bleState) async {
         if (bleState == BluetoothConnectionState.connected) {

@@ -474,7 +474,7 @@ void main() {
       manager.setTicketAdapter(adapter);
       expect(manager.ticketAdapter, adapter);
       expect(manager.ticketState, KoiConnectionState.ready);
-      await manager.dispose();
+      manager.dispose();
     });
 
     test('setLabelAdapter updates adapter and queue', () async {
@@ -485,14 +485,14 @@ void main() {
       manager.setLabelAdapter(adapter);
       expect(manager.labelAdapter, adapter);
       expect(manager.labelState, KoiConnectionState.ready);
-      await manager.dispose();
+      manager.dispose();
     });
 
     test('connectTicketPrinter returns false without adapter', () async {
       final manager = KoiPrinterManager(storage: storage);
       const config = KoiConnectionConfig(deviceName: 'X', deviceId: 'x-id');
       expect(await manager.connectTicketPrinter(config), false);
-      await manager.dispose();
+      manager.dispose();
     });
 
     test('connectTicketPrinter returns true with adapter', () async {
@@ -503,14 +503,14 @@ void main() {
       );
       const config = KoiConnectionConfig(deviceName: 'X', deviceId: 'x-id');
       expect(await manager.connectTicketPrinter(config), true);
-      await manager.dispose();
+      manager.dispose();
     });
 
     test('connectLabelPrinter returns false without adapter', () async {
       final manager = KoiPrinterManager(storage: storage);
       const config = KoiConnectionConfig(deviceName: 'X', deviceId: 'x-id');
       expect(await manager.connectLabelPrinter(config), false);
-      await manager.dispose();
+      manager.dispose();
     });
 
     test('connectLabelPrinter returns true with adapter', () async {
@@ -521,7 +521,7 @@ void main() {
       );
       const config = KoiConnectionConfig(deviceName: 'X', deviceId: 'x-id');
       expect(await manager.connectLabelPrinter(config), true);
-      await manager.dispose();
+      manager.dispose();
     });
 
     test('disconnectAll disconnects both adapters', () async {
@@ -540,7 +540,7 @@ void main() {
       await manager.disconnectAll();
       expect(ticketAdapter.state, KoiConnectionState.disconnected);
       expect(labelAdapter.state, KoiConnectionState.disconnected);
-      await manager.dispose();
+      manager.dispose();
     });
 
     test('startAutoConnect and stopAutoConnect', () async {
@@ -548,8 +548,9 @@ void main() {
         ..startAutoConnect(interval: const Duration(milliseconds: 50));
       // 等一个 tick, 确保 Timer 注册了
       await Future<void>.delayed(const Duration(milliseconds: 10));
-      manager.stopAutoConnect();
-      await manager.dispose();
+      manager
+        ..stopAutoConnect()
+        ..dispose();
     });
 
     test('connectAll connects stored ticket and label printers', () async {
@@ -574,7 +575,7 @@ void main() {
       // 应自动创建 adapter 并尝试连接
       expect(manager.ticketAdapter, isNotNull);
       expect(manager.labelAdapter, isNotNull);
-      await manager.dispose();
+      manager.dispose();
     });
 
     test('connectAll skips when no devices stored', () async {
@@ -582,7 +583,7 @@ void main() {
       await manager.connectAll();
       expect(manager.ticketAdapter, isNull);
       expect(manager.labelAdapter, isNull);
-      await manager.dispose();
+      manager.dispose();
     });
 
     test('connectAll skips when adapters already ready', () async {
@@ -602,7 +603,7 @@ void main() {
       await manager.connectAll();
       // Adapter was already ready, no need to reconnect
       expect(manager.ticketState, KoiConnectionState.ready);
-      await manager.dispose();
+      manager.dispose();
     });
 
     test('printTicketDocument enqueues and returns result', () async {
@@ -620,7 +621,7 @@ void main() {
         config: const KoiPrintConfig(),
       );
       expect(result, isA<KoiPrintSuccess>());
-      await manager.dispose();
+      manager.dispose();
     });
 
     test('printTicketDocument with templateData expands', () async {
@@ -650,7 +651,7 @@ void main() {
         },
       );
       expect(result, isA<KoiPrintSuccess>());
-      await manager.dispose();
+      manager.dispose();
     });
 
     test('printLabelDocument enqueues and returns result', () async {
@@ -672,7 +673,7 @@ void main() {
         ),
       );
       expect(result, isA<KoiPrintSuccess>());
-      await manager.dispose();
+      manager.dispose();
     });
 
     test('printTicket with template builds and enqueues', () async {
@@ -690,7 +691,7 @@ void main() {
         config: const KoiPrintConfig(),
       );
       expect(result, isA<KoiPrintSuccess>());
-      await manager.dispose();
+      manager.dispose();
     });
 
     test('printLabel with template builds and enqueues', () async {
@@ -710,7 +711,7 @@ void main() {
         ),
       );
       expect(result, isA<KoiPrintSuccess>());
-      await manager.dispose();
+      manager.dispose();
     });
 
     test('connectAll handles ticket adapter connect error', () async {
@@ -728,7 +729,7 @@ void main() {
       );
       // connectAll 不应抛错, 内部 catch 处理
       await expectLater(manager.connectAll(), completes);
-      await manager.dispose();
+      manager.dispose();
     });
 
     test('connectAll handles label adapter connect error', () async {
@@ -744,7 +745,7 @@ void main() {
         labelAdapter: adapter,
       );
       await expectLater(manager.connectAll(), completes);
-      await manager.dispose();
+      manager.dispose();
     });
   });
 }

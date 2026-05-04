@@ -27,7 +27,7 @@ import 'package:koi_printer_connection/koi_printer_connection.dart';
 ///   config: config,
 /// );
 /// ```
-class KoiPrinterManager {
+class KoiPrinterManager extends ChangeNotifier {
   /// 初始化打印机管理器。
   KoiPrinterManager({
     required this.storage,
@@ -103,12 +103,14 @@ class KoiPrinterManager {
   void setTicketAdapter(KoiPrinterAdapter adapter) {
     _ticketAdapter = adapter;
     _ticketQueue.adapter = adapter;
+    notifyListeners();
   }
 
   /// 绑定标签打印机适配器。
   void setLabelAdapter(KoiPrinterAdapter adapter) {
     _labelAdapter = adapter;
     _labelQueue.adapter = adapter;
+    notifyListeners();
   }
 
   // ── 自动连接 ──
@@ -196,6 +198,7 @@ class KoiPrinterManager {
     if (_ticketAdapter == null) {
       _ticketAdapter = KoiPrinterFactory.createAdapter(device.connectionType);
       _ticketQueue.adapter = _ticketAdapter;
+      notifyListeners();
     }
 
     if (_ticketAdapter!.isReady) return;
@@ -216,6 +219,7 @@ class KoiPrinterManager {
     if (_labelAdapter == null) {
       _labelAdapter = KoiPrinterFactory.createAdapter(device.connectionType);
       _labelQueue.adapter = _labelAdapter;
+      notifyListeners();
     }
 
     if (_labelAdapter!.isReady) return;
@@ -230,11 +234,13 @@ class KoiPrinterManager {
   }
 
   /// 释放资源。
-  Future<void> dispose() async {
+  @override
+  void dispose() {
     stopAutoConnect();
     _ticketQueue.clear();
     _labelQueue.clear();
-    await _ticketAdapter?.dispose();
-    await _labelAdapter?.dispose();
+    _ticketAdapter?.dispose().ignore();
+    _labelAdapter?.dispose().ignore();
+    super.dispose();
   }
 }

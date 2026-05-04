@@ -3,6 +3,7 @@ import 'package:koi_printer/koi_printer.dart';
 
 import '../template/koi_templates.dart';
 import 'koi_scanner_screen.dart';
+import 'package:provider/provider.dart';
 
 /// 设备管理主界面 — 合并旧 XIIDeviceMainScreen + XIIBoundDeviceScreen。
 /// 显示已绑定的小票 / 标签打印机, 支持添加 / 删除 / 重连。
@@ -20,6 +21,34 @@ final List<KoiBoundDevice> globalLabelDevices = [];
 
 class _KoiDeviceManagementScreenState extends State<KoiDeviceManagementScreen> {
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final storage = context.read<KoiPrinterStorage>();
+      final ticket = storage.getTicketPrinter();
+      final label = storage.getLabelPrinter();
+      
+      setState(() {
+        if (ticket != null && globalTicketDevices.isEmpty) {
+          globalTicketDevices.add(KoiBoundDevice(
+            name: ticket.name,
+            deviceId: ticket.address,
+            connectionType: ticket.connectionType,
+          ));
+        }
+        if (label != null && globalLabelDevices.isEmpty) {
+          globalLabelDevices.add(KoiBoundDevice(
+            name: label.name,
+            deviceId: label.address,
+            connectionType: label.connectionType,
+          ));
+        }
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('打印机管理')),
@@ -32,6 +61,7 @@ class _KoiDeviceManagementScreenState extends State<KoiDeviceManagementScreen> {
           for (final device in globalTicketDevices)
             _DeviceTile(
               device: device,
+              isLabel: false,
               onDelete: () => _removeDevice(device, isLabel: false),
             ),
           _AddDeviceButton(
@@ -47,6 +77,7 @@ class _KoiDeviceManagementScreenState extends State<KoiDeviceManagementScreen> {
           for (final device in globalLabelDevices)
             _DeviceTile(
               device: device,
+              isLabel: true,
               onDelete: () => _removeDevice(device, isLabel: true),
             ),
           _AddDeviceButton(
@@ -82,10 +113,19 @@ class _KoiDeviceManagementScreenState extends State<KoiDeviceManagementScreen> {
     );
 
     setState(() {
+      final info = KoiDeviceInfo(
+        name: bound.name,
+        address: bound.deviceId,
+        connectionType: bound.connectionType,
+      );
       if (isLabel) {
+        globalLabelDevices.clear(); // Only allow 1 label printer in example
         globalLabelDevices.add(bound);
+        context.read<KoiPrinterStorage>().saveLabelPrinter(info);
       } else {
+        globalTicketDevices.clear(); // Only allow 1 ticket printer in example
         globalTicketDevices.add(bound);
+        context.read<KoiPrinterStorage>().saveTicketPrinter(info);
       }
     });
   }
@@ -94,8 +134,10 @@ class _KoiDeviceManagementScreenState extends State<KoiDeviceManagementScreen> {
     setState(() {
       if (isLabel) {
         globalLabelDevices.remove(device);
+        context.read<KoiPrinterStorage>().saveLabelPrinter(null);
       } else {
         globalTicketDevices.remove(device);
+        context.read<KoiPrinterStorage>().saveTicketPrinter(null);
       }
     });
   }
@@ -117,34 +159,48 @@ class _EmptyDeviceTile extends StatelessWidget {
 }
 
 class _DeviceTile extends StatelessWidget {
-  const _DeviceTile({required this.device, required this.onDelete});
+  const _DeviceTile({required this.device, required this.onDelete, required this.isLabel});
   final KoiBoundDevice device;
   final VoidCallback onDelete;
+  final bool isLabel;
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: Icon(_iconForType(device.connectionType)),
-      title: Text(device.name),
-      subtitle: Text(device.deviceId),
-      trailing: PopupMenuButton<String>(
-        onSelected: (action) {
-          switch (action) {
-            case 'delete':
-              onDelete();
-            case 'test':
-              final docs = const KoiTestTicketTemplate().build(
-                null,
-                const KoiPrintConfig(),
-              );
-              executePrintJob(context, device, docs);
-          }
-        },
-        itemBuilder: (_) => const [
-          PopupMenuItem(value: 'test', child: Text('测试打印')),
-          PopupMenuItem(value: 'delete', child: Text('删除')),
-        ],
-      ),
+    final manager = context.watch<KoiPrinterManager>();
+    final adapter = isLabel ? manager.labelAdapter : manager.ticketAdapter;
+    
+    return StreamBuilder<KoiConnectionState>(
+      stream: adapter?.stateStream ?? Stream.value(KoiConnectionState.disconnected),
+      initialData: adapter?.state ?? KoiConnectionState.disconnected,
+      builder: (context, snapshot) {
+        final state = snapshot.data ?? KoiConnectionState.disconnected;
+        final isConnected = state == KoiConnectionState.ready;
+        final statusText = isConnected ? '🟢 已连接' : (state == KoiConnectionState.connecting ? '🟡 连接中...' : '🔴 未连接');
+
+        return ListTile(
+          leading: Icon(_iconForType(device.connectionType), color: isConnected ? Colors.blue : Colors.grey),
+          title: Text(device.name),
+          subtitle: Text('${device.deviceId} - $statusText'),
+          trailing: PopupMenuButton<String>(
+            onSelected: (action) {
+              switch (action) {
+                case 'delete':
+                  onDelete();
+                case 'test':
+                  final docs = const KoiTestTicketTemplate().build(
+                    null,
+                    const KoiPrintConfig(),
+                  );
+                  executePrintJob(context, device, docs, isLabel);
+              }
+            },
+            itemBuilder: (_) => const [
+              PopupMenuItem(value: 'test', child: Text('测试打印')),
+              PopupMenuItem(value: 'delete', child: Text('删除')),
+            ],
+          ),
+        );
+      }
     );
   }
 
@@ -226,41 +282,29 @@ Future<void> executePrintJob(
   BuildContext context,
   KoiBoundDevice device,
   List<KoiPrintDocument> docs,
+  bool isLabel,
 ) async {
-  ScaffoldMessenger.of(
-    context,
-  ).showSnackBar(SnackBar(content: Text('正在连接 ${device.name} 并发送打印任务...')));
+  final manager = context.read<KoiPrinterManager>();
+  
+  final state = isLabel ? manager.labelState : manager.ticketState;
+  
+  if (state != KoiConnectionState.ready) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('打印机未连接，已加入后台队列，一旦上线将自动打出...')),
+    );
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('已发送打印任务')),
+    );
+  }
 
   try {
-    final config = KoiConnectionConfig(
-      deviceName: device.name,
-      deviceId: device.deviceId,
-    );
-
-    final service = KoiPrinterService(
-      protocol: KoiCommandProtocol.escPos,
-      connectionType: device.connectionType,
-    );
-
-    final connected = await service.connect(config);
-    if (!connected) {
-      throw Exception('设备连接失败');
-    }
-
     for (final doc in docs) {
-      final result = await service.print(doc);
-      if (result is KoiPrintFailure) {
-        throw Exception(result.error);
+      if (isLabel) {
+        await manager.printLabelDocument(doc as KoiLabelDocument, config: const KoiPrintConfig());
+      } else {
+        await manager.printTicketDocument(doc as KoiTicketDocument, config: const KoiPrintConfig());
       }
-    }
-
-    await Future.delayed(const Duration(milliseconds: 500));
-    await service.disconnect();
-
-    if (context.mounted) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('发送成功!')));
     }
   } on Object catch (e, st) {
     debugPrint('==== 打印失败详细日志 ====');

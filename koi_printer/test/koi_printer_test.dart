@@ -456,7 +456,7 @@ void main() {
       SharedPreferences.setMockInitialValues({});
       final sp = await SharedPreferences.getInstance();
       final manager = KoiPrinterManager(storage: KoiPrinterStorage(sp));
-      await expectLater(manager.dispose(), completes);
+      expect(manager.dispose, returnsNormally);
     });
   });
 }
