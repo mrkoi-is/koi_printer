@@ -252,15 +252,7 @@ class KoiBleAdapter implements KoiPrinterAdapter {
   /// 来源: 旧 XIIBluetoothPrinter.writeBytes() 的核心逻辑。
   Future<void> _writeWithMtuChunking(List<int> data) async {
     // BLE 实际可写大小 = MTU - 3 (ATT 头部)
-    int chunkSize = _mtu - 3;
-    
-    // 为了兼容市面上的大部分国产廉价台式打印机（它们的底层蓝牙芯片到主板的 UART 缓冲区通常只有几十字节），
-    // 强制将单次发送的块大小限制在 20 字节。
-    // 虽然安卓协商出了如 512 的 MTU，但如果单次发送 512 字节，打印机会因为 UART 缓冲溢出而静默丢包（不打印）。
-    if (chunkSize > 20) {
-      chunkSize = 20;
-    }
-
+    final chunkSize = _mtu - 3;
     if (chunkSize <= 0) return;
 
     for (var offset = 0; offset < data.length; offset += chunkSize) {
@@ -273,10 +265,10 @@ class KoiBleAdapter implements KoiPrinterAdapter {
           piece,
           withoutResponse: _characteristic!.properties.writeWithoutResponse,
         );
-        // 增加流量控制: 即使是有响应写入，BLE 回复速度也远超打印机串口波特率。
-        // 连续的高速突发写入极易导致打印机底层 BLE 芯片 UART 缓冲溢出而导致丢包不打印。
-        // 旧版 SDK 在这里硬编码了 8ms，我们使用 20ms 更稳健。
-        await Future<void>.delayed(const Duration(milliseconds: 20));
+        // 增加流量控制: 如果是 withoutResponse，连续的高速突发写入极易导致打印机底层 BLE 芯片 UART 缓冲溢出而断开连接。
+        if (_characteristic!.properties.writeWithoutResponse) {
+          await Future<void>.delayed(const Duration(milliseconds: 20));
+        }
       } on Object catch (e) {
         debugPrint('KoiBleAdapter: write error at offset $offset: $e');
         rethrow;
