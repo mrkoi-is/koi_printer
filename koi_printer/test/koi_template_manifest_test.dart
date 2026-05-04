@@ -4,24 +4,24 @@ import 'package:koi_printer/koi_printer.dart';
 void main() {
   group('KoiTemplateManifest 序列化 round-trip', () {
     // 构建一个完整的 manifest 用于所有 round-trip 测试
-    final fullManifest = const KoiTemplateManifest(
+    const fullManifest = KoiTemplateManifest(
       id: 'test_v1',
       name: '测试模板',
       version: 2,
       category: 'test',
       description: '一个用于测试的模板',
-      schema: const [
+      schema: [
         KoiTemplateField(key: 'title', label: '标题'),
         KoiTemplateField(
             key: 'amount', label: '金额', type: KoiFieldType.number),
         KoiTemplateField(
             key: 'items', label: '列表', type: KoiFieldType.array),
       ],
-      groups: const [
+      groups: [
         KoiTemplateGroup(label: '头部', startIndex: 0, endIndex: 2),
         KoiTemplateGroup(label: '明细', startIndex: 3, endIndex: 5),
       ],
-      mockData: const {
+      mockData: {
         'title': '测试标题',
         'amount': 99.9,
         'items': [
@@ -29,7 +29,7 @@ void main() {
           {'name': 'B', 'qty': 2},
         ],
       },
-      document: const KoiTicketDocument(elements: [
+      document: KoiTicketDocument(elements: [
         KoiTextElement(text: '{{title}}', bold: true),
         KoiDividerElement(),
         KoiCutElement(),

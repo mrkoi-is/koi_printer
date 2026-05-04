@@ -312,7 +312,7 @@ Future<void> executePrintJob(
             final last = elements.isNotEmpty ? elements.last : null;
             final injection = [
               const KoiTextElement(text: '\n'),
-              KoiTextElement(text: pageText, align: KoiAlign.center, bold: true),
+              KoiTextElement(text: pageText, align: KoiTextAlign.center, bold: true),
               const KoiTextElement(text: '\n'),
             ];
 
@@ -333,7 +333,7 @@ Future<void> executePrintJob(
               name: doc.name,
               elements: [
                 ...doc.elements,
-                KoiLabelTextElement(
+                KoiPositionedTextElement(
                   text: pageText,
                   x: 10,
                   y: 10,

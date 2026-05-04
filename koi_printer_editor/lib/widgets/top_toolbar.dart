@@ -59,7 +59,7 @@ class TopToolbar extends StatelessWidget {
               Switch(
                 value: state.isPreviewMode,
                 onChanged: (_) => context.read<EditorState>().togglePreviewMode(),
-                activeColor: theme.colorScheme.primary,
+                activeTrackColor: theme.colorScheme.primary,
               ),
               Text('预览 (假数据)', style: TextStyle(color: state.isPreviewMode ? theme.colorScheme.primary : Colors.grey, fontWeight: FontWeight.bold)),
             ],
