@@ -1,5 +1,7 @@
 # koi_printer_command
 
+![CI](https://github.com/mrkoi-is/koi_printer/actions/workflows/ci.yml/badge.svg)
+
 The low-level instruction set and rendering engine for the `koi_printer` ecosystem.
 
 ## Features

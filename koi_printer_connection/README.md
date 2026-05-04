@@ -1,5 +1,7 @@
 # koi_printer_connection
 
+![CI](https://github.com/mrkoi-is/koi_printer/actions/workflows/ci.yml/badge.svg)
+
 The connection layer for the `koi_printer` ecosystem.
 
 ## Features

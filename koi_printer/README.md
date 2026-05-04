@@ -1,5 +1,7 @@
 # koi_printer 生态系统 (Ecosystem)
 
+![CI](https://github.com/mrkoi-is/koi_printer/actions/workflows/ci.yml/badge.svg)
+
 全新架构的 V4 打印机聚合防腐层门面包。彻底替代旧版 `xii_bluetooth`。
 
 ## 架构组成
