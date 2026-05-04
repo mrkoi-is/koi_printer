@@ -300,11 +300,56 @@ Future<void> executePrintJob(
   }
 
   try {
-    for (final doc in docs) {
-      if (isLabel) {
-        await manager.printLabelDocument(doc as KoiLabelDocument, config: config);
-      } else {
-        await manager.printTicketDocument(doc as KoiTicketDocument, config: config);
+    for (int copyIndex = 1; copyIndex <= config.copies; copyIndex++) {
+      for (final doc in docs) {
+        KoiPrintDocument modifiedDoc = doc;
+
+        if (config.copies > 1) {
+          final pageText = '=== 批量测试: 第 $copyIndex / ${config.copies} 份 ===';
+
+          if (doc is KoiTicketDocument) {
+            final elements = List<KoiTicketElement>.from(doc.elements);
+            final last = elements.isNotEmpty ? elements.last : null;
+            final injection = [
+              const KoiTextElement(text: '\n'),
+              KoiTextElement(text: pageText, align: KoiAlign.center, bold: true),
+              const KoiTextElement(text: '\n'),
+            ];
+
+            if (last is KoiCutElement) {
+              elements.insertAll(elements.length - 1, injection);
+            } else {
+              elements.addAll(injection);
+            }
+
+            modifiedDoc = KoiTicketDocument(
+              name: doc.name,
+              paperSize: doc.paperSize,
+              codePage: doc.codePage,
+              elements: elements,
+            );
+          } else if (doc is KoiLabelDocument) {
+            modifiedDoc = KoiLabelDocument(
+              name: doc.name,
+              elements: [
+                ...doc.elements,
+                KoiLabelTextElement(
+                  text: pageText,
+                  x: 10,
+                  y: 10,
+                ),
+              ],
+            );
+          }
+        }
+
+        final singleCopyConfig = config.copyWith(copies: 1);
+
+        if (isLabel) {
+          await manager.printLabelDocument(modifiedDoc as KoiLabelDocument, config: singleCopyConfig);
+        } else {
+          await manager.printTicketDocument(modifiedDoc as KoiTicketDocument, config: singleCopyConfig);
+        }
       }
     }
   } on Object catch (e, st) {
