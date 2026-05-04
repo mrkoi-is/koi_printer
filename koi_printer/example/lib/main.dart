@@ -82,8 +82,9 @@ class _MainScreenState extends State<MainScreen> {
         children: [
           PreviewScreen(
             onNavigateToDeviceManagement: () =>
-                setState(() => _currentIndex = 1),
+                setState(() => _currentIndex = 2),
           ),
+          const EditorDemoScreen(),
           const KoiDeviceManagementScreen(),
         ],
       ),
@@ -92,6 +93,7 @@ class _MainScreenState extends State<MainScreen> {
         onDestinationSelected: (v) => setState(() => _currentIndex = v),
         destinations: const [
           NavigationDestination(icon: Icon(Icons.preview), label: '预览与模板'),
+          NavigationDestination(icon: Icon(Icons.edit), label: '编辑器'),
           NavigationDestination(icon: Icon(Icons.settings), label: '设置'),
         ],
       ),
@@ -347,6 +349,107 @@ class _PreviewScreenState extends State<PreviewScreen> {
           }
         },
         child: const Icon(Icons.print),
+      ),
+    );
+  }
+}
+
+class EditorDemoScreen extends StatefulWidget {
+  const EditorDemoScreen({super.key});
+
+  @override
+  State<EditorDemoScreen> createState() => _EditorDemoScreenState();
+}
+
+class _EditorDemoScreenState extends State<EditorDemoScreen> {
+  Object _element = const KoiTextElement(
+    text: 'Koi Printer 动态编辑器',
+    size: KoiTextSize.size2,
+    bold: true,
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('元素编辑器演示')),
+      body: Column(
+        children: [
+          Expanded(
+            flex: 2,
+            child: Container(
+              color: Colors.grey[200],
+              alignment: Alignment.center,
+              child: SingleChildScrollView(
+                child: KoiPreviewRenderer.build(
+                  document: KoiTicketDocument(
+                    paperSize: KoiPaperSize.mm80,
+                    elements: [_element as KoiTicketElement],
+                  ),
+                  paperWidthPx: 384,
+                ),
+              ),
+            ),
+          ),
+          const Divider(height: 1),
+          Expanded(
+            flex: 3,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    '编辑属性:',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 16),
+                  KoiElementEditor(
+                    element: _element,
+                    onChanged: (val) {
+                      setState(() {
+                        _element = val;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 24),
+                  const Text(
+                    '切换元素类型:',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 16),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () => setState(
+                          () => _element = const KoiTextElement(text: '文本元素'),
+                        ),
+                        child: const Text('Text'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () => setState(
+                          () => _element = const KoiBarcodeElement(
+                            data: '12345678',
+                          ),
+                        ),
+                        child: const Text('Barcode'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () => setState(
+                          () => _element = const KoiQrCodeElement(
+                            data: 'https://koi.com',
+                          ),
+                        ),
+                        child: const Text('QR Code'),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
