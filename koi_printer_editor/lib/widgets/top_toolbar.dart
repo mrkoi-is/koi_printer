@@ -1,10 +1,9 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:koi_printer/koi_printer.dart';
 import 'package:koi_printer_editor/mock_templates.dart';
 import 'package:koi_printer_editor/state/editor_state.dart';
 import 'package:provider/provider.dart';
-import 'package:koi_printer_command/koi_printer_command.dart';
 
 class TopToolbar extends StatelessWidget {
   const TopToolbar({super.key});
@@ -81,20 +80,35 @@ class TopToolbar extends StatelessWidget {
           const SizedBox(width: 16),
           FilledButton.icon(
             onPressed: () {
-              final jsonStr = state.document.toJsonString();
+              // 构建完整的模板清单信封
+              final manifest = KoiTemplateManifest(
+                id: 'custom_${DateTime.now().millisecondsSinceEpoch}',
+                name: '自定义模板',
+                document: state.document,
+                schema: state.currentSchema.fields.map((f) => KoiTemplateField(
+                  key: f.key,
+                  label: f.label,
+                  type: f.type == 'array' ? KoiFieldType.array
+                      : f.type == 'number' ? KoiFieldType.number
+                      : KoiFieldType.string,
+                )).toList(),
+                mockData: state.mockData,
+              );
+              final jsonStr = manifest.toJsonString();
               
               showDialog(
                 context: context,
                 builder: (ctx) {
                   return AlertDialog(
-                    title: const Text('导出模板成功'),
+                    title: const Text('导出模板清单 (Manifest)'),
                     content: SizedBox(
                       width: 600,
                       height: 400,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('您的模板 JSON 代码如下：'),
+                          Text('包含: 模板元数据 + Schema (${manifest.schema.length} 字段) + 打印文档',
+                            style: TextStyle(color: Colors.grey.shade600, fontSize: 13)),
                           const SizedBox(height: 8),
                           Expanded(
                             child: Container(
@@ -106,7 +120,7 @@ class TopToolbar extends StatelessWidget {
                               ),
                               child: SingleChildScrollView(
                                 child: SelectableText(
-                                  const JsonEncoder.withIndent('  ').convert(jsonDecode(jsonStr)),
+                                  jsonStr,
                                   style: const TextStyle(fontFamily: 'SarasaMono', fontSize: 12),
                                 ),
                               ),
@@ -136,7 +150,7 @@ class TopToolbar extends StatelessWidget {
               );
             },
             icon: const Icon(Icons.save_alt, size: 18),
-            label: const Text('导出本地模板'),
+            label: const Text('导出模板'),
           ),
         ],
       ),
@@ -148,25 +162,30 @@ class TopToolbar extends StatelessWidget {
       context: context,
       builder: (ctx) {
         return AlertDialog(
-          title: const Text('选择模板'),
+          title: const Text('模板大厅'),
           content: SizedBox(
-            width: 500,
-            height: 400,
-            child: GridView.count(
-              crossAxisCount: 2,
-              mainAxisSpacing: 16,
-              crossAxisSpacing: 16,
-              childAspectRatio: 1.5,
-              children: templateGallery.keys.map((key) {
+            width: 560,
+            height: 420,
+            child: GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 12,
+                crossAxisSpacing: 12,
+                childAspectRatio: 1.6,
+              ),
+              itemCount: templateManifests.length,
+              itemBuilder: (_, i) {
+                final m = templateManifests[i];
                 return Card(
                   clipBehavior: Clip.antiAlias,
                   child: InkWell(
                     onTap: () {
-                      context.read<EditorState>().loadTemplate(templateGallery[key]!);
+                      final elements = manifestToEditorElements(m);
+                      context.read<EditorState>().loadManifest(m, elements);
                       Navigator.pop(ctx);
                     },
                     child: Container(
-                      padding: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [Colors.blue.shade50, Colors.white],
@@ -174,16 +193,30 @@ class TopToolbar extends StatelessWidget {
                           end: Alignment.bottomRight,
                         ),
                       ),
-                      child: Center(
-                        child: Text(
-                          key,
-                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(m.name,
+                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 4),
+                          if (m.description.isNotEmpty)
+                            Text(m.description,
+                              style: TextStyle(fontSize: 11, color: Colors.grey.shade600),
+                              textAlign: TextAlign.center,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          const SizedBox(height: 4),
+                          Text('${m.schema.length} 个字段',
+                            style: TextStyle(fontSize: 11, color: Colors.blue.shade400)),
+                        ],
                       ),
                     ),
                   ),
                 );
-              }).toList(),
+              },
             ),
           ),
           actions: [

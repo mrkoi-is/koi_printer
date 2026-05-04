@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:koi_printer_command/koi_printer_command.dart';
+import 'package:koi_printer/koi_printer.dart';
 import 'package:koi_printer_editor/state/editor_command.dart';
 
 /// 编辑器包装的元素，带有唯一 ID
@@ -70,7 +70,7 @@ class EditorState extends ChangeNotifier {
 
   // 预览模式与假数据
   bool _isPreviewMode = false;
-  final Map<String, dynamic> _mockData = {
+  Map<String, dynamic> _mockData = {
     'companyName': '顺丰速运 (SF Express)',
     'companyAdv': '一站式供应链解决方案提供商',
     'fromNodeInfo': '深圳南山科技园网点',
@@ -134,6 +134,33 @@ class EditorState extends ChangeNotifier {
     _undoStack.clear();
     _redoStack.clear();
     _selectedElementId = null;
+    notifyListeners();
+  }
+
+  /// 从 [KoiTemplateManifest] 加载完整模板 (元素 + Schema + 假数据)。
+  void loadManifest(KoiTemplateManifest manifest, List<EditorElement> elements) {
+    _elements = elements;
+    _undoStack.clear();
+    _redoStack.clear();
+    _selectedElementId = null;
+
+    // 同步 Schema
+    if (manifest.schema.isNotEmpty) {
+      _currentSchema = DataSchema(
+        entity: manifest.name,
+        fields: manifest.schema.map((f) => SchemaField(
+          key: f.key,
+          label: f.label,
+          type: f.type.name,
+        )).toList(),
+      );
+    }
+
+    // 同步假数据
+    if (manifest.mockData.isNotEmpty) {
+      _mockData = Map<String, dynamic>.from(manifest.mockData);
+    }
+
     notifyListeners();
   }
 

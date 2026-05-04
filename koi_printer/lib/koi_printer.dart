@@ -45,3 +45,4 @@ export 'src/service/koi_printer_manager.dart';
 export 'src/storage/koi_printer_storage.dart';
 // 模板
 export 'src/template/koi_print_template.dart';
+export 'src/template/koi_template_manifest.dart';
