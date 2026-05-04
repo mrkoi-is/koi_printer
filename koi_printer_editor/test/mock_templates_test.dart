@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:koi_printer/koi_printer.dart';
 import 'package:koi_printer_editor/mock_templates.dart';
-import 'package:koi_printer_editor/state/editor_state.dart';
+
 
 void main() {
   group('manifestToEditorElements 转换', () {

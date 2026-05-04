@@ -4,7 +4,7 @@ import 'package:koi_printer/koi_printer.dart';
 void main() {
   group('KoiTemplateManifest 序列化 round-trip', () {
     // 构建一个完整的 manifest 用于所有 round-trip 测试
-    final fullManifest = KoiTemplateManifest(
+    final fullManifest = const KoiTemplateManifest(
       id: 'test_v1',
       name: '测试模板',
       version: 2,

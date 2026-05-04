@@ -4,7 +4,7 @@ import 'package:koi_printer_editor/state/editor_state.dart';
 
 void main() {
   // 辅助: 创建一个简单的 manifest
-  KoiTemplateManifest _makeManifest({
+  KoiTemplateManifest makeManifest({
     String id = 'test_id',
     String name = '测试模板',
     List<KoiTemplateField> schema = const [],
@@ -21,7 +21,7 @@ void main() {
   }
 
   // 辅助: 把 manifest 转成 EditorElement 列表
-  List<EditorElement> _toEditorElements(KoiTemplateManifest m) {
+  List<EditorElement> toEditorElements(KoiTemplateManifest m) {
     final doc = m.document as KoiTicketDocument;
     int counter = 0;
     return doc.elements
@@ -32,13 +32,13 @@ void main() {
   group('EditorState.loadManifest 行为', () {
     test('同步 elements', () {
       final state = EditorState();
-      final manifest = _makeManifest(
+      final manifest = makeManifest(
         elements: const [
           KoiTextElement(text: 'Hello'),
           KoiDividerElement(),
         ],
       );
-      final elements = _toEditorElements(manifest);
+      final elements = toEditorElements(manifest);
 
       state.loadManifest(manifest, elements);
 
@@ -50,7 +50,7 @@ void main() {
 
     test('同步 schema', () {
       final state = EditorState();
-      final manifest = _makeManifest(
+      final manifest = makeManifest(
         schema: const [
           KoiTemplateField(key: 'title', label: '标题'),
           KoiTemplateField(
@@ -69,7 +69,7 @@ void main() {
 
     test('同步 mockData', () {
       final state = EditorState();
-      final manifest = _makeManifest(
+      final manifest = makeManifest(
         mockData: const {'companyName': 'Koi', 'amount': 42},
       );
 
@@ -81,7 +81,7 @@ void main() {
 
     test('同步 manifest 身份 (id + name)', () {
       final state = EditorState();
-      final manifest = _makeManifest(id: 'my_id', name: '交款单');
+      final manifest = makeManifest(id: 'my_id', name: '交款单');
 
       state.loadManifest(manifest, []);
 
@@ -99,7 +99,7 @@ void main() {
       expect(state.elements.length, 1);
 
       // loadManifest 应该重置
-      final manifest = _makeManifest();
+      final manifest = makeManifest();
       state.loadManifest(manifest, []);
 
       expect(state.canUndo, isFalse);
@@ -114,7 +114,7 @@ void main() {
       state.selectElement('1');
       expect(state.selectedElementId, '1');
 
-      final manifest = _makeManifest();
+      final manifest = makeManifest();
       state.loadManifest(manifest, []);
 
       expect(state.selectedElementId, isNull);
@@ -122,7 +122,7 @@ void main() {
 
     test('空 schema 保持空列表', () {
       final state = EditorState();
-      final manifest = _makeManifest(schema: const []);
+      final manifest = makeManifest(schema: const []);
 
       state.loadManifest(manifest, []);
 
@@ -131,7 +131,7 @@ void main() {
 
     test('空 mockData 保持空 map', () {
       final state = EditorState();
-      final manifest = _makeManifest(mockData: const {});
+      final manifest = makeManifest(mockData: const {});
 
       state.loadManifest(manifest, []);
 
