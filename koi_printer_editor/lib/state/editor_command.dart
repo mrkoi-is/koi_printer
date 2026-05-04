@@ -1,0 +1,134 @@
+import 'package:koi_printer_command/koi_printer_command.dart';
+import 'package:koi_printer_editor/state/editor_state.dart';
+
+abstract class EditorCommand {
+  void execute(EditorState state);
+  void undo(EditorState state);
+}
+
+class AddElementCommand extends EditorCommand {
+  AddElementCommand(this.element, {this.index});
+
+  final EditorElement element;
+  final int? index;
+
+  @override
+  void execute(EditorState state) {
+    final elements = List<EditorElement>.from(state.elements);
+    if (index != null && index! >= 0 && index! <= elements.length) {
+      elements.insert(index!, element);
+    } else {
+      elements.add(element);
+    }
+    state.updateElements(elements);
+    state.selectElement(element.id);
+  }
+
+  @override
+  void undo(EditorState state) {
+    final elements = List<EditorElement>.from(state.elements);
+    elements.removeWhere((e) => e.id == element.id);
+    state.updateElements(elements);
+    if (state.selectedElementId == element.id) {
+      state.selectElement(null);
+    }
+  }
+}
+
+class RemoveElementCommand extends EditorCommand {
+  RemoveElementCommand(this.elementId);
+
+  final String elementId;
+  EditorElement? _removedElement;
+  int? _removedIndex;
+
+  @override
+  void execute(EditorState state) {
+    final elements = List<EditorElement>.from(state.elements);
+    _removedIndex = elements.indexWhere((e) => e.id == elementId);
+    if (_removedIndex != -1) {
+      _removedElement = elements.removeAt(_removedIndex!);
+      state.updateElements(elements);
+      if (state.selectedElementId == elementId) {
+        state.selectElement(null);
+      }
+    }
+  }
+
+  @override
+  void undo(EditorState state) {
+    if (_removedElement != null && _removedIndex != null) {
+      final elements = List<EditorElement>.from(state.elements);
+      elements.insert(_removedIndex!, _removedElement!);
+      state.updateElements(elements);
+      state.selectElement(elementId);
+    }
+  }
+}
+
+class UpdateElementCommand extends EditorCommand {
+  UpdateElementCommand({
+    required this.elementId,
+    required this.oldElement,
+    required this.newElement,
+  });
+
+  final String elementId;
+  final KoiTicketElement oldElement;
+  final KoiTicketElement newElement;
+
+  @override
+  void execute(EditorState state) {
+    _replace(state, newElement);
+  }
+
+  @override
+  void undo(EditorState state) {
+    _replace(state, oldElement);
+  }
+
+  void _replace(EditorState state, KoiTicketElement replacement) {
+    final elements = List<EditorElement>.from(state.elements);
+    final index = elements.indexWhere((e) => e.id == elementId);
+    if (index != -1) {
+      elements[index] = elements[index].copyWith(element: replacement);
+      state.updateElements(elements);
+    }
+  }
+}
+
+class ReorderElementsCommand extends EditorCommand {
+  ReorderElementsCommand({
+    required this.oldIndex,
+    required this.newIndex,
+  });
+
+  final int oldIndex;
+  final int newIndex;
+
+  @override
+  void execute(EditorState state) {
+    _move(state, oldIndex, newIndex);
+  }
+
+  @override
+  void undo(EditorState state) {
+    int reverseOldIndex = newIndex;
+    int reverseNewIndex = oldIndex;
+    if (oldIndex < newIndex) {
+      reverseOldIndex -= 1;
+    } else {
+      reverseNewIndex += 1;
+    }
+    _move(state, reverseOldIndex, reverseNewIndex);
+  }
+
+  void _move(EditorState state, int from, int to) {
+    final elements = List<EditorElement>.from(state.elements);
+    final element = elements.removeAt(from);
+    int target = to;
+    if (from < to) target -= 1;
+    elements.insert(target, element);
+    state.updateElements(elements);
+  }
+}
