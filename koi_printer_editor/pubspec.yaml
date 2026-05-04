@@ -23,3 +23,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  fonts:
+    - family: SarasaMono
+      fonts:
+        - asset: assets/fonts/sarasa-mono-sc-regular.ttf

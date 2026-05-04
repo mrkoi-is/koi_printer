@@ -129,6 +129,7 @@ class _EditableElementWrap extends StatelessWidget {
     final renderWidget = KoiPreviewRenderer.build(
       document: mockDoc,
       paperWidthPx: 380,
+      fontFamily: 'SarasaMono',
     );
     
     Widget child = renderWidget;
@@ -155,7 +156,11 @@ class _EditableElementWrap extends StatelessWidget {
                const Divider(color: Colors.orange),
                ...forEachElement.templates.map((t) {
                   final mockInnerDoc = KoiTicketDocument(elements: [_processEditMode(t, state.currentSchema)]);
-                  final innerRender = KoiPreviewRenderer.build(document: mockInnerDoc, paperWidthPx: 380);
+                  final innerRender = KoiPreviewRenderer.build(
+                    document: mockInnerDoc, 
+                    paperWidthPx: 380,
+                    fontFamily: 'SarasaMono',
+                  );
                   if (innerRender is Container && innerRender.child is Column) {
                     final col = innerRender.child as Column;
                     if (col.children.isNotEmpty) return col.children.first;

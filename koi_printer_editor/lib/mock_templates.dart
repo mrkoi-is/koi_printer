@@ -1,7 +1,8 @@
 import 'package:koi_printer_command/koi_printer_command.dart';
 import 'package:koi_printer_editor/state/editor_state.dart';
 
-String _genId() => DateTime.now().microsecondsSinceEpoch.toString();
+int _idCounter = 0;
+String _genId() => '${DateTime.now().microsecondsSinceEpoch}_${_idCounter++}';
 
 final Map<String, List<EditorElement>> templateGallery = {
   '简单收据 (Demo)': [
