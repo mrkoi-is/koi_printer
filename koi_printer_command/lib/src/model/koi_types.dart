@@ -19,6 +19,7 @@ enum KoiCommandProtocol {
 /// Paper size — standard presets or custom dimensions.
 @immutable
 class KoiPaperSize {
+  /// Documentation for this public member.
   const KoiPaperSize({required this.widthDots, required this.widthMm});
 
   /// 自定义尺寸 (架构文档 §7.1)。
@@ -58,23 +59,49 @@ class KoiPaperSize {
 /// Text alignment for flow-layout elements.
 /// KoiTextAlign.
 /// KoiTextAlign.
-enum KoiTextAlign { left, center, right }
+/// Documentation for this public member.
+enum KoiTextAlign {
+  /// Documentation for this public member.
+  left,
+
+  /// Documentation for this public member.
+  center,
+
+  /// Documentation for this public member.
+  right,
+}
 
 /// 文本大小 (1-8 倍)。
 /// Text size multiplier, maps to ESC/POS GS ! command.
 /// KoiTextSize.
 enum KoiTextSize {
+  /// Documentation for this public member.
   size1(value: 1),
+
+  /// Documentation for this public member.
   size2(value: 2),
+
+  /// Documentation for this public member.
   size3(value: 3),
+
+  /// Documentation for this public member.
   size4(value: 4),
+
+  /// Documentation for this public member.
   size5(value: 5),
+
+  /// Documentation for this public member.
   size6(value: 6),
+
+  /// Documentation for this public member.
   size7(value: 7),
+
+  /// Documentation for this public member.
   size8(value: 8);
 
   const KoiTextSize({required this.value});
 
+  /// Documentation for this public member.
   final int value;
 }
 
@@ -116,17 +143,33 @@ enum KoiQrRenderStrategy {
 /// QR 码大小 (1-8)。
 /// QR code module size.
 enum KoiQrSize {
+  /// Documentation for this public member.
   size1(value: 1),
+
+  /// Documentation for this public member.
   size2(value: 2),
+
+  /// Documentation for this public member.
   size3(value: 3),
+
+  /// Documentation for this public member.
   size4(value: 4),
+
+  /// Documentation for this public member.
   size5(value: 5),
+
+  /// Documentation for this public member.
   size6(value: 6),
+
+  /// Documentation for this public member.
   size7(value: 7),
+
+  /// Documentation for this public member.
   size8(value: 8);
 
   const KoiQrSize({required this.value});
 
+  /// Documentation for this public member.
   final int value;
 }
 
@@ -147,20 +190,38 @@ enum KoiQrCorrection {
 
   const KoiQrCorrection({required this.value});
 
+  /// Documentation for this public member.
   final int value;
 }
 
 /// 条码类型。
 /// Barcode symbology types.
 enum KoiBarcodeType {
+  /// Documentation for this public member.
   upcA,
+
+  /// Documentation for this public member.
   upcE,
+
+  /// Documentation for this public member.
   jan13,
+
+  /// Documentation for this public member.
   jan8,
+
+  /// Documentation for this public member.
   code39,
+
+  /// Documentation for this public member.
   itf,
+
+  /// Documentation for this public member.
   codabar,
+
+  /// Documentation for this public member.
   code93,
+
+  /// Documentation for this public member.
   code128,
 }
 
@@ -202,13 +263,39 @@ enum KoiDelayProfile {
 /// 来源: 旧 XIISenderPrintStyle
 /// KoiPrintStyle.
 /// KoiPrintStyle.
-enum KoiPrintStyle { normal, large }
+/// Documentation for this public member.
+enum KoiPrintStyle {
+  /// Documentation for this public member.
+  normal,
+
+  /// Documentation for this public member.
+  large,
+}
 
 /// 标签样式 (6种公司样式)。
 /// Label style — 6 company-specific label layouts.
 /// KoiLabelStyle.
 /// KoiLabelStyle.
-enum KoiLabelStyle { style1, style2, style3, style4, style5, style6 }
+/// Documentation for this public member.
+enum KoiLabelStyle {
+  /// Documentation for this public member.
+  style1,
+
+  /// Documentation for this public member.
+  style2,
+
+  /// Documentation for this public member.
+  style3,
+
+  /// Documentation for this public member.
+  style4,
+
+  /// Documentation for this public member.
+  style5,
+
+  /// Documentation for this public member.
+  style6,
+}
 
 /// 切纸行为配置。
 /// Cut behavior configuration.

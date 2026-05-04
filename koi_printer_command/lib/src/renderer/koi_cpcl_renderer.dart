@@ -11,6 +11,7 @@ import 'package:koi_printer_command/src/renderer/koi_command_renderer.dart';
 /// CPCL 指令渲染器。
 /// Converts [KoiLabelDocument] (positioned layout) into CPCL byte sequences.
 class KoiCpclRenderer implements KoiCommandRenderer {
+  /// Documentation for this public member.
   const KoiCpclRenderer();
 
   @override

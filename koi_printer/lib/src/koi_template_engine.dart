@@ -14,6 +14,7 @@ import 'package:koi_printer_command/koi_printer_command.dart';
 /// });
 /// ```
 class KoiTemplateEngine {
+  /// Documentation for this public member.
   const KoiTemplateEngine();
 
   /// 展开小票文档中的 [KoiTicketForEachElement]。

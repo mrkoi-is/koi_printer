@@ -195,9 +195,12 @@ class KoiPreviewRenderer {
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: QrImageView(
         data: e.data,
-        version: QrVersions.auto,
         size: size,
-        foregroundColor: color,
+        eyeStyle: QrEyeStyle(eyeShape: QrEyeShape.square, color: color),
+        dataModuleStyle: QrDataModuleStyle(
+          dataModuleShape: QrDataModuleShape.square,
+          color: color,
+        ),
         gapless: false,
       ),
     );
@@ -395,7 +398,6 @@ class KoiPreviewRenderer {
           barcode: Barcode.code128(),
           data: e.data,
           color: color,
-          drawText: true,
           style: TextStyle(
             fontFamily: 'monospace',
             fontSize: 10 * scale,
@@ -417,9 +419,12 @@ class KoiPreviewRenderer {
       top: e.y * scale,
       child: QrImageView(
         data: e.data,
-        version: QrVersions.auto,
         size: size,
-        foregroundColor: color,
+        eyeStyle: QrEyeStyle(eyeShape: QrEyeShape.square, color: color),
+        dataModuleStyle: QrDataModuleStyle(
+          dataModuleShape: QrDataModuleShape.square,
+          color: color,
+        ),
         gapless: false,
       ),
     );

@@ -7,6 +7,7 @@ import 'package:meta/meta.dart';
 /// Represents a discovered printer device.
 @immutable
 class KoiDiscoveredDevice {
+  /// Documentation for this public member.
   const KoiDiscoveredDevice({
     required this.name,
     required this.deviceId,

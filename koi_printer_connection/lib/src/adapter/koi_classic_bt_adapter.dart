@@ -10,6 +10,7 @@ import 'package:koi_printer_connection/src/model/koi_connection_types.dart';
 /// 经典蓝牙 (SPP) 适配器。
 /// Classic Bluetooth (Serial Port Profile) adapter.
 class KoiClassicBtAdapter implements KoiPrinterAdapter {
+  /// Documentation for this public member.
   KoiClassicBtAdapter();
 
   BluetoothConnection? _connection;

@@ -28,6 +28,8 @@ export 'package:koi_printer_connection/koi_printer_connection.dart';
 // 配置
 export 'src/config/koi_print_config.dart';
 export 'src/config/koi_user_preferences.dart';
+// 预览 & 编辑
+export 'src/editor/koi_element_editor.dart';
 // 常量
 export 'src/koi_printer_constants.dart';
 // 服务
@@ -36,7 +38,6 @@ export 'src/koi_printer_service.dart';
 export 'src/koi_template_engine.dart';
 // 模型
 export 'src/model/koi_printer_profile.dart';
-// 预览
 export 'src/preview/koi_preview_renderer.dart';
 export 'src/service/koi_print_job_queue.dart';
 export 'src/service/koi_printer_manager.dart';

@@ -11,6 +11,7 @@ import 'package:koi_printer_command/src/renderer/koi_command_renderer.dart';
 /// TSPL 指令渲染器。
 /// Converts [KoiLabelDocument] (positioned layout) into TSPL byte sequences.
 class KoiTsplRenderer implements KoiCommandRenderer {
+  /// Documentation for this public member.
   const KoiTsplRenderer();
 
   @override

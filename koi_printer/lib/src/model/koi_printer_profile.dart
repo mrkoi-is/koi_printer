@@ -18,6 +18,7 @@ import 'package:koi_printer_connection/koi_printer_connection.dart';
 /// final strategy = profile?.bestQrStrategy ?? KoiQrRenderStrategy.normal;
 /// ```
 class KoiPrinterProfile {
+  /// Documentation for this public member.
   const KoiPrinterProfile({
     required this.id,
     required this.name,
@@ -36,6 +37,7 @@ class KoiPrinterProfile {
     this.delayProfile = KoiDelayProfile.normal,
   });
 
+  /// Documentation for this public member.
   factory KoiPrinterProfile.fromJson(Map<String, dynamic> j) {
     return KoiPrinterProfile(
       id: j['id'] as String,
@@ -62,22 +64,52 @@ class KoiPrinterProfile {
     );
   }
 
+  /// Documentation for this public member.
   final String id;
+
+  /// Documentation for this public member.
   final String name;
+
+  /// Documentation for this public member.
   final String vendor;
+
+  /// Documentation for this public member.
   final List<KoiCommandProtocol> protocols;
+
+  /// Documentation for this public member.
   final List<KoiConnectionType> connections;
+
+  /// Documentation for this public member.
   final int paperWidthMm;
+
+  /// Documentation for this public member.
   final int dotsPerLine;
+
+  /// Documentation for this public member.
   final int dpi;
+
+  /// Documentation for this public member.
   final bool supportsCut;
+
+  /// Documentation for this public member.
   final bool supportsQrCode;
+
+  /// Documentation for this public member.
   final KoiQrRenderStrategy bestQrStrategy;
+
+  /// Documentation for this public member.
   final bool supportsChinese;
+
+  /// Documentation for this public member.
   final String? characteristicFilter;
+
+  /// Documentation for this public member.
   final int? maxMtu;
+
+  /// Documentation for this public member.
   final KoiDelayProfile delayProfile;
 
+  /// Documentation for this public member.
   Map<String, dynamic> toJson() => {
     'id': id,
     'name': name,
@@ -116,6 +148,7 @@ class KoiPrinterProfile {
 
 /// 打印机能力数据库。
 class KoiPrinterProfileDb {
+  /// Documentation for this public member.
   KoiPrinterProfileDb();
 
   final List<KoiPrinterProfile> _profiles = [];
