@@ -80,18 +80,16 @@ class TopToolbar extends StatelessWidget {
           const SizedBox(width: 16),
           FilledButton.icon(
             onPressed: () {
-              // 构建完整的模板清单信封
+              // 构建完整的模板清单信封 (复用当前加载的 manifest 身份)
               final manifest = KoiTemplateManifest(
-                id: 'custom_${DateTime.now().millisecondsSinceEpoch}',
-                name: '自定义模板',
+                id: state.currentManifestId.isNotEmpty
+                    ? state.currentManifestId
+                    : 'custom_${DateTime.now().millisecondsSinceEpoch}',
+                name: state.currentManifestName.isNotEmpty
+                    ? state.currentManifestName
+                    : '自定义模板',
                 document: state.document,
-                schema: state.currentSchema.fields.map((f) => KoiTemplateField(
-                  key: f.key,
-                  label: f.label,
-                  type: f.type == 'array' ? KoiFieldType.array
-                      : f.type == 'number' ? KoiFieldType.number
-                      : KoiFieldType.string,
-                )).toList(),
+                schema: state.schema,
                 mockData: state.mockData,
               );
               final jsonStr = manifest.toJsonString();

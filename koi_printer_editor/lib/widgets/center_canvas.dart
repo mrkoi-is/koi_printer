@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:koi_printer_command/koi_printer_command.dart';
 import 'package:koi_printer_editor/state/editor_command.dart';
 import 'package:koi_printer_editor/state/editor_state.dart';
 import 'package:koi_printer/koi_printer.dart';
@@ -76,10 +75,10 @@ class _EditableElementWrap extends StatelessWidget {
   final VoidCallback onSelect;
   final VoidCallback onDelete;
 
-  KoiTicketElement _processEditMode(KoiTicketElement e, DataSchema schema) {
+  KoiTicketElement _processEditMode(KoiTicketElement e, List<KoiTemplateField> fields) {
     if (e is KoiTextElement) {
       String t = e.text;
-      for (var f in schema.fields) {
+      for (var f in fields) {
         t = t.replaceAll('{{${f.key}}}', '<${f.label}>');
       }
       return KoiTextElement(
@@ -98,7 +97,7 @@ class _EditableElementWrap extends StatelessWidget {
       return KoiTextRowElement(
         columns: e.columns.map((c) {
           String t = c.text;
-          for (var f in schema.fields) {
+          for (var f in fields) {
             t = t.replaceAll('{{${f.key}}}', '<${f.label}>');
           }
           return KoiTextColumn(text: t, ratio: c.ratio, align: c.align, bold: c.bold);
@@ -122,7 +121,7 @@ class _EditableElementWrap extends StatelessWidget {
     } else {
       // 编辑模式下，替换占位符为中文别名标签
       mockDoc = KoiTicketDocument(
-        elements: [_processEditMode(element.element, state.currentSchema)],
+        elements: [_processEditMode(element.element, state.schema)],
       );
     }
 
@@ -155,7 +154,7 @@ class _EditableElementWrap extends StatelessWidget {
                Text('🔄 列表循环区域 (数组: ${forEachElement.listKey})', style: const TextStyle(color: Colors.orange, fontSize: 12, fontWeight: FontWeight.bold)),
                const Divider(color: Colors.orange),
                ...forEachElement.templates.map((t) {
-                  final mockInnerDoc = KoiTicketDocument(elements: [_processEditMode(t, state.currentSchema)]);
+                  final mockInnerDoc = KoiTicketDocument(elements: [_processEditMode(t, state.schema)]);
                   final innerRender = KoiPreviewRenderer.build(
                     document: mockInnerDoc, 
                     paperWidthPx: 380,

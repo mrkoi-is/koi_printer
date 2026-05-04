@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:koi_printer_command/koi_printer_command.dart';
+import 'package:koi_printer/koi_printer.dart';
 import 'package:koi_printer_editor/state/editor_command.dart';
 import 'package:koi_printer_editor/state/editor_state.dart';
 import 'package:provider/provider.dart';
@@ -224,7 +224,7 @@ class _DataBindingFieldState extends State<_DataBindingField> {
 
   @override
   Widget build(BuildContext context) {
-    final schema = context.watch<EditorState>().currentSchema;
+    final fields = context.watch<EditorState>().schema;
     final text = widget.element.text;
 
     return Column(
@@ -244,8 +244,8 @@ class _DataBindingFieldState extends State<_DataBindingField> {
               _modeIndex = set.first;
             });
             if (_modeIndex == 1) {
-              if (!RegExp(r'^\{\{([a-zA-Z0-9_.]+)\}\}$').hasMatch(text) && schema.fields.isNotEmpty) {
-                 _updateText('{{${schema.fields.first.key}}}');
+              if (!RegExp(r'^\{\{([a-zA-Z0-9_.]+)\}\}$').hasMatch(text) && fields.isNotEmpty) {
+                 _updateText('{{${fields.first.key}}}');
               }
             } else if (_modeIndex == 0) {
                _updateText(text.replaceAll(RegExp(r'\{\{|\}\}'), ''));
@@ -262,9 +262,9 @@ class _DataBindingFieldState extends State<_DataBindingField> {
            ),
         ] else if (_modeIndex == 1) ...[
            DropdownButtonFormField<String>(
-             value: RegExp(r'^\{\{([a-zA-Z0-9_.]+)\}\}$').firstMatch(text)?.group(1) ?? (schema.fields.isNotEmpty ? schema.fields.first.key : null),
+             value: RegExp(r'^\{\{([a-zA-Z0-9_.]+)\}\}$').firstMatch(text)?.group(1) ?? (fields.isNotEmpty ? fields.first.key : null),
              decoration: const InputDecoration(labelText: '绑定业务字段', border: OutlineInputBorder()),
-             items: schema.fields.map((f) => DropdownMenuItem(value: f.key, child: Text('${f.label} (${f.key})'))).toList(),
+             items: fields.map((f) => DropdownMenuItem(value: f.key, child: Text('${f.label} (${f.key})'))).toList(),
              onChanged: (val) {
                if (val != null) {
                  _updateText('{{$val}}');
@@ -276,7 +276,7 @@ class _DataBindingFieldState extends State<_DataBindingField> {
              children: [
                const Icon(Icons.check_circle, color: Colors.green, size: 16),
                const SizedBox(width: 4),
-               Text('已绑定: ${schema.fields.where((f) => '{{${f.key}}}' == text).firstOrNull?.label ?? '未知'}', 
+               Text('已绑定: ${fields.where((f) => '{{${f.key}}}' == text).firstOrNull?.label ?? '未知'}', 
                  style: const TextStyle(color: Colors.green, fontSize: 12)),
              ],
            ),
@@ -291,7 +291,7 @@ class _DataBindingFieldState extends State<_DataBindingField> {
            const Text('点击插入变量:', style: TextStyle(fontSize: 12, color: Colors.grey)),
            Wrap(
              spacing: 4,
-             children: schema.fields.map((f) => ActionChip(
+             children: fields.map((f) => ActionChip(
                label: Text(f.label, style: const TextStyle(fontSize: 10)),
                onPressed: () {
                  _updateText('$text{{${f.key}}}');

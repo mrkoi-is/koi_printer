@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:koi_printer_command/koi_printer_command.dart';
+import 'package:koi_printer/koi_printer.dart';
 import 'package:koi_printer_editor/state/editor_command.dart';
 import 'package:koi_printer_editor/state/editor_state.dart';
 import 'package:provider/provider.dart';
@@ -131,20 +131,21 @@ class _DataSchemaTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final schema = context.watch<EditorState>().currentSchema;
+    final state = context.watch<EditorState>();
+    final fields = state.schema;
     
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
         Text(
-          '单据模型: ${schema.entity}',
+          '单据模型: ${state.schemaEntity}',
           style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.grey),
         ),
         const SizedBox(height: 16),
-        ...schema.fields.map((field) => ListTile(
+        ...fields.map((field) => ListTile(
           leading: Icon(
-            field.type == 'string' ? Icons.abc : 
-            field.type == 'number' ? Icons.numbers : Icons.list,
+            field.type == KoiFieldType.string ? Icons.abc : 
+            field.type == KoiFieldType.number ? Icons.numbers : Icons.list,
           ),
           title: Text(field.label),
           subtitle: Text('{{${field.key}}}'),

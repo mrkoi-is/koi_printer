@@ -113,9 +113,7 @@ class KoiTemplateManifest {
       version: json['version'] as int? ?? 1,
       category: json['category'] as String? ?? '',
       description: json['description'] as String? ?? '',
-      document: koiPrintDocumentFromJson(
-        json['document'] as Map<String, dynamic>,
-      ),
+      document: _parseDocument(json['document']),
       schema: (json['schema'] as List?)
               ?.map((e) => _fieldFromJson(e as Map<String, dynamic>))
               .toList() ??
@@ -225,4 +223,13 @@ class KoiTemplateManifest {
         startIndex: j['startIndex'] as int,
         endIndex: j['endIndex'] as int,
       );
+
+  static KoiPrintDocument _parseDocument(Object? value) {
+    if (value is! Map<String, dynamic>) {
+      throw const FormatException(
+        'KoiTemplateManifest: 缺少或无效的 "document" 字段',
+      );
+    }
+    return koiPrintDocumentFromJson(value);
+  }
 }
