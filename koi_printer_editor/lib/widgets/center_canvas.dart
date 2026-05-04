@@ -76,20 +76,106 @@ class _EditableElementWrap extends StatelessWidget {
   final VoidCallback onSelect;
   final VoidCallback onDelete;
 
+  KoiTicketElement _processEditMode(KoiTicketElement e, DataSchema schema) {
+    if (e is KoiTextElement) {
+      String t = e.text;
+      for (var f in schema.fields) {
+        t = t.replaceAll('{{${f.key}}}', '<${f.label}>');
+      }
+      return KoiTextElement(
+        text: t,
+        size: e.size,
+        widthSize: e.widthSize,
+        heightSize: e.heightSize,
+        align: e.align,
+        bold: e.bold,
+        reverse: e.reverse,
+        underline: e.underline,
+        underlineStyle: e.underlineStyle,
+        font: e.font,
+      );
+    } else if (e is KoiTextRowElement) {
+      return KoiTextRowElement(
+        columns: e.columns.map((c) {
+          String t = c.text;
+          for (var f in schema.fields) {
+            t = t.replaceAll('{{${f.key}}}', '<${f.label}>');
+          }
+          return KoiTextColumn(text: t, ratio: c.ratio, align: c.align, bold: c.bold);
+        }).toList(),
+      );
+    }
+    return e;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final mockDoc = KoiTicketDocument(elements: [element.element]);
+    final state = context.watch<EditorState>();
+    
+    KoiPrintDocument mockDoc;
+    if (state.isPreviewMode) {
+      // 真实数据预览模式
+      mockDoc = const KoiTemplateEngine().expandTicket(
+        KoiTicketDocument(elements: [element.element]),
+        state.mockData,
+      );
+    } else {
+      // 编辑模式下，替换占位符为中文别名标签
+      mockDoc = KoiTicketDocument(
+        elements: [_processEditMode(element.element, state.currentSchema)],
+      );
+    }
+
     final renderWidget = KoiPreviewRenderer.build(
       document: mockDoc,
       paperWidthPx: 380,
     );
     
     Widget child = renderWidget;
+    // 提取单个元素的渲染结果（去除外层 Document 容器）
     if (renderWidget is Container && renderWidget.child is Column) {
        final col = renderWidget.child as Column;
        if (col.children.isNotEmpty) {
          child = col.children.first;
        }
+    }
+
+    if (!state.isPreviewMode && element.element is KoiTicketForEachElement) {
+       final forEachElement = element.element as KoiTicketForEachElement;
+       child = Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.orange, style: BorderStyle.solid),
+            color: Colors.orange.withValues(alpha: 0.05),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+               Text('🔄 列表循环区域 (数组: ${forEachElement.listKey})', style: const TextStyle(color: Colors.orange, fontSize: 12, fontWeight: FontWeight.bold)),
+               const Divider(color: Colors.orange),
+               ...forEachElement.templates.map((t) {
+                  final mockInnerDoc = KoiTicketDocument(elements: [_processEditMode(t, state.currentSchema)]);
+                  final innerRender = KoiPreviewRenderer.build(document: mockInnerDoc, paperWidthPx: 380);
+                  if (innerRender is Container && innerRender.child is Column) {
+                    final col = innerRender.child as Column;
+                    if (col.children.isNotEmpty) return col.children.first;
+                  }
+                  return innerRender;
+               }),
+               if (forEachElement.templates.isEmpty)
+                 const Padding(
+                   padding: EdgeInsets.all(16), 
+                   child: Center(child: Text('选中此区域，从左侧组件库添加子组件', style: TextStyle(color: Colors.grey, fontSize: 12)))
+                 ),
+            ]
+          )
+       );
+    }
+
+    // 编辑模式下给中文别名加个底色（如果是文本）
+    if (!state.isPreviewMode) {
+      // 因为我们无法直接侵入 KoiPreviewRenderer 内部修改单个字的底色，
+      // 所以我们依赖上面的 _processEditMode 将文字变成 <运单号> 来做视觉提示
     }
 
     return GestureDetector(

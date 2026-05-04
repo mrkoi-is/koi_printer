@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:koi_printer_editor/editor_screen.dart';
+import 'package:koi_printer_editor/mock_templates.dart';
 import 'package:koi_printer_editor/state/editor_state.dart';
 import 'package:provider/provider.dart';
 
 void main() {
   runApp(
     ChangeNotifierProvider(
-      create: (_) => EditorState(),
+      create: (_) => EditorState(initialElements: defaultTemplateElements),
       child: const KoiPrinterEditorApp(),
     ),
   );

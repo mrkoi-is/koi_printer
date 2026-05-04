@@ -51,13 +51,40 @@ class EditorState extends ChangeNotifier {
   final List<EditorCommand> _undoStack = [];
   final List<EditorCommand> _redoStack = [];
 
+  // 预览模式与假数据
+  bool _isPreviewMode = false;
+  final Map<String, dynamic> _mockData = {
+    'waybillNo': 'SF123456789',
+    'fee': {'total': 188.0},
+    'items': [
+      {'name': 'Koi 机械键盘', 'qty': 1, 'price': 99.0},
+      {'name': 'Koi 鼠标', 'qty': 2, 'price': 44.5},
+    ],
+  };
+
   List<EditorElement> get elements => _elements;
   KoiPrintDocument get document => KoiTicketDocument(elements: _elements.map((e) => e.element).toList());
   String? get selectedElementId => _selectedElementId;
+  EditorElement? get selectedElement => _elements.where((e) => e.id == _selectedElementId).firstOrNull;
   DataSchema get currentSchema => _currentSchema;
+  bool get isPreviewMode => _isPreviewMode;
+  Map<String, dynamic> get mockData => _mockData;
 
   bool get canUndo => _undoStack.isNotEmpty;
   bool get canRedo => _redoStack.isNotEmpty;
+
+  void togglePreviewMode() {
+    _isPreviewMode = !_isPreviewMode;
+    notifyListeners();
+  }
+
+  void loadTemplate(List<EditorElement> templateElements) {
+    _elements = templateElements;
+    _undoStack.clear();
+    _redoStack.clear();
+    _selectedElementId = null;
+    notifyListeners();
+  }
 
   void updateElements(List<EditorElement> newElements) {
     _elements = newElements;

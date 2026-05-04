@@ -45,76 +45,52 @@ class LeftPalette extends StatelessWidget {
 class _ComponentsTab extends StatelessWidget {
   String _genId() => DateTime.now().microsecondsSinceEpoch.toString();
 
+  void _addNode(BuildContext context, KoiTicketElement element) {
+    final state = context.read<EditorState>();
+    final selected = state.selectedElement;
+    final String? parentId = (selected?.element is KoiTicketForEachElement) ? selected!.id : null;
+    state.execute(AddElementCommand(EditorElement(id: _genId(), element: element), parentId: parentId));
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
         _PaletteItem(
+          icon: Icons.list_alt_rounded,
+          label: '循环列表容器 (ForEach)',
+          onAdd: () => _addNode(context, const KoiTicketForEachElement(listKey: 'items', templates: [])),
+        ),
+        _PaletteItem(
           icon: Icons.text_fields,
           label: '文本 (Text)',
-          onAdd: () {
-            context.read<EditorState>().execute(
-              AddElementCommand(
-                EditorElement(
-                  id: _genId(), 
-                  element: const KoiTextElement(text: '默认文本', size: KoiTextSize.size1),
-                ),
-              ),
-            );
-          },
+          onAdd: () => _addNode(context, const KoiTextElement(text: '默认文本', size: KoiTextSize.size1)),
         ),
         _PaletteItem(
           icon: Icons.horizontal_rule,
           label: '分割线 (Divider)',
-          onAdd: () {
-            context.read<EditorState>().execute(
-              AddElementCommand(
-                EditorElement(id: _genId(), element: const KoiDividerElement()),
-              ),
-            );
-          },
+          onAdd: () => _addNode(context, const KoiDividerElement()),
         ),
         _PaletteItem(
           icon: Icons.qr_code,
           label: '二维码 (QR Code)',
-          onAdd: () {
-            context.read<EditorState>().execute(
-              AddElementCommand(
-                EditorElement(id: _genId(), element: const KoiQrCodeElement(data: 'https://mrkoi.io')),
-              ),
-            );
-          },
+          onAdd: () => _addNode(context, const KoiQrCodeElement(data: 'https://mrkoi.io')),
         ),
         _PaletteItem(
           icon: Icons.view_column,
           label: '多列排版 (Row)',
-          onAdd: () {
-            context.read<EditorState>().execute(
-              AddElementCommand(
-                EditorElement(
-                  id: _genId(),
-                  element: const KoiTextRowElement(
-                    columns: [
-                      KoiTextColumn(text: '左侧'),
-                      KoiTextColumn(text: '右侧', align: KoiTextAlign.right),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
+          onAdd: () => _addNode(context, const KoiTextRowElement(
+            columns: [
+              KoiTextColumn(text: '左侧'),
+              KoiTextColumn(text: '右侧', align: KoiTextAlign.right),
+            ],
+          )),
         ),
         _PaletteItem(
           icon: Icons.space_bar,
           label: '空白行 (Spacer)',
-          onAdd: () {
-            context.read<EditorState>().execute(
-              AddElementCommand(
-                EditorElement(id: _genId(), element: const KoiSpacerElement(lines: 1)),
-              ),
-            );
-          },
+          onAdd: () => _addNode(context, const KoiSpacerElement(lines: 1)),
         ),
       ],
     );

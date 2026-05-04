@@ -7,27 +7,71 @@ abstract class EditorCommand {
 }
 
 class AddElementCommand extends EditorCommand {
-  AddElementCommand(this.element, {this.index});
+  AddElementCommand(this.element, {this.index, this.parentId});
 
   final EditorElement element;
   final int? index;
+  final String? parentId;
 
   @override
   void execute(EditorState state) {
     final elements = List<EditorElement>.from(state.elements);
-    if (index != null && index! >= 0 && index! <= elements.length) {
-      elements.insert(index!, element);
+    
+    if (parentId != null) {
+      final pIndex = elements.indexWhere((e) => e.id == parentId);
+      if (pIndex != -1) {
+        final parent = elements[pIndex].element;
+        if (parent is KoiTicketForEachElement) {
+          final newTemplates = List<KoiTicketElement>.from(parent.templates);
+          if (index != null && index! >= 0 && index! <= newTemplates.length) {
+            newTemplates.insert(index!, element.element);
+          } else {
+            newTemplates.add(element.element);
+          }
+          elements[pIndex] = elements[pIndex].copyWith(
+            element: KoiTicketForEachElement(
+              listKey: parent.listKey,
+              templates: newTemplates,
+            ),
+          );
+        }
+      }
     } else {
-      elements.add(element);
+      if (index != null && index! >= 0 && index! <= elements.length) {
+        elements.insert(index!, element);
+      } else {
+        elements.add(element);
+      }
     }
+    
     state.updateElements(elements);
-    state.selectElement(element.id);
+    // 选中仍然保留到容器（因为子元素没有 ID 追踪，这是一个简化版实现）
+    state.selectElement(parentId ?? element.id);
   }
 
   @override
   void undo(EditorState state) {
     final elements = List<EditorElement>.from(state.elements);
-    elements.removeWhere((e) => e.id == element.id);
+    
+    if (parentId != null) {
+      final pIndex = elements.indexWhere((e) => e.id == parentId);
+      if (pIndex != -1) {
+        final parent = elements[pIndex].element;
+        if (parent is KoiTicketForEachElement) {
+          final newTemplates = List<KoiTicketElement>.from(parent.templates);
+          newTemplates.remove(element.element);
+          elements[pIndex] = elements[pIndex].copyWith(
+            element: KoiTicketForEachElement(
+              listKey: parent.listKey,
+              templates: newTemplates,
+            ),
+          );
+        }
+      }
+    } else {
+      elements.removeWhere((e) => e.id == element.id);
+    }
+    
     state.updateElements(elements);
     if (state.selectedElementId == element.id) {
       state.selectElement(null);
