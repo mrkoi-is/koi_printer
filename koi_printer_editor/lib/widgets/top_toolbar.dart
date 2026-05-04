@@ -1,7 +1,10 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:koi_printer_editor/mock_templates.dart';
 import 'package:koi_printer_editor/state/editor_state.dart';
 import 'package:provider/provider.dart';
+import 'package:koi_printer_command/koi_printer_command.dart';
 
 class TopToolbar extends StatelessWidget {
   const TopToolbar({super.key});
@@ -78,13 +81,62 @@ class TopToolbar extends StatelessWidget {
           const SizedBox(width: 16),
           FilledButton.icon(
             onPressed: () {
-              // TODO: Implement save & publish
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('已保存至云端')),
+              final jsonStr = state.document.toJsonString();
+              
+              showDialog(
+                context: context,
+                builder: (ctx) {
+                  return AlertDialog(
+                    title: const Text('导出模板成功'),
+                    content: SizedBox(
+                      width: 600,
+                      height: 400,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text('您的模板 JSON 代码如下：'),
+                          const SizedBox(height: 8),
+                          Expanded(
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade100,
+                                border: Border.all(color: Colors.grey.shade300),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: SingleChildScrollView(
+                                child: SelectableText(
+                                  const JsonEncoder.withIndent('  ').convert(jsonDecode(jsonStr)),
+                                  style: const TextStyle(fontFamily: 'SarasaMono', fontSize: 12),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(ctx),
+                        child: const Text('关闭'),
+                      ),
+                      FilledButton.icon(
+                        onPressed: () {
+                          Clipboard.setData(ClipboardData(text: jsonStr));
+                          ScaffoldMessenger.of(ctx).showSnackBar(
+                            const SnackBar(content: Text('已复制到剪贴板！')),
+                          );
+                        },
+                        icon: const Icon(Icons.copy, size: 16),
+                        label: const Text('复制 JSON'),
+                      ),
+                    ],
+                  );
+                },
               );
             },
-            icon: const Icon(Icons.cloud_upload, size: 18),
-            label: const Text('保存发布'),
+            icon: const Icon(Icons.save_alt, size: 18),
+            label: const Text('导出本地模板'),
           ),
         ],
       ),
