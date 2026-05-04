@@ -187,11 +187,11 @@ class _DeviceTile extends StatelessWidget {
                 case 'delete':
                   onDelete();
                 case 'test':
-                  final docs = const KoiTestTicketTemplate().build(
-                    null,
-                    const KoiPrintConfig(),
-                  );
-                  executePrintJob(context, device, docs, isLabel);
+                  final testConfig = const KoiPrintConfig();
+                  final docs = isLabel
+                      ? const KoiSenderLabelTemplate().build({}, testConfig)
+                      : const KoiTestTicketTemplate().build(null, testConfig);
+                  executePrintJob(context, device, docs, isLabel, config: testConfig);
               }
             },
             itemBuilder: (_) => const [
@@ -282,8 +282,9 @@ Future<void> executePrintJob(
   BuildContext context,
   KoiBoundDevice device,
   List<KoiPrintDocument> docs,
-  bool isLabel,
-) async {
+  bool isLabel, {
+  KoiPrintConfig config = const KoiPrintConfig(),
+}) async {
   final manager = context.read<KoiPrinterManager>();
   
   final state = isLabel ? manager.labelState : manager.ticketState;
@@ -301,9 +302,9 @@ Future<void> executePrintJob(
   try {
     for (final doc in docs) {
       if (isLabel) {
-        await manager.printLabelDocument(doc as KoiLabelDocument, config: const KoiPrintConfig());
+        await manager.printLabelDocument(doc as KoiLabelDocument, config: config);
       } else {
-        await manager.printTicketDocument(doc as KoiTicketDocument, config: const KoiPrintConfig());
+        await manager.printTicketDocument(doc as KoiTicketDocument, config: config);
       }
     }
   } on Object catch (e, st) {

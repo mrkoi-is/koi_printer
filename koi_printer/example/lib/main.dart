@@ -387,7 +387,7 @@ class _PreviewScreenState extends State<PreviewScreen> {
 
           if (devices.isNotEmpty) {
             final device = devices.first;
-            executePrintJob(context, device, docs, isLabel);
+            executePrintJob(context, device, docs, isLabel, config: effectiveConfig);
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text('请先前往设置页面绑定$printerTypeName')),
