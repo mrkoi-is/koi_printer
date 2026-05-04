@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:koi_printer/koi_printer.dart';
-import 'package:koi_printer_command/koi_printer_command.dart';
 import 'package:koi_printer_example/src/template/ticket/koi_sender_ticket_template.dart';
 import 'dart:io';
 
@@ -34,7 +33,7 @@ void main() {
     final tpl = const KoiSenderTicketTemplate();
     final docs = tpl.build(d, const KoiPrintConfig());
     final doc = docs.first;
-    
+
     final jsonStr = (doc as KoiPrintDocument).toJsonString();
     File('sender_ticket_template.json').writeAsStringSync(jsonStr);
   });

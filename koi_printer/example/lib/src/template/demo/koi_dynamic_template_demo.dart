@@ -2,7 +2,8 @@ import 'package:koi_printer/koi_printer.dart';
 
 /// 这个文件用于演示在真实 TMS 业务中，如何使用 JSON 和动态模板引擎
 /// 替代原有的硬编码 `.dart` 模板文件。
-class KoiDynamicTemplateDemo implements KoiTicketTemplate<Map<String, dynamic>> {
+class KoiDynamicTemplateDemo
+    implements KoiTicketTemplate<Map<String, dynamic>> {
   const KoiDynamicTemplateDemo();
 
   /// 模拟从后端接口下发的 JSON 排版配置。
@@ -53,11 +54,14 @@ class KoiDynamicTemplateDemo implements KoiTicketTemplate<Map<String, dynamic>> 
 
   /// 模拟 TMS 实际调用打印的流程 (将复制到您的业务工程中)
   @override
-  List<KoiTicketDocument> build(Map<String, dynamic>? data, KoiPrintConfig config) {
+  List<KoiTicketDocument> build(
+    Map<String, dynamic>? data,
+    KoiPrintConfig config,
+  ) {
     if (data == null) return [];
 
     // 1. 将服务器下发的 JSON 字符串，反序列化为文档对象
-    final KoiTicketDocument templateDoc = 
+    final KoiTicketDocument templateDoc =
         koiPrintDocumentFromJsonString(serverResponseJson) as KoiTicketDocument;
 
     // 2. 实例化模板绑定引擎

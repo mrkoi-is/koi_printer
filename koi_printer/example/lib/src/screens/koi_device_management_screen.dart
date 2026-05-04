@@ -19,8 +19,6 @@ final List<KoiBoundDevice> globalTicketDevices = [];
 final List<KoiBoundDevice> globalLabelDevices = [];
 
 class _KoiDeviceManagementScreenState extends State<KoiDeviceManagementScreen> {
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +27,8 @@ class _KoiDeviceManagementScreenState extends State<KoiDeviceManagementScreen> {
         children: [
           // ── 小票打印机区 ──
           _sectionHeader('小票打印机'),
-          if (globalTicketDevices.isEmpty) const _EmptyDeviceTile(hint: '未绑定小票打印机'),
+          if (globalTicketDevices.isEmpty)
+            const _EmptyDeviceTile(hint: '未绑定小票打印机'),
           for (final device in globalTicketDevices)
             _DeviceTile(
               device: device,
@@ -43,7 +42,8 @@ class _KoiDeviceManagementScreenState extends State<KoiDeviceManagementScreen> {
 
           // ── 标签打印机区 ──
           _sectionHeader('标签打印机'),
-          if (globalLabelDevices.isEmpty) const _EmptyDeviceTile(hint: '未绑定标签打印机'),
+          if (globalLabelDevices.isEmpty)
+            const _EmptyDeviceTile(hint: '未绑定标签打印机'),
           for (final device in globalLabelDevices)
             _DeviceTile(
               device: device,
@@ -133,7 +133,10 @@ class _DeviceTile extends StatelessWidget {
             case 'delete':
               onDelete();
             case 'test':
-              final docs = const KoiTestTicketTemplate().build(null, const KoiPrintConfig());
+              final docs = const KoiTestTicketTemplate().build(
+                null,
+                const KoiPrintConfig(),
+              );
               executePrintJob(context, device, docs);
           }
         },
@@ -144,7 +147,6 @@ class _DeviceTile extends StatelessWidget {
       ),
     );
   }
-
 
   IconData _iconForType(KoiConnectionType type) {
     return switch (type) {
@@ -225,9 +227,9 @@ Future<void> executePrintJob(
   KoiBoundDevice device,
   List<KoiPrintDocument> docs,
 ) async {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(content: Text('正在连接 ${device.name} 并发送打印任务...')),
-  );
+  ScaffoldMessenger.of(
+    context,
+  ).showSnackBar(SnackBar(content: Text('正在连接 ${device.name} 并发送打印任务...')));
 
   try {
     final config = KoiConnectionConfig(
@@ -256,11 +258,11 @@ Future<void> executePrintJob(
     await service.disconnect();
 
     if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('发送成功!')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('发送成功!')));
     }
-  } catch (e, st) {
+  } on Object catch (e, st) {
     debugPrint('==== 打印失败详细日志 ====');
     debugPrint('Error: $e');
     debugPrint('StackTrace: $st');

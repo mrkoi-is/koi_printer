@@ -111,7 +111,7 @@ class KoiPrintJobQueue {
       }
 
       return KoiPrintSuccess(bytesSent: totalBytes);
-    } catch (e) {
+    } on Object catch (e) {
       debugPrint('KoiPrintJobQueue: job error: $e');
       return KoiPrintFailure(error: e.toString());
     }

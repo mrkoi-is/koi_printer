@@ -70,7 +70,9 @@ class KoiPreviewRenderer {
         mainAxisSize: MainAxisSize.min,
         children:
             document.elements
-                .map((e) => _flowElement(e, textColor, paperWidthPx, fontFamily))
+                .map(
+                  (e) => _flowElement(e, textColor, paperWidthPx, fontFamily),
+                )
                 .toList(),
       ),
     );
@@ -88,7 +90,12 @@ class KoiPreviewRenderer {
       KoiQrCodeElement() => _flowQrCode(element, textColor, fontFamily),
       KoiBarcodeElement() => _flowBarcode(element, textColor, fontFamily),
       KoiTicketImageElement() => _flowImage(element),
-      KoiDividerElement() => _flowDivider(element, textColor, paperWidth, fontFamily),
+      KoiDividerElement() => _flowDivider(
+        element,
+        textColor,
+        paperWidth,
+        fontFamily,
+      ),
       KoiSpacerElement() => _flowSpacer(element),
       KoiCutElement() => _flowCut(textColor),
       _ => const SizedBox.shrink(),
@@ -98,13 +105,13 @@ class KoiPreviewRenderer {
   static Widget _flowText(KoiTextElement e, Color color, String fontFamily) {
     final wScale = (e.widthSize?.value ?? e.size.value).toDouble();
     final hScale = (e.heightSize?.value ?? e.size.value).toDouble();
-    
+
     // 基础字体大小 (基于点阵的 24 Dots)
     const baseFontSize = 24.0;
-    
+
     // 强制按宽度拉伸比例计算 fontSize，以确保 Flutter 文本换行策略与物理打印机的水平点阵限制完全一致。
     final fontSize = baseFontSize * wScale;
-    
+
     // 计算为了达到目标高度，需要对文本进行的垂直物理拉伸比例。
     final stretchY = hScale / wScale;
 
@@ -116,7 +123,8 @@ class KoiPreviewRenderer {
         fontSize: fontSize,
         fontWeight: e.bold ? FontWeight.bold : FontWeight.normal,
         letterSpacing: fontFamily == 'monospace' ? -0.5 : 0,
-        decoration: e.underline ? TextDecoration.underline : TextDecoration.none,
+        decoration:
+            e.underline ? TextDecoration.underline : TextDecoration.none,
         color: e.reverse ? Colors.white : color,
         backgroundColor: e.reverse ? color : null,
       ),
@@ -126,15 +134,13 @@ class KoiPreviewRenderer {
       // 通过 Transform.scale 仅进行垂直渲染拉伸
       textWidget = Transform.scale(
         scaleY: stretchY,
-        alignment: Alignment.center,
         child: textWidget,
       );
-      
+
       // 通过 Align.heightFactor 动态调整排版高度，使其与垂直拉伸后的视觉高度完全一致，避免组件重叠。
       textWidget = Align(
-        alignment: Alignment.center,
         heightFactor: stretchY,
-        widthFactor: 1.0,
+        widthFactor: 1,
         child: textWidget,
       );
     }
@@ -146,7 +152,11 @@ class KoiPreviewRenderer {
     );
   }
 
-  static Widget _flowTextRow(KoiTextRowElement e, Color color, String fontFamily) {
+  static Widget _flowTextRow(
+    KoiTextRowElement e,
+    Color color,
+    String fontFamily,
+  ) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 1),
       child: Row(
@@ -172,7 +182,11 @@ class KoiPreviewRenderer {
     );
   }
 
-  static Widget _flowQrCode(KoiQrCodeElement e, Color color, String fontFamily) {
+  static Widget _flowQrCode(
+    KoiQrCodeElement e,
+    Color color,
+    String fontFamily,
+  ) {
     final size = e.size.value * 16.0;
     return Container(
       alignment: _align(e.align),
@@ -200,7 +214,11 @@ class KoiPreviewRenderer {
     );
   }
 
-  static Widget _flowBarcode(KoiBarcodeElement e, Color color, String fontFamily) {
+  static Widget _flowBarcode(
+    KoiBarcodeElement e,
+    Color color,
+    String fontFamily,
+  ) {
     return Container(
       alignment: _align(e.align),
       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -266,7 +284,12 @@ class KoiPreviewRenderer {
     );
   }
 
-  static Widget _flowDivider(KoiDividerElement e, Color color, double paperWidthPx, String fontFamily) {
+  static Widget _flowDivider(
+    KoiDividerElement e,
+    Color color,
+    double paperWidthPx,
+    String fontFamily,
+  ) {
     final charsPerLine = (paperWidthPx / 12).floor();
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),

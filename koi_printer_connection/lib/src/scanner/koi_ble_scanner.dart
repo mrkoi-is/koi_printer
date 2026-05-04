@@ -23,7 +23,7 @@ class KoiBleScanner {
     StreamSubscription<List<ScanResult>>? scanSub;
 
     void startScan() {
-      FlutterBluePlus.startScan(timeout: timeout);
+      unawaited(FlutterBluePlus.startScan(timeout: timeout));
       scanSub = FlutterBluePlus.scanResults.listen((results) {
         for (final result in results) {
           final name = result.device.platformName;
@@ -45,19 +45,21 @@ class KoiBleScanner {
       });
 
       // 超时后自动关闭
-      Future<void>.delayed(timeout).then((_) {
-        scanSub?.cancel();
-        if (!controller.isClosed) {
-          controller.close();
-        }
-      });
+      unawaited(
+        Future<void>.delayed(timeout).then((_) {
+          unawaited(scanSub?.cancel());
+          if (!controller.isClosed) {
+            unawaited(controller.close());
+          }
+        }),
+      );
     }
 
     controller
       ..onListen = startScan
       ..onCancel = () {
-        scanSub?.cancel();
-        FlutterBluePlus.stopScan();
+        unawaited(scanSub?.cancel());
+        unawaited(FlutterBluePlus.stopScan());
       };
 
     return controller.stream;
@@ -67,7 +69,7 @@ class KoiBleScanner {
   Future<void> stopScan() async {
     try {
       await FlutterBluePlus.stopScan();
-    } catch (e) {
+    } on Object catch (e) {
       debugPrint('KoiBleScanner: stopScan error: $e');
     }
   }

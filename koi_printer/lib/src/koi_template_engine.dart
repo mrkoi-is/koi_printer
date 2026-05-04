@@ -68,7 +68,9 @@ class KoiTemplateEngine {
     final result = <KoiTicketElement>[];
     for (final item in collection) {
       for (final template in forEach.templates) {
-        result.add(_substituteTicketElement(template, item as Map<String, dynamic>));
+        result.add(
+          _substituteTicketElement(template, item as Map<String, dynamic>),
+        );
       }
     }
     return result;
@@ -138,7 +140,9 @@ class KoiTemplateEngine {
     final result = <KoiLabelElement>[];
     for (final item in collection) {
       for (final template in forEach.templates) {
-        result.add(_substituteLabelElement(template, item as Map<String, dynamic>));
+        result.add(
+          _substituteLabelElement(template, item as Map<String, dynamic>),
+        );
       }
     }
     return result;

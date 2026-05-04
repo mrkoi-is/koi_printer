@@ -203,7 +203,7 @@ class KoiPrinterManager {
       await _ticketAdapter!.connect(
         KoiConnectionConfig(deviceName: device.name, deviceId: device.address),
       );
-    } catch (e) {
+    } on Object catch (e) {
       debugPrint('KoiPrinterManager: ticket connect error: $e');
     }
   }
@@ -223,7 +223,7 @@ class KoiPrinterManager {
       await _labelAdapter!.connect(
         KoiConnectionConfig(deviceName: device.name, deviceId: device.address),
       );
-    } catch (e) {
+    } on Object catch (e) {
       debugPrint('KoiPrinterManager: label connect error: $e');
     }
   }

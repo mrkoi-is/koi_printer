@@ -475,13 +475,21 @@ void main() {
     });
 
     test('parsePaperSize handles int 58', () {
-      final json = {'documentType': 'ticket', 'paperSize': 58, 'elements': []};
+      final json = {
+        'documentType': 'ticket',
+        'paperSize': 58,
+        'elements': <dynamic>[],
+      };
       final doc = koiPrintDocumentFromJson(json) as KoiTicketDocument;
       expect(doc.paperSize, KoiPaperSize.mm58);
     });
 
     test('parsePaperSize handles custom int', () {
-      final json = {'documentType': 'ticket', 'paperSize': 104, 'elements': []};
+      final json = {
+        'documentType': 'ticket',
+        'paperSize': 104,
+        'elements': <dynamic>[],
+      };
       final doc = koiPrintDocumentFromJson(json) as KoiTicketDocument;
       expect(doc.paperSize.widthMm, 104);
     });
@@ -490,7 +498,7 @@ void main() {
       final json = {
         'documentType': 'ticket',
         'paperSize': 'mm80',
-        'elements': [],
+        'elements': <dynamic>[],
       };
       final doc = koiPrintDocumentFromJson(json) as KoiTicketDocument;
       expect(doc.paperSize, KoiPaperSize.mm80);
@@ -500,7 +508,7 @@ void main() {
       final json = {
         'documentType': 'ticket',
         'paperSize': 'mm58',
-        'elements': [],
+        'elements': <dynamic>[],
       };
       final doc = koiPrintDocumentFromJson(json) as KoiTicketDocument;
       expect(doc.paperSize, KoiPaperSize.mm58);

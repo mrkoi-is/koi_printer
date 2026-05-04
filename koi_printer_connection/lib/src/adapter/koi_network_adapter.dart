@@ -68,7 +68,7 @@ class KoiNetworkAdapter implements KoiPrinterAdapter {
       );
       _updateState(KoiConnectionState.ready);
       return true;
-    } catch (e) {
+    } on Object catch (e) {
       debugPrint('KoiNetworkAdapter: connect error: $e');
       _updateState(KoiConnectionState.disconnected);
       return false;
@@ -80,7 +80,7 @@ class KoiNetworkAdapter implements KoiPrinterAdapter {
     try {
       await _socket?.flush();
       await _socket?.close();
-    } catch (e) {
+    } on Object catch (e) {
       debugPrint('KoiNetworkAdapter: disconnect error: $e');
     }
     _socket = null;
@@ -93,9 +93,7 @@ class KoiNetworkAdapter implements KoiPrinterAdapter {
       throw StateError('Not connected. Call connect first.');
     }
 
-    for (final chunk in chunks) {
-      _socket!.add(chunk);
-    }
+    chunks.forEach(_socket!.add);
     await _socket!.flush();
   }
 

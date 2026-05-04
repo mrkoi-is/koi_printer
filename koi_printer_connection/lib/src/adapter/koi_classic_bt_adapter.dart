@@ -70,7 +70,7 @@ class KoiClassicBtAdapter implements KoiPrinterAdapter {
 
       _updateState(KoiConnectionState.ready);
       return true;
-    } catch (e) {
+    } on Object catch (e) {
       debugPrint('KoiClassicBtAdapter: connect error: $e');
       _updateState(KoiConnectionState.disconnected);
       _connection = null;
@@ -83,7 +83,7 @@ class KoiClassicBtAdapter implements KoiPrinterAdapter {
     try {
       await _connection?.close();
       _connection = null;
-    } catch (e) {
+    } on Object catch (e) {
       debugPrint('KoiClassicBtAdapter: disconnect error: $e');
     }
     _updateState(KoiConnectionState.disconnected);
@@ -99,7 +99,7 @@ class KoiClassicBtAdapter implements KoiPrinterAdapter {
       try {
         _connection!.output.add(Uint8List.fromList(chunk));
         await _connection!.output.allSent;
-      } catch (e) {
+      } on Object catch (e) {
         debugPrint('KoiClassicBtAdapter: send error: $e');
         rethrow;
       }

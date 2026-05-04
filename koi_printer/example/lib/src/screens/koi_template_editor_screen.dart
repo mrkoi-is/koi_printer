@@ -197,7 +197,7 @@ class _KoiTemplateEditorScreenState extends State<KoiTemplateEditorScreen> {
           content: Text('已导入: ${doc.name} (${doc.elements.length} 个元素)'),
         ),
       );
-    } catch (e) {
+    } on Object catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(
         context,

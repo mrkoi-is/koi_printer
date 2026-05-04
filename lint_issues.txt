@@ -1,0 +1,83 @@
+Analyzing koit_printer...
+
+   info - koi_printer/lib/koi_printer.dart:9:8 - The referenced name isn't visible in scope. Try adding an import for the referenced name. - comment_references
+   info - koi_printer/lib/src/koi_printer_service.dart:105:7 - Catch clause should use 'on' to specify the type of exception being caught. Try adding an 'on' clause before the 'catch'. - avoid_catches_without_on_clauses
+   info - koi_printer/lib/src/koi_template_engine.dart:71:81 - The line length exceeds the 80-character limit. Try breaking the line across multiple lines. - lines_longer_than_80_chars
+   info - koi_printer/lib/src/koi_template_engine.dart:141:81 - The line length exceeds the 80-character limit. Try breaking the line across multiple lines. - lines_longer_than_80_chars
+   info - koi_printer/lib/src/preview/koi_preview_renderer.dart:73:81 - The line length exceeds the 80-character limit. Try breaking the line across multiple lines. - lines_longer_than_80_chars
+   info - koi_printer/lib/src/preview/koi_preview_renderer.dart:91:81 - The line length exceeds the 80-character limit. Try breaking the line across multiple lines. - lines_longer_than_80_chars
+   info - koi_printer/lib/src/preview/koi_preview_renderer.dart:119:81 - The line length exceeds the 80-character limit. Try breaking the line across multiple lines. - lines_longer_than_80_chars
+   info - koi_printer/lib/src/preview/koi_preview_renderer.dart:147:81 - The line length exceeds the 80-character limit. Try breaking the line across multiple lines. - lines_longer_than_80_chars
+   info - koi_printer/lib/src/preview/koi_preview_renderer.dart:173:81 - The line length exceeds the 80-character limit. Try breaking the line across multiple lines. - lines_longer_than_80_chars
+   info - koi_printer/lib/src/preview/koi_preview_renderer.dart:201:81 - The line length exceeds the 80-character limit. Try breaking the line across multiple lines. - lines_longer_than_80_chars
+   info - koi_printer/lib/src/preview/koi_preview_renderer.dart:267:81 - The line length exceeds the 80-character limit. Try breaking the line across multiple lines. - lines_longer_than_80_chars
+   info - koi_printer/lib/src/service/koi_print_job_queue.dart:114:7 - Catch clause should use 'on' to specify the type of exception being caught. Try adding an 'on' clause before the 'catch'. - avoid_catches_without_on_clauses
+   info - koi_printer/lib/src/service/koi_printer_manager.dart:206:7 - Catch clause should use 'on' to specify the type of exception being caught. Try adding an 'on' clause before the 'catch'. - avoid_catches_without_on_clauses
+   info - koi_printer/lib/src/service/koi_printer_manager.dart:226:7 - Catch clause should use 'on' to specify the type of exception being caught. Try adding an 'on' clause before the 'catch'. - avoid_catches_without_on_clauses
+   info - koi_printer/lib/src/storage/koi_printer_storage.dart:73:7 - Catch clause should use 'on' to specify the type of exception being caught. Try adding an 'on' clause before the 'catch'. - avoid_catches_without_on_clauses
+   info - koi_printer/lib/src/storage/koi_printer_storage.dart:95:7 - Catch clause should use 'on' to specify the type of exception being caught. Try adding an 'on' clause before the 'catch'. - avoid_catches_without_on_clauses
+   info - koi_printer/test/koi_printer_test.dart:436:7 - Unnecessary duplication of receiver. Try using a cascade to avoid the duplication. - cascade_invocations
+   info - koi_printer/test/koi_profile_test.dart:158:7 - Unnecessary duplication of receiver. Try using a cascade to avoid the duplication. - cascade_invocations
+   info - koi_printer/test/koi_profile_test.dart:169:7 - Unnecessary duplication of receiver. Try using a cascade to avoid the duplication. - cascade_invocations
+   info - koi_printer/test/koi_profile_test.dart:181:7 - Unnecessary duplication of receiver. Try using a cascade to avoid the duplication. - cascade_invocations
+   info - koi_printer/test/koi_profile_test.dart:196:7 - Unnecessary duplication of receiver. Try using a cascade to avoid the duplication. - cascade_invocations
+   info - koi_printer/test/koi_profile_test.dart:203:7 - Unnecessary duplication of receiver. Try using a cascade to avoid the duplication. - cascade_invocations
+   info - koi_printer/test/koi_profile_test.dart:209:7 - Unnecessary duplication of receiver. Try using a cascade to avoid the duplication. - cascade_invocations
+   info - koi_printer/test/koi_profile_test.dart:216:7 - Unnecessary duplication of receiver. Try using a cascade to avoid the duplication. - cascade_invocations
+   info - koi_printer/test/koi_profile_test.dart:222:7 - Unnecessary duplication of receiver. Try using a cascade to avoid the duplication. - cascade_invocations
+   info - koi_printer/test/koi_profile_test.dart:237:7 - Unnecessary duplication of receiver. Try using a cascade to avoid the duplication. - cascade_invocations
+   info - koi_printer/test/koi_profile_test.dart:251:7 - Unnecessary duplication of receiver. Try using a cascade to avoid the duplication. - cascade_invocations
+   info - koi_printer/test/koi_service_test.dart:540:7 - Unnecessary duplication of receiver. Try using a cascade to avoid the duplication. - cascade_invocations
+   info - koi_printer_command/lib/src/renderer/koi_cpcl_renderer.dart:72:81 - The line length exceeds the 80-character limit. Try breaking the line across multiple lines. - lines_longer_than_80_chars
+   info - koi_printer_command/lib/src/renderer/koi_esc_pos_renderer.dart:107:5 - Unnecessary duplication of receiver. Try using a cascade to avoid the duplication. - cascade_invocations
+   info - koi_printer_command/lib/src/renderer/koi_esc_pos_renderer.dart:110:5 - Unnecessary duplication of receiver. Try using a cascade to avoid the duplication. - cascade_invocations
+   info - koi_printer_command/lib/src/renderer/koi_esc_pos_renderer.dart:333:5 - Unnecessary duplication of receiver. Try using a cascade to avoid the duplication. - cascade_invocations
+   info - koi_printer_command/lib/src/renderer/koi_esc_pos_renderer.dart:336:5 - Unnecessary duplication of receiver. Try using a cascade to avoid the duplication. - cascade_invocations
+   info - koi_printer_command/lib/src/renderer/koi_esc_pos_renderer.dart:370:5 - Unnecessary duplication of receiver. Try using a cascade to avoid the duplication. - cascade_invocations
+   info - koi_printer_command/lib/src/renderer/koi_esc_pos_renderer.dart:371:5 - Unnecessary duplication of receiver. Try using a cascade to avoid the duplication. - cascade_invocations
+   info - koi_printer_command/lib/src/renderer/koi_esc_pos_renderer.dart:374:5 - Unnecessary duplication of receiver. Try using a cascade to avoid the duplication. - cascade_invocations
+   info - koi_printer_command/lib/src/renderer/koi_esc_pos_renderer.dart:516:81 - The line length exceeds the 80-character limit. Try breaking the line across multiple lines. - lines_longer_than_80_chars
+   info - koi_printer_command/lib/src/renderer/koi_esc_pos_renderer.dart:630:9 - Unnecessary duplication of receiver. Try using a cascade to avoid the duplication. - cascade_invocations
+   info - koi_printer_command/lib/src/renderer/koi_tspl_renderer.dart:51:15 - Missing whitespace between adjacent strings. Try adding whitespace between the strings. - missing_whitespace_between_adjacent_strings
+   info - koi_printer_command/lib/src/renderer/koi_tspl_renderer.dart:59:15 - Missing whitespace between adjacent strings. Try adding whitespace between the strings. - missing_whitespace_between_adjacent_strings
+   info - koi_printer_command/lib/src/renderer/koi_tspl_renderer.dart:67:15 - Missing whitespace between adjacent strings. Try adding whitespace between the strings. - missing_whitespace_between_adjacent_strings
+   info - koi_printer_command/pubspec.yaml:17:3 - Dependencies not sorted alphabetically. Try sorting the dependencies alphabetically (A to Z). - sort_pub_dependencies
+   info - koi_printer_command/test/koi_json_serialization_test.dart:478:81 - The line length exceeds the 80-character limit. Try breaking the line across multiple lines. - lines_longer_than_80_chars
+   info - koi_printer_command/test/koi_json_serialization_test.dart:484:81 - The line length exceeds the 80-character limit. Try breaking the line across multiple lines. - lines_longer_than_80_chars
+   info - koi_printer_command/test/koi_renderer_test.dart:268:81 - The line length exceeds the 80-character limit. Try breaking the line across multiple lines. - lines_longer_than_80_chars
+   info - koi_printer_command/test/test_raster.dart:6:3 - Unnecessary duplication of receiver. Try using a cascade to avoid the duplication. - cascade_invocations
+   info - koi_printer_command/test/test_raster.dart:7:3 - Unnecessary duplication of receiver. Try using a cascade to avoid the duplication. - cascade_invocations
+   info - koi_printer_command/test/test_raster.dart:37:3 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - koi_printer_command/test/test_raster.dart:51:81 - The line length exceeds the 80-character limit. Try breaking the line across multiple lines. - lines_longer_than_80_chars
+   info - koi_printer_command/test/test_raster.dart:61:3 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - koi_printer_connection/lib/src/adapter/koi_ble_adapter.dart:85:41 - 'connecting' is deprecated and shouldn't be used. Android & iOS dont stream this state. You can delete. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - koi_printer_connection/lib/src/adapter/koi_ble_adapter.dart:87:41 - 'disconnecting' is deprecated and shouldn't be used. Android & iOS dont stream this state. You can delete. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - koi_printer_connection/lib/src/adapter/koi_ble_adapter.dart:103:9 - Catch clause should use 'on' to specify the type of exception being caught. Try adding an 'on' clause before the 'catch'. - avoid_catches_without_on_clauses
+   info - koi_printer_connection/lib/src/adapter/koi_ble_adapter.dart:133:81 - The line length exceeds the 80-character limit. Try breaking the line across multiple lines. - lines_longer_than_80_chars
+   info - koi_printer_connection/lib/src/adapter/koi_ble_adapter.dart:136:11 - Catch clause should use 'on' to specify the type of exception being caught. Try adding an 'on' clause before the 'catch'. - avoid_catches_without_on_clauses
+   info - koi_printer_connection/lib/src/adapter/koi_ble_adapter.dart:142:7 - Catch clause should use 'on' to specify the type of exception being caught. Try adding an 'on' clause before the 'catch'. - avoid_catches_without_on_clauses
+   info - koi_printer_connection/lib/src/adapter/koi_ble_adapter.dart:156:81 - The line length exceeds the 80-character limit. Try breaking the line across multiple lines. - lines_longer_than_80_chars
+   info - koi_printer_connection/lib/src/adapter/koi_ble_adapter.dart:203:7 - Catch clause should use 'on' to specify the type of exception being caught. Try adding an 'on' clause before the 'catch'. - avoid_catches_without_on_clauses
+   info - koi_printer_connection/lib/src/adapter/koi_ble_adapter.dart:228:7 - Catch clause should use 'on' to specify the type of exception being caught. Try adding an 'on' clause before the 'catch'. - avoid_catches_without_on_clauses
+   info - koi_printer_connection/lib/src/adapter/koi_ble_adapter.dart:287:7 - Catch clause should use 'on' to specify the type of exception being caught. Try adding an 'on' clause before the 'catch'. - avoid_catches_without_on_clauses
+   info - koi_printer_connection/lib/src/adapter/koi_classic_bt_adapter.dart:73:7 - Catch clause should use 'on' to specify the type of exception being caught. Try adding an 'on' clause before the 'catch'. - avoid_catches_without_on_clauses
+   info - koi_printer_connection/lib/src/adapter/koi_classic_bt_adapter.dart:86:7 - Catch clause should use 'on' to specify the type of exception being caught. Try adding an 'on' clause before the 'catch'. - avoid_catches_without_on_clauses
+   info - koi_printer_connection/lib/src/adapter/koi_network_adapter.dart:71:7 - Catch clause should use 'on' to specify the type of exception being caught. Try adding an 'on' clause before the 'catch'. - avoid_catches_without_on_clauses
+   info - koi_printer_connection/lib/src/adapter/koi_network_adapter.dart:83:7 - Catch clause should use 'on' to specify the type of exception being caught. Try adding an 'on' clause before the 'catch'. - avoid_catches_without_on_clauses
+   info - koi_printer_connection/lib/src/adapter/koi_network_adapter.dart:96:5 - Use 'forEach' and a tear-off rather than a 'for' loop to apply a function to every element. Try using 'forEach' and a tear-off rather than a 'for' loop. - prefer_foreach
+   info - koi_printer_connection/lib/src/model/koi_discovered_device.dart:39:3 - The method '==' should not be overridden in classes not annotated with '@immutable'. Try removing the override or annotating the class with '@immutable'. - avoid_equals_and_hash_code_on_mutable_classes
+   info - koi_printer_connection/lib/src/model/koi_discovered_device.dart:46:3 - The method 'hashCode' should not be overridden in classes not annotated with '@immutable'. Try removing the override or annotating the class with '@immutable'. - avoid_equals_and_hash_code_on_mutable_classes
+   info - koi_printer_connection/lib/src/scanner/koi_ble_scanner.dart:26:23 - 'Future'-returning calls in a non-'async' function. Try converting the enclosing function to be 'async' and then 'await' the future, or wrap the expression in 'unawaited'. - discarded_futures
+   info - koi_printer_connection/lib/src/scanner/koi_ble_scanner.dart:48:37 - 'Future'-returning calls in a non-'async' function. Try converting the enclosing function to be 'async' and then 'await' the future, or wrap the expression in 'unawaited'. - discarded_futures
+   info - koi_printer_connection/lib/src/scanner/koi_ble_scanner.dart:49:18 - 'Future'-returning calls in a non-'async' function. Try converting the enclosing function to be 'async' and then 'await' the future, or wrap the expression in 'unawaited'. - discarded_futures
+   info - koi_printer_connection/lib/src/scanner/koi_ble_scanner.dart:51:22 - 'Future'-returning calls in a non-'async' function. Try converting the enclosing function to be 'async' and then 'await' the future, or wrap the expression in 'unawaited'. - discarded_futures
+   info - koi_printer_connection/lib/src/scanner/koi_ble_scanner.dart:59:18 - 'Future'-returning calls in a non-'async' function. Try converting the enclosing function to be 'async' and then 'await' the future, or wrap the expression in 'unawaited'. - discarded_futures
+   info - koi_printer_connection/lib/src/scanner/koi_ble_scanner.dart:60:25 - 'Future'-returning calls in a non-'async' function. Try converting the enclosing function to be 'async' and then 'await' the future, or wrap the expression in 'unawaited'. - discarded_futures
+   info - koi_printer_connection/lib/src/scanner/koi_ble_scanner.dart:70:7 - Catch clause should use 'on' to specify the type of exception being caught. Try adding an 'on' clause before the 'catch'. - avoid_catches_without_on_clauses
+   info - koi_printer_connection/lib/src/scanner/koi_classic_bt_scanner.dart:32:9 - Catch clause should use 'on' to specify the type of exception being caught. Try adding an 'on' clause before the 'catch'. - avoid_catches_without_on_clauses
+   info - koi_printer_connection/lib/src/scanner/koi_classic_bt_scanner.dart:36:44 - Missing an 'await' for the 'Future' computed by this expression. Try adding an 'await' or wrapping the expression with 'unawaited'. - unawaited_futures
+   info - koi_printer_connection/lib/src/scanner/koi_keyboard_scanner.dart:70:21 - 'Future'-returning calls in a non-'async' function. Try converting the enclosing function to be 'async' and then 'await' the future, or wrap the expression in 'unawaited'. - discarded_futures
+   info - koi_printer_connection/lib/src/scanner/koi_network_scanner.dart:32:44 - Missing an 'await' for the 'Future' computed by this expression. Try adding an 'await' or wrapping the expression with 'unawaited'. - unawaited_futures
+   info - koi_printer_connection/lib/src/scanner/koi_network_scanner.dart:59:7 - Catch clause should use 'on' to specify the type of exception being caught. Try adding an 'on' clause before the 'catch'. - avoid_catches_without_on_clauses
+
+79 issues found.

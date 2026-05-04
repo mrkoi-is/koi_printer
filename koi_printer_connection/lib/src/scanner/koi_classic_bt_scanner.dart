@@ -29,11 +29,11 @@ class KoiClassicBtScanner {
             ),
           );
         }
-      } catch (e) {
+      } on Object catch (e) {
         debugPrint('KoiClassicBtScanner: getBondedDevices error: $e');
       }
 
-      if (!controller.isClosed) controller.close();
+      if (!controller.isClosed) unawaited(controller.close());
     }
 
     controller.onListen = fetchBondedDevices;

@@ -136,8 +136,7 @@ class _PreviewScreenState extends State<PreviewScreen> {
     // We pass dynamic map or void depending on the generic constraint, safely casted.
     final dynamicTemplate = templateTuple.$2 as dynamic;
     final docs = (templateTuple.$1 == '功能测试页')
-        ? dynamicTemplate.build(null, effectiveConfig)
-              as List<KoiPrintDocument>
+        ? dynamicTemplate.build(null, effectiveConfig) as List<KoiPrintDocument>
         : dynamicTemplate.build(_mockData, effectiveConfig)
               as List<KoiPrintDocument>;
 

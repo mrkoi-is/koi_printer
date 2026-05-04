@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:gbk_codec/gbk_codec.dart';
+
 import 'package:image/image.dart' as img;
 import 'package:koi_printer_command/src/model/koi_print_document.dart';
 import 'package:koi_printer_command/src/model/koi_print_element.dart';
@@ -46,28 +49,40 @@ class KoiTsplRenderer implements KoiCommandRenderer {
           }
           commands.add(_cmd('CLS'));
         case KoiPositionedTextElement():
-          commands.add(
-            _cmd(
-              'TEXT ${element.x},${element.y},'
-              '"${element.font}",${element.rotation},'
-              '${element.xScale},${element.yScale},"${element.text}"',
-            ),
-          );
+          final parts = [
+            'TEXT ${element.x}',
+            '${element.y}',
+            '"${element.font}"',
+            '${element.rotation}',
+            '${element.xScale}',
+            '${element.yScale}',
+            '"${element.text}"',
+          ];
+          commands.add(_cmd(parts.join(',')));
         case KoiPositionedBarcodeElement():
-          commands.add(
-            _cmd(
-              'BARCODE ${element.x},${element.y},'
-              '"${element.type}",${element.height},'
-              '1,0,2,2,"${element.data}"',
-            ),
-          );
+          final parts = [
+            'BARCODE ${element.x}',
+            '${element.y}',
+            '"${element.type}"',
+            '${element.height}',
+            '1',
+            '0',
+            '2',
+            '2',
+            '"${element.data}"',
+          ];
+          commands.add(_cmd(parts.join(',')));
         case KoiPositionedQrCodeElement():
-          commands.add(
-            _cmd(
-              'QRCODE ${element.x},${element.y},'
-              'L,${element.cellSize},A,0,"${element.data}"',
-            ),
-          );
+          final parts = [
+            'QRCODE ${element.x}',
+            '${element.y}',
+            'L',
+            '${element.cellSize}',
+            'A',
+            '0',
+            '"${element.data}"',
+          ];
+          commands.add(_cmd(parts.join(',')));
         case KoiLabelBoxElement():
           final xEnd = element.x + element.width;
           final yEnd = element.y + element.height;
@@ -147,9 +162,9 @@ class KoiTsplRenderer implements KoiCommandRenderer {
       return [
         <int>[...header, ...bitmapData, 0x0D, 0x0A],
       ];
-      // 位图解码可能抛出多种异常, 统一忽略以保证打印流程不中断。
-      // ignore: avoid_catches_without_on_clauses
-    } catch (_) {
+      // 位图解码可能抛出多种异常类型 (image, codec 等)，记录日志以保证打印流程不中断。
+    } on Object catch (e, st) {
+      log('Image Decode Error: $e\n$st', name: 'KoiTsplRenderer', error: e);
       return [];
     }
   }

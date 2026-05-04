@@ -102,7 +102,7 @@ class KoiPrinterService {
         documentName: document.name,
         bytesSent: totalBytes,
       );
-    } catch (e) {
+    } on Object catch (e) {
       debugPrint('KoiPrinterService: print error: $e');
       return KoiPrintFailure(
         documentName: document.name,

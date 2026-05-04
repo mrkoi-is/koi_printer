@@ -70,7 +70,7 @@ class KoiPrinterStorage {
     if (json == null) return null;
     try {
       return KoiDeviceInfo.fromJson(json);
-    } catch (e) {
+    } on Object catch (e) {
       debugPrint('KoiPrinterStorage: parse ticket printer error: $e');
       return null;
     }
@@ -92,7 +92,7 @@ class KoiPrinterStorage {
     if (json == null) return null;
     try {
       return KoiDeviceInfo.fromJson(json);
-    } catch (e) {
+    } on Object catch (e) {
       debugPrint('KoiPrinterStorage: parse label printer error: $e');
       return null;
     }

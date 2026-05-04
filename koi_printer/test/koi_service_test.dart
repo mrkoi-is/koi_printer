@@ -369,6 +369,7 @@ void main() {
     });
 
     test('creates service with custom renderer', () async {
+      SharedPreferences.setMockInitialValues({});
       final adapter = MockPrinterAdapter(
         initialState: KoiConnectionState.ready,
       );
@@ -458,6 +459,10 @@ void main() {
       storage = KoiPrinterStorage(prefs);
     });
 
+    tearDown(() async {
+      await prefs.clear();
+    });
+
     test('setTicketAdapter updates adapter and queue', () async {
       final manager = KoiPrinterManager(storage: storage);
       final adapter = MockPrinterAdapter(
@@ -536,8 +541,8 @@ void main() {
     });
 
     test('startAutoConnect and stopAutoConnect', () async {
-      final manager = KoiPrinterManager(storage: storage);
-      manager.startAutoConnect(interval: const Duration(milliseconds: 50));
+      final manager = KoiPrinterManager(storage: storage)
+        ..startAutoConnect(interval: const Duration(milliseconds: 50));
       // 等一个 tick, 确保 Timer 注册了
       await Future<void>.delayed(const Duration(milliseconds: 10));
       manager.stopAutoConnect();
@@ -554,7 +559,13 @@ void main() {
       await storage.saveTicketPrinter(device);
       await storage.saveLabelPrinter(device);
 
-      final manager = KoiPrinterManager(storage: storage);
+      final ticketAdapter = MockPrinterAdapter();
+      final labelAdapter = MockPrinterAdapter();
+      final manager = KoiPrinterManager(
+        storage: storage,
+        ticketAdapter: ticketAdapter,
+        labelAdapter: labelAdapter,
+      );
       await manager.connectAll();
 
       // 应自动创建 adapter 并尝试连接

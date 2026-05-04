@@ -29,7 +29,7 @@ class KoiNetworkScanner {
         futures.add(_probe(host, port, timeout, controller));
       }
       await Future.wait(futures);
-      if (!controller.isClosed) controller.close();
+      if (!controller.isClosed) unawaited(controller.close());
     }
 
     controller.onListen = scanAll;
@@ -56,8 +56,9 @@ class KoiNetworkScanner {
           ),
         );
       }
-    } catch (_) {
+    } on Object catch (e, st) {
       // 连接超时或拒绝 → 该 IP 无打印机
+      debugPrint('Network Scanner ($host:$port) check failed: $e\n$st');
     }
   }
 

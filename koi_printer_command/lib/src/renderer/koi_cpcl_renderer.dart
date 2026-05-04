@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:gbk_codec/gbk_codec.dart';
+
 import 'package:image/image.dart' as img;
 import 'package:koi_printer_command/src/model/koi_print_document.dart';
 import 'package:koi_printer_command/src/model/koi_print_element.dart';
@@ -66,12 +69,9 @@ class KoiCpclRenderer implements KoiCommandRenderer {
             ),
           );
         case KoiPositionedQrCodeElement():
+          final size = element.cellSize;
           commands
-            ..add(
-              _cmd(
-                'BARCODE QR ${element.x} ${element.y} M 2 U ${element.cellSize}',
-              ),
-            )
+            ..add(_cmd('BARCODE QR ${element.x} ${element.y} M 2 U $size'))
             ..add(_cmd('MA,${element.data}'))
             ..add(_cmd('ENDQR'));
         case KoiLabelBoxElement():
@@ -158,9 +158,9 @@ class KoiCpclRenderer implements KoiCommandRenderer {
       return [
         <int>[...header, ...bitmapData, 0x0D, 0x0A],
       ];
-      // 位图解码可能抛出多种异常类型 (image, codec 等)，统一忽略以保证打印流程不中断。
-      // ignore: avoid_catches_without_on_clauses
-    } catch (_) {
+      // 位图解码可能抛出多种异常类型 (image, codec 等)，记录日志以保证打印流程不中断。
+    } on Object catch (e, st) {
+      log('Image Decode Error: $e\n$st', name: 'KoiCpclRenderer', error: e);
       return [];
     }
   }

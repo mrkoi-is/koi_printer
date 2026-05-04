@@ -101,13 +101,11 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
     // qrStrategy 来自 KoiPrinterProfile.bestQrStrategy, 优先级最高
     final effectiveQrStrategy = qrStrategy ?? defaultStrategy;
     final chunks = <List<int>>[];
-    final bytes = <int>[];
-
-    // 初始化打印机
-    bytes.addAll(_cmdInit);
-
-    // 设置代码页 (ESC t n)
-    bytes.addAll([..._cmdCodePage, ticketDoc.codePage.value]);
+    final bytes = <int>[
+      ..._cmdInit,
+      ..._cmdCodePage,
+      ticketDoc.codePage.value,
+    ];
 
     for (final element in ticketDoc.elements) {
       switch (element) {
@@ -327,22 +325,21 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
     final textBytes = latin1.encode(element.data);
 
     // 初始化
-    chunks.add([_esc, 0x40]);
-
-    // 设置 QR 大小
-    chunks.add([_gs, 0x28, 0x6B, 0x03, 0x00, 0x31, 0x43, element.size.value]);
-
-    // 设置纠错等级
-    chunks.add([
-      _gs,
-      0x28,
-      0x6B,
-      0x03,
-      0x00,
-      0x31,
-      0x45,
-      element.correction.value,
-    ]);
+    chunks
+      ..add([_esc, 0x40])
+      // 设置 QR 大小
+      ..add([_gs, 0x28, 0x6B, 0x03, 0x00, 0x31, 0x43, element.size.value])
+      // 设置纠错等级
+      ..add([
+        _gs,
+        0x28,
+        0x6B,
+        0x03,
+        0x00,
+        0x31,
+        0x45,
+        element.correction.value,
+      ]);
 
     // 存储数据 (头部)
     final dataLen = textBytes.length + 3;
@@ -366,12 +363,12 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
     }
 
     // 居中 + 获取大小 + 打印
-    chunks.add([_esc, 0x61, 0x01]);
-    chunks.add([_gs, 0x28, 0x6B, 0x03, 0x00, 0x31, 0x52, 0x30]);
-    chunks.add([_gs, 0x28, 0x6B, 0x03, 0x00, 0x31, 0x51, 0x30]);
-
-    // 重置
-    chunks.add([_gs, 0x40]);
+    chunks
+      ..add([_esc, 0x61, 0x01])
+      ..add([_gs, 0x28, 0x6B, 0x03, 0x00, 0x31, 0x52, 0x30])
+      ..add([_gs, 0x28, 0x6B, 0x03, 0x00, 0x31, 0x51, 0x30])
+      // 重置
+      ..add([_gs, 0x40]);
 
     return chunks;
   }
@@ -485,8 +482,7 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
         KoiPaperSize.mm80,
       );
       // zxing / image 库均可能因数据过长等原因异常, 统一降级为文本。
-      // ignore: avoid_catches_without_on_clauses
-    } catch (e, st) {
+    } on Object catch (e, st) {
       // QR 生成失败时记录日志，由于 renderer 内部无注入 logger，使用 dart:developer log 降级。
       log('QR Error: $e\n$st', name: 'KoiEscPosRenderer', error: e);
       // 降级: 如果 QR 生成失败, 输出纯文本占位
@@ -513,7 +509,8 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
     final barcodeType = _barcodeTypeValue(element.type);
 
     if (element.type == KoiBarcodeType.code128) {
-      // CODE128 needs a starting code set. '{B' is usually a safe default for standard ASCII.
+      // CODE128 needs a starting code set.
+      // '{B' is usually a safe default for standard ASCII.
       if (barcodeData.isEmpty || barcodeData[0] != 0x7B) {
         barcodeData = [0x7B, 0x42, ...barcodeData];
       }
@@ -597,12 +594,12 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
 
       if (element.renderMode == KoiImageRenderMode.bitImage) {
         // ESC * (传统列格式位图)
-        final lineHeight = 24; // 24-dot mode (high density)
+        const lineHeight = 24; // 24-dot mode (high density)
         final blobs = _toColumnFormat(image, lineHeight);
-        final densityByte = 33; // m=33 (24-dot double density)
-        
+        const densityByte = 33; // m=33 (24-dot double density)
+
         bytes.addAll([0x1B, 0x33, 0x10]); // ESC 3 16 (设置行间距为16)
-        
+
         for (final blob in blobs) {
           bytes
             ..addAll([0x1B, 0x2A]) // ESC *
@@ -611,7 +608,7 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
             ..addAll(blob)
             ..addAll(_newLine);
         }
-        
+
         bytes.addAll([0x1B, 0x32]); // ESC 2 (恢复默认行间距)
       } else if (element.renderMode == KoiImageRenderMode.graphics) {
         // GS ( L — FN_112 (新标准图形模式)
@@ -624,10 +621,8 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
           ..addAll([49]) // c=49
           ..addAll(_intLowHigh(widthBytes, 2)) // xL xH
           ..addAll(_intLowHigh(image.height, 2)) // yL yH
-          ..addAll(rasterData);
-
-        // GS ( L — FN_50 (Run print)
-        bytes
+          ..addAll(rasterData)
+          // GS ( L — FN_50 (Run print)
           ..addAll([_gs, 0x28, 0x4C]) // GS ( L
           ..addAll([2, 0]) // pL pH
           ..addAll([48, 50]); // m fn[2,50]
@@ -642,8 +637,7 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
       }
 
       // 图片解码/处理可能抛出多种异常类型, 统一忽略以保证打印流程不中断。
-      // ignore: avoid_catches_without_on_clauses
-    } catch (e, st) {
+    } on Object catch (e, st) {
       // Renderer 内部无 logger 依赖，使用 dart:developer log 记录图片解码错误。
       log('Image Decode Error: $e\n$st', name: 'KoiEscPosRenderer', error: e);
       // 图片解码失败, 跳过
@@ -659,7 +653,7 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
     // 如果不进行转换，对于 1-bit 单色位图，getPixel() 会返回未归一化的值（如 p.a 永远为 0，最大通道值为 1），
     // 导致后续 p.a >= 128 的判断永远为 false，最终打印出一张完全空白的图片。
     final image = imgSrc.convert(format: img.Format.uint8, numChannels: 4);
-    
+
     final widthPx = image.width;
     final heightPx = image.height;
 
@@ -674,7 +668,7 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
           final realX = x + bit;
           if (realX < widthPx) {
             final p = image.getPixel(realX, y);
-            
+
             // 计算灰度值 (Luminance: 0.299*R + 0.587*G + 0.114*B)
             final lum = (p.r * 299 + p.g * 587 + p.b * 114) ~/ 1000;
 
@@ -682,7 +676,7 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
             // 1. 忽略透明像素 (alpha < 128 当作白纸)
             // 2. 较暗的像素打印黑点 (luminance < 128 打点)
             if (p.a >= 128 && lum < 128) {
-              byteVal |= (1 << (7 - bit));
+              byteVal |= 1 << (7 - bit);
             }
           }
         }
@@ -699,19 +693,19 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
     final widthPx = image.width;
     final heightPx = image.height;
     final blobs = <List<int>>[];
-    
-    for (int y = 0; y < heightPx; y += lineHeight) {
+
+    for (var y = 0; y < heightPx; y += lineHeight) {
       final blob = <int>[];
-      for (int x = 0; x < widthPx; ++x) {
-        for (int b = 0; b < lineHeight ~/ 8; ++b) {
-          int byteVal = 0;
-          for (int bit = 0; bit < 8; ++bit) {
+      for (var x = 0; x < widthPx; ++x) {
+        for (var b = 0; b < lineHeight ~/ 8; ++b) {
+          var byteVal = 0;
+          for (var bit = 0; bit < 8; ++bit) {
             final realY = y + b * 8 + bit;
             if (realY < heightPx) {
               final p = image.getPixel(x, realY);
               final lum = (p.r * 299 + p.g * 587 + p.b * 114) ~/ 1000;
               if (p.a >= 128 && lum < 128) {
-                byteVal |= (1 << (7 - bit));
+                byteVal |= 1 << (7 - bit);
               }
             }
           }

@@ -74,22 +74,13 @@ class KoiBleAdapter implements KoiPrinterAdapter {
 
       // 监听连接状态变化
       _connectionSub = _device!.connectionState.listen((bleState) async {
-        switch (bleState) {
-          case BluetoothConnectionState.connected:
-            if (_state != KoiConnectionState.ready) {
-              await _discoverServices();
-            }
-            break;
-          case BluetoothConnectionState.disconnected:
-            _updateState(KoiConnectionState.disconnected);
-            _characteristic = null;
-            break;
-          case BluetoothConnectionState.connecting:
-            _updateState(KoiConnectionState.connecting);
-            break;
-          case BluetoothConnectionState.disconnecting:
-            _updateState(KoiConnectionState.disconnecting);
-            break;
+        if (bleState == BluetoothConnectionState.connected) {
+          if (_state != KoiConnectionState.ready) {
+            await _discoverServices();
+          }
+        } else if (bleState == BluetoothConnectionState.disconnected) {
+          _updateState(KoiConnectionState.disconnected);
+          _characteristic = null;
         }
       });
 
@@ -104,7 +95,9 @@ class KoiBleAdapter implements KoiPrinterAdapter {
       try {
         // 先确保断开之前的僵尸连接，预防 Android GATT 133 错误
         await _device!.disconnect();
-      } catch (_) {}
+      } on Object catch (e, st) {
+        debugPrint('KoiBleAdapter: Cleanup disconnect error: $e\n$st');
+      }
 
       try {
         await _device!.connect(
@@ -112,7 +105,7 @@ class KoiBleAdapter implements KoiPrinterAdapter {
           autoConnect: config.autoReconnect,
           mtu: config.mtu,
         );
-      } catch (e) {
+      } on Object catch (e) {
         final err = e.toString();
         if (err.contains('133') || err.contains('ANDROID_SPECIFIC_ERROR')) {
           debugPrint('KoiBleAdapter: caught 133 error, retrying in 500ms...');
@@ -134,16 +127,18 @@ class KoiBleAdapter implements KoiPrinterAdapter {
                 (s) =>
                     s == KoiConnectionState.ready ||
                     s == KoiConnectionState.disconnected ||
-                    (s == KoiConnectionState.connected && _characteristic == null),
+                    (s == KoiConnectionState.connected &&
+                        _characteristic == null),
               )
               .timeout(const Duration(seconds: 15));
-        } catch (_) {
+        } on Object catch (e, st) {
           // 超时或错误
+          debugPrint('KoiBleAdapter: Wait for ready timeout/error: $e\n$st');
         }
       }
-      
+
       return isReady;
-    } catch (e) {
+    } on Object catch (e) {
       debugPrint('KoiBleAdapter: connect error: $e');
       _updateState(KoiConnectionState.disconnected);
       return false;
@@ -157,7 +152,8 @@ class KoiBleAdapter implements KoiPrinterAdapter {
     try {
       final services = await _device!.discoverServices();
 
-      final hasConfigUuid = _config?.serviceUuid != null || _config?.characteristicUuid != null;
+      final hasConfigUuid =
+          _config?.serviceUuid != null || _config?.characteristicUuid != null;
 
       if (hasConfigUuid) {
         for (final service in services) {
@@ -188,12 +184,12 @@ class KoiBleAdapter implements KoiPrinterAdapter {
         if (_isSystemUuid(service.uuid.toString())) {
           continue;
         }
-        
+
         for (final c in service.characteristics) {
           if (_isSystemUuid(c.uuid.toString())) {
             continue;
           }
-          
+
           if (c.properties.write || c.properties.writeWithoutResponse) {
             _characteristic = c;
             _updateState(KoiConnectionState.ready);
@@ -204,7 +200,7 @@ class KoiBleAdapter implements KoiPrinterAdapter {
 
       debugPrint('KoiBleAdapter: No writable characteristic found');
       _updateState(KoiConnectionState.connected);
-    } catch (e) {
+    } on Object catch (e) {
       debugPrint('KoiBleAdapter: discoverServices error: $e');
       _updateState(KoiConnectionState.connected);
     }
@@ -224,12 +220,11 @@ class KoiBleAdapter implements KoiPrinterAdapter {
     return false;
   }
 
-
   @override
   Future<void> disconnect() async {
     try {
       await _device?.disconnect();
-    } catch (e) {
+    } on Object catch (e) {
       debugPrint('KoiBleAdapter: disconnect error: $e');
     }
     _updateState(KoiConnectionState.disconnected);
@@ -267,9 +262,9 @@ class KoiBleAdapter implements KoiPrinterAdapter {
         );
         // 增加流量控制: 如果是 withoutResponse，连续的高速突发写入极易导致打印机底层 BLE 芯片 UART 缓冲溢出而断开连接。
         if (_characteristic!.properties.writeWithoutResponse) {
-          await Future.delayed(const Duration(milliseconds: 20));
+          await Future<void>.delayed(const Duration(milliseconds: 20));
         }
-      } catch (e) {
+      } on Object catch (e) {
         debugPrint('KoiBleAdapter: write error at offset $offset: $e');
         rethrow;
       }
@@ -288,8 +283,9 @@ class KoiBleAdapter implements KoiPrinterAdapter {
     await _stateController.close();
     try {
       await _device?.disconnect();
-    } catch (_) {
+    } on Object catch (e, st) {
       // 忽略 dispose 时的断连错误。
+      debugPrint('KoiBleAdapter: Dispose disconnect error: $e\n$st');
     }
   }
 }

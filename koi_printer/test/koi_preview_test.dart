@@ -74,7 +74,13 @@ void main() {
         ],
       );
       final widget = KoiPreviewRenderer.build(document: doc, paperWidthPx: 384);
-      await tester.pumpWidget(MaterialApp(home: Scaffold(body: widget)));
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SingleChildScrollView(child: widget),
+          ),
+        ),
+      );
       expect(find.text('S1'), findsOneWidget);
       expect(find.text('S8'), findsOneWidget);
     });

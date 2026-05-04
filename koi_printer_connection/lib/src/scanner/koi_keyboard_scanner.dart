@@ -67,6 +67,6 @@ class KoiKeyboardScanner {
   void dispose() {
     HardwareKeyboard.instance.removeHandler(_handleKeyEvent);
     _timer?.cancel();
-    _scanController.close();
+    unawaited(_scanController.close());
   }
 }

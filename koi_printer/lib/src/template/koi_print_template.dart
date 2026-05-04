@@ -20,8 +20,9 @@ import 'package:koi_printer_command/koi_printer_command.dart';
 ///   }
 /// }
 /// ```
+// Justified: Used as an interface for the Template pattern by clients.
 // ignore: one_member_abstracts
-abstract class KoiTicketTemplate<T> {
+abstract interface class KoiTicketTemplate<T> {
   /// 构建小票文档列表 (支持多联)。
   List<KoiTicketDocument> build(T data, KoiPrintConfig config);
 }
@@ -40,8 +41,9 @@ abstract class KoiTicketTemplate<T> {
 ///   }
 /// }
 /// ```
+// Justified: Used as an interface for the Template pattern by clients.
 // ignore: one_member_abstracts
-abstract class KoiLabelTemplate<T> {
+abstract interface class KoiLabelTemplate<T> {
   /// 构建标签文档列表。
   List<KoiLabelDocument> build(T data, KoiPrintConfig config);
 }

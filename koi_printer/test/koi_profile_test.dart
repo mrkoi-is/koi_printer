@@ -154,8 +154,8 @@ void main() {
 
   group('KoiPrinterProfileDb', () {
     test('loadFromJsonString populates profiles', () {
-      final db = KoiPrinterProfileDb();
-      db.loadFromJsonString('''
+      final db =
+          KoiPrinterProfileDb()..loadFromJsonString('''
       [
         {"id": "p1", "name": "Printer One", "vendor": "V1", "protocols": ["escPos"], "connections": ["ble"]},
         {"id": "p2", "name": "Printer Two", "vendor": "V2", "protocols": ["tspl"], "connections": ["network"]}
@@ -165,8 +165,9 @@ void main() {
     });
 
     test('loadFromJsonString replaces previous data', () {
-      final db = KoiPrinterProfileDb();
-      db.loadFromJsonString('[{"id": "p1", "name": "First"}]');
+      final db =
+          KoiPrinterProfileDb()
+            ..loadFromJsonString('[{"id": "p1", "name": "First"}]');
       expect(db.profiles.length, 1);
 
       db.loadFromJsonString(
@@ -177,87 +178,91 @@ void main() {
     });
 
     test('addProfile appends to list', () {
-      final db = KoiPrinterProfileDb();
-      db.addProfile(
-        const KoiPrinterProfile(
-          id: 'custom-1',
-          name: 'Custom',
-          vendor: 'Me',
-          protocols: [KoiCommandProtocol.escPos],
-          connections: [KoiConnectionType.network],
-        ),
-      );
+      final db =
+          KoiPrinterProfileDb()..addProfile(
+            const KoiPrinterProfile(
+              id: 'custom-1',
+              name: 'Custom',
+              vendor: 'Me',
+              protocols: [KoiCommandProtocol.escPos],
+              connections: [KoiConnectionType.network],
+            ),
+          );
       expect(db.profiles.length, 1);
       expect(db.profiles.first.id, 'custom-1');
     });
 
     test('findById returns matching profile', () {
-      final db = KoiPrinterProfileDb();
-      db.loadFromJsonString('[{"id": "abc", "name": "ABC Printer"}]');
+      final db =
+          KoiPrinterProfileDb()
+            ..loadFromJsonString('[{"id": "abc", "name": "ABC Printer"}]');
       expect(db.findById('abc'), isNotNull);
       expect(db.findById('abc')!.name, 'ABC Printer');
     });
 
     test('findById returns null for non-existent id', () {
-      final db = KoiPrinterProfileDb();
-      db.loadFromJsonString('[{"id": "abc", "name": "ABC"}]');
+      final db =
+          KoiPrinterProfileDb()
+            ..loadFromJsonString('[{"id": "abc", "name": "ABC"}]');
       expect(db.findById('xyz'), isNull);
     });
 
     test('findByName matches case-insensitively', () {
-      final db = KoiPrinterProfileDb();
-      db.loadFromJsonString('[{"id": "xp", "name": "芯烨 XT-423"}]');
+      final db =
+          KoiPrinterProfileDb()
+            ..loadFromJsonString('[{"id": "xp", "name": "芯烨 XT-423"}]');
       expect(db.findByName('xt-423'), isNotNull);
       expect(db.findByName('芯烨'), isNotNull);
     });
 
     test('findByName returns null for no match', () {
-      final db = KoiPrinterProfileDb();
-      db.loadFromJsonString('[{"id": "xp", "name": "ABC"}]');
+      final db =
+          KoiPrinterProfileDb()
+            ..loadFromJsonString('[{"id": "xp", "name": "ABC"}]');
       expect(db.findByName('XYZ'), isNull);
     });
 
     test('findByCharacteristic matches filter UUID', () {
-      final db = KoiPrinterProfileDb();
-      db.addProfile(
-        const KoiPrinterProfile(
-          id: 'ble-1',
-          name: 'BLE Printer',
-          vendor: 'V',
-          protocols: [KoiCommandProtocol.escPos],
-          connections: [KoiConnectionType.ble],
-          characteristicFilter: '49535343-8841',
-        ),
-      );
+      final db =
+          KoiPrinterProfileDb()..addProfile(
+            const KoiPrinterProfile(
+              id: 'ble-1',
+              name: 'BLE Printer',
+              vendor: 'V',
+              protocols: [KoiCommandProtocol.escPos],
+              connections: [KoiConnectionType.ble],
+              characteristicFilter: '49535343-8841',
+            ),
+          );
       expect(db.findByCharacteristic('SERVICE-49535343-8841-CHAR'), isNotNull);
     });
 
     test('findByCharacteristic returns null when no filter', () {
-      final db = KoiPrinterProfileDb();
-      db.addProfile(
-        const KoiPrinterProfile(
-          id: 'no-filter',
-          name: 'No Filter',
-          vendor: 'V',
-          protocols: [],
-          connections: [],
-        ),
-      );
+      final db =
+          KoiPrinterProfileDb()..addProfile(
+            const KoiPrinterProfile(
+              id: 'no-filter',
+              name: 'No Filter',
+              vendor: 'V',
+              protocols: [],
+              connections: [],
+            ),
+          );
       expect(db.findByCharacteristic('any-uuid'), isNull);
     });
 
     test('findByCharacteristic returns null for no match', () {
-      final db = KoiPrinterProfileDb();
-      db.addProfile(
-        const KoiPrinterProfile(
-          id: 'ble-1',
-          name: 'BLE',
-          vendor: 'V',
-          protocols: [],
-          connections: [],
-          characteristicFilter: 'AAAA',
-        ),
-      );
+      final db =
+          KoiPrinterProfileDb()..addProfile(
+            const KoiPrinterProfile(
+              id: 'ble-1',
+              name: 'BLE',
+              vendor: 'V',
+              protocols: [],
+              connections: [],
+              characteristicFilter: 'AAAA',
+            ),
+          );
       expect(db.findByCharacteristic('BBBB'), isNull);
     });
   });
@@ -381,7 +386,7 @@ void main() {
         ],
       );
 
-      final result = engine.expandLabel(doc, {'items': []});
+      final result = engine.expandLabel(doc, {'items': <dynamic>[]});
       expect(result.elements, isEmpty);
     });
 

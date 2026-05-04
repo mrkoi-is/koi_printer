@@ -265,7 +265,8 @@ void main() {
 
     test('renders TicketImageElement in graphics mode', () {
       final validPng = base64Decode(
-        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
+        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAA'
+        'YAAjCB0C8AAAAASUVORK5CYII=',
       );
       final doc = KoiTicketDocument(
         elements: [
@@ -339,7 +340,7 @@ void main() {
       );
       final chunks = renderer.render(doc);
       final allBytes = chunks.expand((c) => c).toList();
-      expect(_containsSubsequence(allBytes, [0x1D, 0x56, 0x01]), isTrue);
+      expect(_containsSubsequence(allBytes, [0x1D, 0x56, 0x31]), isTrue);
     });
 
     test('renders KoiTicketForEachElement silently (no error)', () {

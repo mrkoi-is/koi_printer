@@ -70,7 +70,7 @@ void main() {
         ],
       );
 
-      final expanded = engine.expandTicket(doc, {'items': []});
+      final expanded = engine.expandTicket(doc, {'items': <dynamic>[]});
       expect(expanded.elements, isEmpty);
     });
 
@@ -432,8 +432,7 @@ void main() {
     });
 
     test('clear empties queue', () {
-      final queue = KoiPrintJobQueue();
-      queue.clear();
+      final queue = KoiPrintJobQueue()..clear();
       expect(queue.length, 0);
     });
   });
