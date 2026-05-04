@@ -1,9 +1,11 @@
 // 测试: KoiPreviewRenderer — Widget 测试
 import 'dart:typed_data';
 
+import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:koi_printer/koi_printer.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 void main() {
   // ════════════════════════════════════════════════════════════
@@ -126,7 +128,7 @@ void main() {
       );
       final widget = KoiPreviewRenderer.build(document: doc, paperWidthPx: 384);
       await tester.pumpWidget(MaterialApp(home: Scaffold(body: widget)));
-      expect(find.byType(Column), findsWidgets);
+      expect(find.byType(QrImageView), findsOneWidget);
     });
 
     testWidgets('renders BarcodeElement', (tester) async {
@@ -135,8 +137,7 @@ void main() {
       );
       final widget = KoiPreviewRenderer.build(document: doc, paperWidthPx: 384);
       await tester.pumpWidget(MaterialApp(home: Scaffold(body: widget)));
-      // Check barcode text is rendered
-      expect(find.text('123456789'), findsOneWidget);
+      expect(find.byType(BarcodeWidget), findsOneWidget);
     });
 
     testWidgets('renders DividerElement', (tester) async {
@@ -291,7 +292,7 @@ void main() {
       );
       final widget = KoiPreviewRenderer.build(document: doc, paperWidthPx: 384);
       await tester.pumpWidget(MaterialApp(home: Scaffold(body: widget)));
-      expect(find.text('BC123'), findsOneWidget);
+      expect(find.byType(BarcodeWidget), findsOneWidget);
     });
 
     testWidgets('renders positioned QR code', (tester) async {
@@ -308,7 +309,7 @@ void main() {
       );
       final widget = KoiPreviewRenderer.build(document: doc, paperWidthPx: 384);
       await tester.pumpWidget(MaterialApp(home: Scaffold(body: widget)));
-      expect(find.byType(Stack), findsWidgets);
+      expect(find.byType(QrImageView), findsOneWidget);
     });
 
     testWidgets('renders box element', (tester) async {
@@ -366,7 +367,7 @@ void main() {
       final widget = KoiPreviewRenderer.build(document: doc, paperWidthPx: 384);
       await tester.pumpWidget(MaterialApp(home: Scaffold(body: widget)));
       expect(find.text('标题'), findsOneWidget);
-      expect(find.text('BC-001'), findsOneWidget);
+      expect(find.byType(BarcodeWidget), findsOneWidget);
     });
 
     testWidgets('renders with custom colors', (tester) async {

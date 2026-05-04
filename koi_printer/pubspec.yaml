@@ -14,12 +14,14 @@ environment:
   flutter: ">=3.27.0"
 
 dependencies:
+  barcode_widget: ^2.0.4
   flutter:
     sdk: flutter
   koi_printer_command:
     path: ../koi_printer_command
   koi_printer_connection:
     path: ../koi_printer_connection
+  qr_flutter: ^4.1.0
   shared_preferences: ^2.5.0
 
 dev_dependencies:

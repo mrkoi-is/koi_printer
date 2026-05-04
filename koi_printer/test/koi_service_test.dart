@@ -369,7 +369,6 @@ void main() {
     });
 
     test('creates service with custom renderer', () async {
-      SharedPreferences.setMockInitialValues({});
       final adapter = MockPrinterAdapter(
         initialState: KoiConnectionState.ready,
       );

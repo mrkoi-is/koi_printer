@@ -1,5 +1,7 @@
+import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:koi_printer_command/koi_printer_command.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 /// 预览渲染器 — 将 [KoiPrintDocument] 渲染为 Flutter Widget。
 /// Preview renderer that converts a print document into a visual preview
@@ -191,25 +193,12 @@ class KoiPreviewRenderer {
     return Container(
       alignment: _align(e.align),
       padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Container(
-        width: size,
-        height: size,
-        decoration: BoxDecoration(border: Border.all(color: color)),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.qr_code_2, size: size * 0.6, color: color),
-              Text(
-                'QR',
-                style: TextStyle(
-                  fontSize: 10,
-                  color: color.withValues(alpha: 0.6),
-                ),
-              ),
-            ],
-          ),
-        ),
+      child: QrImageView(
+        data: e.data,
+        version: QrVersions.auto,
+        size: size,
+        foregroundColor: color,
+        gapless: false,
       ),
     );
   }
@@ -222,52 +211,23 @@ class KoiPreviewRenderer {
     return Container(
       alignment: _align(e.align),
       padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: double.infinity,
-            height: e.height * 0.8, // 稍微放大
-            decoration: BoxDecoration(
-              border: Border.all(color: color.withValues(alpha: 0.3)),
-              color: color.withValues(alpha: 0.05),
-            ),
-            child: Stack(
-              children: [
-                // 模拟条码线条
-                Positioned.fill(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(
-                      80, // 更密集的线条
-                      (index) {
-                        // 简单的伪随机生成类似真实条码的粗细
-                        final w = ((index * 13) % 7) < 3 ? 2.5 : 1.0;
-                        final space = ((index * 17) % 5) < 2 ? 1.0 : 2.0;
-                        return Container(
-                          width: w,
-                          margin: EdgeInsets.only(right: space),
-                          color: color,
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
+      child: SizedBox(
+        height: e.height.toDouble(),
+        width: 300, // Reasonable default width for preview
+        child: BarcodeWidget(
+          barcode: Barcode.code128(),
+          data: e.data,
+          color: color,
+          drawText: e.textPosition != KoiBarcodeTextPosition.none,
+          style: TextStyle(
+            fontFamily: fontFamily,
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 2,
+            color: color,
           ),
-          const SizedBox(height: 4),
-          Text(
-            e.data,
-            style: TextStyle(
-              fontFamily: fontFamily,
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 2,
-              color: color,
-            ),
-          ),
-        ],
+          textPadding: 4,
+        ),
       ),
     );
   }
@@ -428,18 +388,18 @@ class KoiPreviewRenderer {
     return Positioned(
       left: e.x * scale,
       top: e.y * scale,
-      child: Container(
+      child: SizedBox(
         width: 120 * scale,
-        height: e.height * scale * 0.5,
-        decoration: BoxDecoration(border: Border.all(color: color)),
-        child: Center(
-          child: Text(
-            e.data,
-            style: TextStyle(
-              fontFamily: 'monospace',
-              fontSize: 8,
-              color: color,
-            ),
+        height: e.height * scale,
+        child: BarcodeWidget(
+          barcode: Barcode.code128(),
+          data: e.data,
+          color: color,
+          drawText: true,
+          style: TextStyle(
+            fontFamily: 'monospace',
+            fontSize: 10 * scale,
+            color: color,
           ),
         ),
       ),
@@ -455,11 +415,12 @@ class KoiPreviewRenderer {
     return Positioned(
       left: e.x * scale,
       top: e.y * scale,
-      child: Container(
-        width: size,
-        height: size,
-        decoration: BoxDecoration(border: Border.all(color: color)),
-        child: Icon(Icons.qr_code_2, size: size * 0.6, color: color),
+      child: QrImageView(
+        data: e.data,
+        version: QrVersions.auto,
+        size: size,
+        foregroundColor: color,
+        gapless: false,
       ),
     );
   }
