@@ -189,16 +189,54 @@ class _PreviewScreenState extends State<PreviewScreen> {
                     setState(() => _config = _config.copyWith(paperSize: v)),
               ),
               const SizedBox(height: 16),
-              const Text('打印份数:'),
-              Slider(
-                value: effectiveConfig.copies.toDouble(),
-                min: 1,
-                max: 5,
-                divisions: 4,
-                label: effectiveConfig.copies.toString(),
-                onChanged: (v) => setState(
-                  () => _config = _config.copyWith(copies: v.toInt()),
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('打印份数:'),
+                  Text(
+                    '${effectiveConfig.copies} 份',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  ActionChip(
+                    label: const Text('1份'),
+                    onPressed: () => setState(
+                        () => _config = _config.copyWith(copies: 1)),
+                    backgroundColor: effectiveConfig.copies == 1
+                        ? Colors.blue.shade100
+                        : null,
+                  ),
+                  ActionChip(
+                    label: const Text('5份'),
+                    onPressed: () => setState(
+                        () => _config = _config.copyWith(copies: 5)),
+                    backgroundColor: effectiveConfig.copies == 5
+                        ? Colors.blue.shade100
+                        : null,
+                  ),
+                  ActionChip(
+                    label: const Text('50份 (压力测试)'),
+                    onPressed: () => setState(
+                        () => _config = _config.copyWith(copies: 50)),
+                    backgroundColor: effectiveConfig.copies == 50
+                        ? Colors.red.shade100
+                        : null,
+                  ),
+                  ActionChip(
+                    label: const Text('100份 (极限)'),
+                    onPressed: () => setState(
+                        () => _config = _config.copyWith(copies: 100)),
+                    backgroundColor: effectiveConfig.copies == 100
+                        ? Colors.red.shade200
+                        : null,
+                  ),
+                ],
               ),
               const SizedBox(height: 8),
               const Text('顶部空行:'),
