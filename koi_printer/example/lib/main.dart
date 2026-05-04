@@ -343,13 +343,17 @@ class _PreviewScreenState extends State<PreviewScreen> {
       ),
       floatingActionButton: FloatingActionButton.small(
         onPressed: () {
-          if (globalTicketDevices.isNotEmpty) {
-            final device = globalTicketDevices.first;
-            executePrintJob(context, device, docs, false);
+          final isLabel = docs.isNotEmpty && docs.first is KoiLabelDocument;
+          final devices = isLabel ? globalLabelDevices : globalTicketDevices;
+          final printerTypeName = isLabel ? '标签打印机' : '小票打印机';
+
+          if (devices.isNotEmpty) {
+            final device = devices.first;
+            executePrintJob(context, device, docs, isLabel);
           } else {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(const SnackBar(content: Text('请先前往设置页面绑定打印机')));
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('请先前往设置页面绑定$printerTypeName')),
+            );
             widget.onNavigateToDeviceManagement();
           }
         },
