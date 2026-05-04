@@ -29,7 +29,7 @@ class KoiRendererConfig {
 /// 打印配置 — 从旧 XIIPrinterConfig + XIIPrintSettings 拆出的业务层字段。
 /// 来源: 旧 XIIPrinterConfig + XIIPrintSettings
 class KoiPrintConfig {
-  /// Documentation for this public member.
+  /// 创建打印配置。
   const KoiPrintConfig({
     this.deviceRole = KoiDeviceRole.ticketDesktop,
     this.paperSize = KoiPaperSize.mm80,
@@ -73,7 +73,7 @@ class KoiPrintConfig {
   /// 打印份数。
   final int copies;
 
-  /// Documentation for this public member.
+  /// 复制配置项。
   KoiPrintConfig copyWith({
     KoiDeviceRole? deviceRole,
     KoiPaperSize? paperSize,

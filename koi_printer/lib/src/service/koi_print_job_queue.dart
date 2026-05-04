@@ -9,7 +9,7 @@ import 'package:koi_printer_connection/koi_printer_connection.dart';
 
 /// 打印任务。
 class KoiPrintJob {
-  /// Documentation for this public member.
+  /// 创建一个打印任务。
   KoiPrintJob({
     required this.documents,
     required this.config,
@@ -33,7 +33,7 @@ class KoiPrintJob {
 /// 打印任务队列 — 替代旧 Queue + Future.delayed 模式。
 /// 来源: 旧 PrinterService 中的 cmds 队列 + delay 逻辑。
 class KoiPrintJobQueue {
-  /// Documentation for this public member.
+  /// 创建任务队列。
   KoiPrintJobQueue({this.adapter});
 
   /// 关联的适配器。

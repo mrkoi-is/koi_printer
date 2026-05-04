@@ -19,7 +19,7 @@ enum KoiCommandProtocol {
 /// Paper size — standard presets or custom dimensions.
 @immutable
 class KoiPaperSize {
-  /// Documentation for this public member.
+  /// 根据点数和毫米数创建纸张尺寸。
   const KoiPaperSize({required this.widthDots, required this.widthMm});
 
   /// 自定义尺寸 (架构文档 §7.1)。
@@ -59,15 +59,15 @@ class KoiPaperSize {
 /// Text alignment for flow-layout elements.
 /// KoiTextAlign.
 /// KoiTextAlign.
-/// Documentation for this public member.
+/// 文本对齐方式定义。
 enum KoiTextAlign {
-  /// Documentation for this public member.
+  /// 左对齐
   left,
 
-  /// Documentation for this public member.
+  /// 居中对齐
   center,
 
-  /// Documentation for this public member.
+  /// 右对齐
   right,
 }
 
@@ -75,33 +75,33 @@ enum KoiTextAlign {
 /// Text size multiplier, maps to ESC/POS GS ! command.
 /// KoiTextSize.
 enum KoiTextSize {
-  /// Documentation for this public member.
+  /// 大小 1
   size1(value: 1),
 
-  /// Documentation for this public member.
+  /// 大小 2
   size2(value: 2),
 
-  /// Documentation for this public member.
+  /// 大小 3
   size3(value: 3),
 
-  /// Documentation for this public member.
+  /// 大小 4
   size4(value: 4),
 
-  /// Documentation for this public member.
+  /// 大小 5
   size5(value: 5),
 
-  /// Documentation for this public member.
+  /// 大小 6
   size6(value: 6),
 
-  /// Documentation for this public member.
+  /// 大小 7
   size7(value: 7),
 
-  /// Documentation for this public member.
+  /// 大小 8
   size8(value: 8);
 
   const KoiTextSize({required this.value});
 
-  /// Documentation for this public member.
+  /// 具体的数值
   final int value;
 }
 
@@ -143,33 +143,33 @@ enum KoiQrRenderStrategy {
 /// QR 码大小 (1-8)。
 /// QR code module size.
 enum KoiQrSize {
-  /// Documentation for this public member.
+  /// 大小 1
   size1(value: 1),
 
-  /// Documentation for this public member.
+  /// 大小 2
   size2(value: 2),
 
-  /// Documentation for this public member.
+  /// 大小 3
   size3(value: 3),
 
-  /// Documentation for this public member.
+  /// 大小 4
   size4(value: 4),
 
-  /// Documentation for this public member.
+  /// 大小 5
   size5(value: 5),
 
-  /// Documentation for this public member.
+  /// 大小 6
   size6(value: 6),
 
-  /// Documentation for this public member.
+  /// 大小 7
   size7(value: 7),
 
-  /// Documentation for this public member.
+  /// 大小 8
   size8(value: 8);
 
   const KoiQrSize({required this.value});
 
-  /// Documentation for this public member.
+  /// 具体的数值
   final int value;
 }
 
@@ -190,38 +190,38 @@ enum KoiQrCorrection {
 
   const KoiQrCorrection({required this.value});
 
-  /// Documentation for this public member.
+  /// 具体的数值
   final int value;
 }
 
 /// 条码类型。
 /// Barcode symbology types.
 enum KoiBarcodeType {
-  /// Documentation for this public member.
+  /// upcA 条码
   upcA,
 
-  /// Documentation for this public member.
+  /// upcE 条码
   upcE,
 
-  /// Documentation for this public member.
+  /// jan13 条码
   jan13,
 
-  /// Documentation for this public member.
+  /// jan8 条码
   jan8,
 
-  /// Documentation for this public member.
+  /// code39 条码
   code39,
 
-  /// Documentation for this public member.
+  /// itf 条码
   itf,
 
-  /// Documentation for this public member.
+  /// codabar 条码
   codabar,
 
-  /// Documentation for this public member.
+  /// code93 条码
   code93,
 
-  /// Documentation for this public member.
+  /// code128 条码
   code128,
 }
 
@@ -265,7 +265,7 @@ enum KoiDelayProfile {
 /// KoiPrintStyle.
 /// Documentation for this public member.
 enum KoiPrintStyle {
-  /// Documentation for this public member.
+  /// 正常模式
   normal,
 
   /// Documentation for this public member.
@@ -278,22 +278,22 @@ enum KoiPrintStyle {
 /// KoiLabelStyle.
 /// Documentation for this public member.
 enum KoiLabelStyle {
-  /// Documentation for this public member.
+  /// 样式 1
   style1,
 
-  /// Documentation for this public member.
+  /// 样式 2
   style2,
 
-  /// Documentation for this public member.
+  /// 样式 3
   style3,
 
-  /// Documentation for this public member.
+  /// 样式 4
   style4,
 
-  /// Documentation for this public member.
+  /// 样式 5
   style5,
 
-  /// Documentation for this public member.
+  /// 样式 6
   style6,
 }
 

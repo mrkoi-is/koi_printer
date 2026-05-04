@@ -1,7 +1,8 @@
 /// 连接策略 — 提炼自旧 240 次 retry + 3 秒定时器 + 2 秒自动断连。
 /// 来源: 架构文档 §7.3
 class KoiConnectionPolicy {
-  /// Documentation for this public member.
+  /// 创建连接策略实例。
+  /// [autoReconnectInterval] 重连时间间隔，[maxRetries] 最大重试次数。
   const KoiConnectionPolicy({
     this.autoReconnectInterval = const Duration(seconds: 3),
     this.maxRetries = 10,

@@ -1,7 +1,8 @@
 /// 连接配置。
 /// Configuration for establishing a printer connection.
 class KoiConnectionConfig {
-  /// Documentation for this public member.
+  /// 创建连接配置实例。
+  /// [deviceName] 设备名称，[deviceId] 设备唯一标识（如 MAC, UUID 或 IP）。
   const KoiConnectionConfig({
     required this.deviceName,
     required this.deviceId,
@@ -41,7 +42,7 @@ class KoiConnectionConfig {
   /// 连接超时时间。
   final Duration connectionTimeout;
 
-  /// Documentation for this public member.
+  /// 复制当前配置并替换指定参数。
   KoiConnectionConfig copyWith({
     String? deviceName,
     String? deviceId,

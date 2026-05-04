@@ -18,7 +18,7 @@ import 'package:koi_printer_connection/koi_printer_connection.dart';
 /// final strategy = profile?.bestQrStrategy ?? KoiQrRenderStrategy.normal;
 /// ```
 class KoiPrinterProfile {
-  /// Documentation for this public member.
+  /// 创建打印机能力配置。
   const KoiPrinterProfile({
     required this.id,
     required this.name,
@@ -37,7 +37,7 @@ class KoiPrinterProfile {
     this.delayProfile = KoiDelayProfile.normal,
   });
 
-  /// Documentation for this public member.
+  /// 从 JSON 数据反序列化配置。
   factory KoiPrinterProfile.fromJson(Map<String, dynamic> j) {
     return KoiPrinterProfile(
       id: j['id'] as String,
@@ -64,52 +64,52 @@ class KoiPrinterProfile {
     );
   }
 
-  /// Documentation for this public member.
+  /// 设备配置的唯一标识符。
   final String id;
 
-  /// Documentation for this public member.
+  /// 显示的设备名称。
   final String name;
 
-  /// Documentation for this public member.
+  /// 设备生产厂商名称。
   final String vendor;
 
-  /// Documentation for this public member.
+  /// 支持的指令协议列表（如 ESC/POS, TSPL 等）。
   final List<KoiCommandProtocol> protocols;
 
-  /// Documentation for this public member.
+  /// 支持的连接类型列表（如 BLE, Classic BT 等）。
   final List<KoiConnectionType> connections;
 
-  /// Documentation for this public member.
+  /// 纸张的默认宽度 (毫米)。
   final int paperWidthMm;
 
-  /// Documentation for this public member.
+  /// 一行能打印的像素点数。
   final int dotsPerLine;
 
-  /// Documentation for this public member.
+  /// 打印机的 DPI 分辨率 (通常为 203)。
   final int dpi;
 
-  /// Documentation for this public member.
+  /// 硬件是否支持自动切纸。
   final bool supportsCut;
 
-  /// Documentation for this public member.
+  /// 硬件是否支持原生打印二维码指令。
   final bool supportsQrCode;
 
-  /// Documentation for this public member.
+  /// 最适合当前型号的二维码渲染策略。
   final KoiQrRenderStrategy bestQrStrategy;
 
-  /// Documentation for this public member.
+  /// 是否原生支持中文字符集。
   final bool supportsChinese;
 
-  /// Documentation for this public member.
+  /// BLE 通信时的特征 UUID 过滤字符串。
   final String? characteristicFilter;
 
-  /// Documentation for this public member.
+  /// 数据包的最大传输单元限制。
   final int? maxMtu;
 
-  /// Documentation for this public member.
+  /// 打印发送数据的延迟策略（解决丢包）。
   final KoiDelayProfile delayProfile;
 
-  /// Documentation for this public member.
+  /// 将当前配置序列化为 JSON 格式。
   Map<String, dynamic> toJson() => {
     'id': id,
     'name': name,
@@ -148,7 +148,7 @@ class KoiPrinterProfile {
 
 /// 打印机能力数据库。
 class KoiPrinterProfileDb {
-  /// Documentation for this public member.
+  /// 实例化能力数据库，初始状态为空。
   KoiPrinterProfileDb();
 
   final List<KoiPrinterProfile> _profiles = [];

@@ -12,7 +12,7 @@ import 'package:koi_printer_connection/src/model/koi_connection_types.dart';
 ///
 /// 来源: 旧 XIINetworkPrinter (94 LOC)
 class KoiNetworkAdapter implements KoiPrinterAdapter {
-  /// Documentation for this public member.
+  /// 创建网络打印机适配器实例。
   KoiNetworkAdapter();
 
   Socket? _socket;

@@ -13,7 +13,7 @@ sealed class KoiPrintDocument {
 /// 小票文档 — 流式布局, 元素为 [KoiTicketElement]。
 /// Ticket (receipt) document using flow layout.
 class KoiTicketDocument extends KoiPrintDocument {
-  /// Documentation for this public member.
+  /// 创建一个小票打印文档实例。
   const KoiTicketDocument({
     required this.elements,
     this.paperSize = KoiPaperSize.mm80,
@@ -35,7 +35,7 @@ class KoiTicketDocument extends KoiPrintDocument {
 /// Label document using positioned (canvas) layout.
 /// KoiLabelDocument.
 class KoiLabelDocument extends KoiPrintDocument {
-  /// Documentation for this public member.
+  /// 创建一个标签打印文档实例。
   const KoiLabelDocument({required this.elements, super.name});
 
   /// 标签打印元素列表 (有序, 坐标定位)。

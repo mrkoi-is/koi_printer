@@ -7,7 +7,8 @@ import 'package:meta/meta.dart';
 /// Represents a discovered printer device.
 @immutable
 class KoiDiscoveredDevice {
-  /// Documentation for this public member.
+  /// 创建一个被发现的设备实例。
+  /// [name] 设备名称，[deviceId] 设备标识，[connectionType] 连接类型。
   const KoiDiscoveredDevice({
     required this.name,
     required this.deviceId,

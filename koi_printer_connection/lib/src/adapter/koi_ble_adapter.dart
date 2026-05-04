@@ -17,7 +17,7 @@ import 'package:koi_printer_connection/src/model/koi_connection_types.dart';
 ///
 /// 来源: 旧 XIIBluetoothPrinter (349 LOC) 的核心逻辑。
 class KoiBleAdapter implements KoiPrinterAdapter {
-  /// Documentation for this public member.
+  /// 创建 BLE 低功耗蓝牙适配器实例。
   KoiBleAdapter();
 
   BluetoothDevice? _device;

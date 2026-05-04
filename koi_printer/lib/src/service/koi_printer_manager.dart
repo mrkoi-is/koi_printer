@@ -28,7 +28,7 @@ import 'package:koi_printer_connection/koi_printer_connection.dart';
 /// );
 /// ```
 class KoiPrinterManager {
-  /// Documentation for this public member.
+  /// 初始化打印机管理器。
   KoiPrinterManager({
     required this.storage,
     KoiPrinterAdapter? ticketAdapter,
