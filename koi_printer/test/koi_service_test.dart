@@ -220,6 +220,10 @@ void main() {
   // ════════════════════════════════════════════════════════════
 
   group('KoiPrinterService', () {
+    setUp(() {
+      SharedPreferences.setMockInitialValues({});
+    });
+
     test('print with connected adapter returns success', () async {
       final adapter = MockPrinterAdapter(
         initialState: KoiConnectionState.ready,

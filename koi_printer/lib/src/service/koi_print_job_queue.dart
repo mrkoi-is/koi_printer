@@ -80,10 +80,12 @@ class KoiPrintJobQueue {
       final result = await _executeJob(job);
       job.onComplete?.call(result);
 
-      // 按延迟配置等待
-      final delay = _delayForProfile(job.config.delayProfile);
-      if (delay > Duration.zero) {
-        await Future<void>.delayed(delay);
+      // 仅在后续还有任务时才延迟, 避免最后一个任务产生孤儿定时器。
+      if (_queue.isNotEmpty) {
+        final delay = _delayForProfile(job.config.delayProfile);
+        if (delay > Duration.zero) {
+          await Future<void>.delayed(delay);
+        }
       }
     }
 
