@@ -252,7 +252,15 @@ class KoiBleAdapter implements KoiPrinterAdapter {
   /// 来源: 旧 XIIBluetoothPrinter.writeBytes() 的核心逻辑。
   Future<void> _writeWithMtuChunking(List<int> data) async {
     // BLE 实际可写大小 = MTU - 3 (ATT 头部)
-    final chunkSize = _mtu - 3;
+    int chunkSize = _mtu - 3;
+    
+    // 为了兼容市面上的大部分国产廉价台式打印机（它们的底层蓝牙芯片到主板的 UART 缓冲区通常只有几十字节），
+    // 强制将单次发送的块大小限制在 20 字节。
+    // 虽然安卓协商出了如 512 的 MTU，但如果单次发送 512 字节，打印机会因为 UART 缓冲溢出而静默丢包（不打印）。
+    if (chunkSize > 20) {
+      chunkSize = 20;
+    }
+
     if (chunkSize <= 0) return;
 
     for (var offset = 0; offset < data.length; offset += chunkSize) {
