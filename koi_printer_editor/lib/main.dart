@@ -8,7 +8,12 @@ import 'package:provider/provider.dart';
 void main() {
   runApp(
     ChangeNotifierProvider(
-      create: (_) => EditorState(initialElements: defaultTemplateElements),
+      create: (_) {
+        final state = EditorState(initialElements: defaultTemplateElements);
+        // 同步 Schema、mockData、manifest 身份 (避免初始状态为空)
+        state.loadManifest(defaultManifest, defaultTemplateElements);
+        return state;
+      },
       child: const KoiPrinterEditorApp(),
     ),
   );
