@@ -2,7 +2,7 @@ import 'package:koi_printer_command/koi_printer_command.dart';
 
 /// 渲染器配置 — 从旧 XIIPrinterConfig 中拆出的渲染层字段。
 class KoiRendererConfig {
-  /// Documentation for this public member.
+  /// 创建渲染器配置实例。
   const KoiRendererConfig({
     this.protocol = KoiCommandProtocol.escPos,
     this.qrStrategy = KoiQrRenderStrategy.normal,
@@ -14,7 +14,7 @@ class KoiRendererConfig {
   /// QR 码渲染策略。
   final KoiQrRenderStrategy qrStrategy;
 
-  /// Documentation for this public member.
+  /// 拷贝渲染器配置并可选覆盖属性。
   KoiRendererConfig copyWith({
     KoiCommandProtocol? protocol,
     KoiQrRenderStrategy? qrStrategy,

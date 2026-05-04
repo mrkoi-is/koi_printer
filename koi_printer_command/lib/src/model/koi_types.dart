@@ -263,12 +263,12 @@ enum KoiDelayProfile {
 /// 来源: 旧 XIISenderPrintStyle
 /// KoiPrintStyle.
 /// KoiPrintStyle.
-/// Documentation for this public member.
+/// 打印样式定义。
 enum KoiPrintStyle {
   /// 正常模式
   normal,
 
-  /// Documentation for this public member.
+  /// 加大模式
   large,
 }
 
@@ -276,7 +276,7 @@ enum KoiPrintStyle {
 /// Label style — 6 company-specific label layouts.
 /// KoiLabelStyle.
 /// KoiLabelStyle.
-/// Documentation for this public member.
+/// 标签样式定义。
 enum KoiLabelStyle {
   /// 样式 1
   style1,

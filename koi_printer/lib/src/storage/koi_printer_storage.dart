@@ -7,14 +7,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// 打印机设备信息 — 用于持久化已绑定的设备。
 /// 来源: 旧 XIIDeviceInfo
 class KoiDeviceInfo {
-  /// Documentation for this public member.
+  /// 构造设备信息。
   const KoiDeviceInfo({
     required this.name,
     required this.address,
     required this.connectionType,
   });
 
-  /// Documentation for this public member.
+  /// 从 Map 数据构造设备信息。
   factory KoiDeviceInfo.fromMap(Map<String, dynamic> map) {
     return KoiDeviceInfo(
       name: map['name'] as String,
@@ -24,7 +24,7 @@ class KoiDeviceInfo {
     );
   }
 
-  /// Documentation for this public member.
+  /// 从 JSON 字符串构造设备信息。
   factory KoiDeviceInfo.fromJson(String source) =>
       KoiDeviceInfo.fromMap(json.decode(source) as Map<String, dynamic>);
 
@@ -37,14 +37,14 @@ class KoiDeviceInfo {
   /// 连接类型。
   final KoiConnectionType connectionType;
 
-  /// Documentation for this public member.
+  /// 将设备信息序列化为 Map。
   Map<String, dynamic> toMap() => {
     'name': name,
     'address': address,
     'connectionType': connectionType.index,
   };
 
-  /// Documentation for this public member.
+  /// 将设备信息序列化为 JSON 字符串。
   String toJson() => json.encode(toMap());
 }
 
@@ -52,7 +52,7 @@ class KoiDeviceInfo {
 /// 来源: 旧 XIIPrinterStorage (216 LOC, Singleton)
 /// 改进: 构造函数注入 SharedPreferences (无 Singleton)。
 class KoiPrinterStorage {
-  /// Documentation for this public member.
+  /// 构造打印机存储实例。
   KoiPrinterStorage(this._prefs);
 
   final SharedPreferences _prefs;
