@@ -89,6 +89,7 @@ class _RightInspectorState extends State<RightInspector> {
           ),
           Expanded(
             child: ListView(
+              key: ValueKey(selectedId),
               padding: const EdgeInsets.all(16),
               children: [
                 InspectorRegistry.instance.buildInspector(context, selectedId, selectedElement),

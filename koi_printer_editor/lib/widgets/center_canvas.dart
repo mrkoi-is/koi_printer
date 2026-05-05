@@ -393,12 +393,6 @@ class _EditableLabelElementWrapState extends State<_EditableLabelElementWrap> {
         t = t.replaceAll('{{${f.key}}}', '<${f.label}>');
       }
       return e.copyWith(text: t);
-    } else if (e is KoiPositionedBarcodeElement) {
-      String t = e.data;
-      for (var f in fields) {
-        t = t.replaceAll('{{${f.key}}}', '<${f.label}>');
-      }
-      return e.copyWith(data: t);
     } else if (e is KoiPositionedQrCodeElement) {
       String t = e.data;
       for (var f in fields) {
@@ -510,13 +504,16 @@ class _EditableLabelElementWrapState extends State<_EditableLabelElementWrap> {
               
               if (widget.isSelected)
                 Positioned(
-                  top: -20,
-                  right: -20,
-                  child: IconButton(
-                    icon: const Icon(Icons.delete_forever, color: Colors.red, size: 20),
-                    onPressed: widget.onDelete,
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(),
+                  top: 0,
+                  right: 0,
+                  child: Container(
+                    decoration: const BoxDecoration(color: Colors.white70, shape: BoxShape.circle),
+                    child: IconButton(
+                      icon: const Icon(Icons.delete_forever, color: Colors.red, size: 20),
+                      onPressed: widget.onDelete,
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                    ),
                   ),
                 ),
             ],

@@ -215,9 +215,13 @@ class _DataBindingFieldState extends State<_DataBindingField> {
            ),
         ] else if (_modeIndex == 1) ...[
            DropdownButtonFormField<String>(
+             isExpanded: true,
              initialValue: RegExp(r'^\{\{([a-zA-Z0-9_.]+)\}\}$').firstMatch(text)?.group(1) ?? (fields.isNotEmpty ? fields.first.key : null),
              decoration: const InputDecoration(labelText: '绑定业务字段', border: OutlineInputBorder()),
-             items: fields.map((f) => DropdownMenuItem(value: f.key, child: Text('${f.label} (${f.key})'))).toList(),
+             items: fields.map((f) => DropdownMenuItem(
+               value: f.key, 
+               child: Text('${f.label} (${f.key})', overflow: TextOverflow.ellipsis),
+             )).toList(),
              onChanged: (val) {
                if (val != null) widget.onUpdate('{{$val}}');
              },
