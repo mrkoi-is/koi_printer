@@ -1,3 +1,9 @@
+## 0.2.0
+
+* **Coverage**: achieved 100% test coverage for all adapters, scanners, and state handlers.
+* **Refactor**: introduced Dependency Injection (DI) to `KoiBleScanner` to allow deterministic unit testing without static Singletons.
+* **Refactor**: resolved 80+ lint warnings including unawaited futures and cascade invocations.
+
 ## 0.1.0
 
 * 初始发布 (Initial release)

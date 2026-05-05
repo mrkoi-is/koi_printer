@@ -305,7 +305,7 @@
 
 ---
 
-## CHECKPOINT 11: README + CHANGELOG 更新
+## CHECKPOINT 11: README + CHANGELOG 更新 [DONE]
 
 **包:** 全局  
 **预计用时:** 30 min  

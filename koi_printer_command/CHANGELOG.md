@@ -1,3 +1,8 @@
+## 0.2.0
+
+* **Coverage**: achieved 100% test coverage across all protocol renderers and parsers.
+* **Refactor**: resolved all static analysis lint warnings (including long lines, cascade invocations).
+
 ## 0.1.0
 
 * 初始发布 (Initial release)

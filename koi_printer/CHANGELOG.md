@@ -1,3 +1,9 @@
+## 0.2.0
+
+* **Coverage**: achieved 100% test coverage across all services, preview renderers, widgets, and state managers.
+* **Fix**: refined widget interactions in `KoiElementEditor` for all elements.
+* **Refactor**: resolved all static analysis warnings.
+
 ## 0.1.0
 
 * 初始发布 (Initial release)
