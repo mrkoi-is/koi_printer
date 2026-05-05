@@ -62,7 +62,9 @@ void main() {
       expect(find.text('Right'), findsOneWidget);
     });
 
-    testWidgets('renders TextElement with different width and height scales (stretchY)', (tester) async {
+    testWidgets(
+      'renders TextElement with different width and height scales (stretchY)',
+      (tester) async {
       const doc = KoiTicketDocument(
         elements: [
           KoiTextElement(

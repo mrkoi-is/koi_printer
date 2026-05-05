@@ -328,7 +328,7 @@
 
 ---
 
-## CHECKPOINT 12: 最终全量验证
+## CHECKPOINT 12: 最终全量验证 [DONE]
 
 **包:** 全部  
 **预计用时:** 30 min  
@@ -359,10 +359,10 @@ done
 ```
 
 **最终验收标准:**
-- [ ] koi_printer_command ≥ 95%
-- [ ] koi_printer_connection ≥ 90%
-- [ ] koi_printer_editor ≥ 90%
-- [ ] koi_printer ≥ 90%
-- [ ] 所有包 Lint 0 issues
-- [ ] CI 绿色
-- [ ] 全部 commit 并 push
+- [x] koi_printer_command ≥ 95%
+- [x] koi_printer_connection ≥ 90%
+- [x] koi_printer_editor ≥ 90%
+- [x] koi_printer ≥ 90%
+- [x] 所有包 Lint 0 issues
+- [x] CI 绿色
+- [x] 全部 commit 并 push
