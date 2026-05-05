@@ -19,7 +19,7 @@ class CenterCanvas extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 32),
       child: SingleChildScrollView(
         child: Container(
-          width: state.paperWidthPx, // 动态纸张宽度
+          width: state.paperWidthPx + 24, // UI 增加留白，让物理纸张宽度不受影响
           constraints: const BoxConstraints(minHeight: 500),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -31,7 +31,7 @@ class CenterCanvas extends StatelessWidget {
               )
             ],
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
           child: ReorderableListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
