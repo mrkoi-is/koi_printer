@@ -10,6 +10,8 @@ import 'package:koi_printer_editor/widgets/inspectors/barcode_element_inspector.
 import 'package:koi_printer_editor/widgets/inspectors/text_row_element_inspector.dart';
 import 'package:koi_printer_editor/widgets/inspectors/ticket_for_each_element_inspector.dart';
 import 'package:koi_printer_editor/widgets/inspectors/label_box_element_inspector.dart';
+import 'package:koi_printer_editor/widgets/inspectors/label_setup_element_inspector.dart';
+import 'package:koi_printer_editor/widgets/inspectors/positioned_text_element_inspector.dart';
 import 'package:koi_printer/koi_printer.dart'; // 需要导出相关模型类
 
 class RightInspector extends StatefulWidget {
@@ -30,6 +32,8 @@ class _RightInspectorState extends State<RightInspector> {
       r.register<KoiTicketForEachElement>(TicketForEachElementInspector());
       r.register<KoiTextRowElement>(TextRowElementInspector());
       r.register<KoiLabelBoxElement>(LabelBoxElementInspector());
+      r.register<KoiLabelSetupElement>(LabelSetupElementInspector());
+      r.register<KoiPositionedTextElement>(PositionedTextElementInspector());
     });
   }
 

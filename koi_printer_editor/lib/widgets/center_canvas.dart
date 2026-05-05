@@ -11,52 +11,106 @@ class CenterCanvas extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<EditorState>();
-    final elements = state.elements;
 
     return Container(
       color: Colors.grey[200],
       alignment: Alignment.topCenter,
       padding: const EdgeInsets.symmetric(vertical: 32),
       child: SingleChildScrollView(
-        child: Container(
-          width: state.paperWidthPx + 24, // UI 增加留白，让物理纸张宽度不受影响
-          constraints: const BoxConstraints(minHeight: 500),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.1),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              )
-            ],
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-          child: ReorderableListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: elements.length,
-            onReorder: (oldIndex, newIndex) {
+        child: state.isTicketMode ? _buildTicketContent(context, state) : _buildLabelContent(context, state),
+      ),
+    );
+  }
+
+  Widget _buildTicketContent(BuildContext context, EditorState state) {
+    final elements = state.elements;
+    return Container(
+      width: state.paperWidthPx + 24, // UI 增加留白，让物理纸张宽度不受影响
+      constraints: const BoxConstraints(minHeight: 500),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          )
+        ],
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+      child: ReorderableListView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: elements.length,
+        onReorder: (oldIndex, newIndex) {
+          context.read<EditorState>().execute(
+            ReorderElementsCommand(oldIndex: oldIndex, newIndex: newIndex),
+          );
+        },
+        itemBuilder: (context, index) {
+          final editorElement = elements[index];
+          return _EditableElementWrap(
+            key: ValueKey(editorElement.id),
+            element: editorElement,
+            isSelected: state.selectedElementId == editorElement.id,
+            onSelect: () => context.read<EditorState>().selectElement(editorElement.id),
+            onDelete: () {
               context.read<EditorState>().execute(
-                ReorderElementsCommand(oldIndex: oldIndex, newIndex: newIndex),
+                RemoveElementCommand(editorElement.id),
               );
             },
-            itemBuilder: (context, index) {
-              final editorElement = elements[index];
-              return _EditableElementWrap(
-                key: ValueKey(editorElement.id),
-                element: editorElement,
-                isSelected: state.selectedElementId == editorElement.id,
-                onSelect: () => context.read<EditorState>().selectElement(editorElement.id),
-                onDelete: () {
-                  context.read<EditorState>().execute(
-                    RemoveElementCommand(editorElement.id),
-                  );
-                },
-              );
-            },
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildLabelContent(BuildContext context, EditorState state) {
+    var labelWidth = state.paperWidthPx;
+    var labelHeight = state.paperWidthPx * 0.6;
+    
+    for (final e in state.elements) {
+      if (e.element is KoiLabelSetupElement) {
+        final setup = e.element as KoiLabelSetupElement;
+        labelWidth = setup.widthMm * 3.78;
+        labelHeight = setup.heightMm * 3.78;
+        break;
+      }
+    }
+    
+    // 坐标元素缩放比 (dot → px, 基于 203dpi)
+    final scale = labelWidth / (labelWidth / 3.78 * 203 / 25.4);
+
+    return Container(
+      width: labelWidth,
+      height: labelHeight,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(color: Colors.grey.shade300),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 4,
+            offset: const Offset(0, 1),
           ),
-        ),
+        ],
+      ),
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: state.elements.map((editorElement) {
+          return _EditableLabelElementWrap(
+            key: ValueKey(editorElement.id),
+            element: editorElement,
+            isSelected: state.selectedElementId == editorElement.id,
+            scale: scale,
+            onSelect: () => context.read<EditorState>().selectElement(editorElement.id),
+            onDelete: () {
+              context.read<EditorState>().execute(
+                RemoveElementCommand(editorElement.id),
+              );
+            },
+          );
+        }).toList(),
       ),
     );
   }
@@ -203,6 +257,91 @@ class _EditableElementWrap extends StatelessWidget {
                 ),
               ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _EditableLabelElementWrap extends StatelessWidget {
+  const _EditableLabelElementWrap({
+    super.key,
+    required this.element,
+    required this.isSelected,
+    required this.scale,
+    required this.onSelect,
+    required this.onDelete,
+  });
+
+  final EditorElement element;
+  final bool isSelected;
+  final double scale;
+  final VoidCallback onSelect;
+  final VoidCallback onDelete;
+
+  KoiPrintElement _processEditMode(KoiPrintElement e, List<KoiTemplateField> fields) {
+    if (e is KoiPositionedTextElement) {
+      String t = e.text;
+      for (var f in fields) {
+        t = t.replaceAll('{{${f.key}}}', '<${f.label}>');
+      }
+      return KoiPositionedTextElement(
+        x: e.x, y: e.y, text: t,
+        fontSize: e.fontSize, font: e.font,
+        rotation: e.rotation, xScale: e.xScale, yScale: e.yScale, bold: e.bold,
+      );
+    }
+    return e;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final state = context.watch<EditorState>();
+    final el = element.element as KoiLabelElement;
+    
+    // Replace text placeholders with schema labels
+    final processed = state.isPreviewMode ? el : _processEditMode(el, state.schema) as KoiLabelElement;
+
+    // Use the public render method from KoiPreviewRenderer
+    final innerPositioned = KoiPreviewRenderer.renderPositionedElement(processed, Colors.black, scale);
+
+    if (innerPositioned is! Positioned) {
+      return const SizedBox.shrink();
+    }
+
+    return Positioned(
+      left: innerPositioned.left,
+      top: innerPositioned.top,
+      width: innerPositioned.width,
+      height: innerPositioned.height,
+      child: GestureDetector(
+        onTap: onSelect,
+        behavior: HitTestBehavior.opaque,
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: isSelected ? Colors.blue : Colors.transparent,
+              width: 2,
+            ),
+          ),
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              innerPositioned.child,
+              
+              if (isSelected)
+                Positioned(
+                  top: -20,
+                  right: -20,
+                  child: IconButton(
+                    icon: const Icon(Icons.delete_forever, color: Colors.red, size: 20),
+                    onPressed: onDelete,
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );

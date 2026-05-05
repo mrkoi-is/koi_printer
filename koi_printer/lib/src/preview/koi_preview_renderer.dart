@@ -340,13 +340,14 @@ class KoiPreviewRenderer {
       child: Stack(
         children:
             document.elements
-                .map((e) => _positionedElement(e, textColor, scale))
+                .map((e) => renderPositionedElement(e, textColor, scale))
                 .toList(),
       ),
     );
   }
 
-  static Widget _positionedElement(
+  /// 渲染单个绝对定位的标签元素为 Flutter Widget
+  static Widget renderPositionedElement(
     KoiLabelElement element,
     Color textColor,
     double scale,

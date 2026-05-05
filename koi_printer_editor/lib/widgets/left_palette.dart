@@ -201,6 +201,16 @@ class _LayerTreeTab extends StatelessWidget {
         } else if (el.element is KoiSpacerElement) {
           icon = Icons.space_bar;
           label = '空白行 (${(el.element as KoiSpacerElement).lines} 行)';
+        } else if (el.element is KoiLabelSetupElement) {
+          final s = el.element as KoiLabelSetupElement;
+          icon = Icons.settings_overscan;
+          label = '纸张设置 (${s.widthMm}x${s.heightMm}mm)';
+        } else if (el.element is KoiPositionedTextElement) {
+          icon = Icons.text_format;
+          label = '绝对文本: ${(el.element as KoiPositionedTextElement).text}';
+        } else if (el.element is KoiLabelBoxElement) {
+          icon = Icons.crop_square;
+          label = '矩形框 (Box)';
         } else {
           icon = Icons.widgets;
           label = '未知组件';
