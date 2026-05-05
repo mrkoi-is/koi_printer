@@ -156,7 +156,7 @@
 
 ---
 
-## CHECKPOINT 6: editor_command.dart 测试补齐
+## CHECKPOINT 6: editor_command.dart 测试补齐 [DONE]
 
 **包:** `koi_printer_editor`  
 **预计用时:** 1.5 hours  

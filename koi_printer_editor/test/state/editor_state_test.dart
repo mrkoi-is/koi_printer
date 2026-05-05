@@ -42,6 +42,69 @@ void main() {
       expect(state.canRedo, isFalse);
     });
 
+    test('AddElementCommand with parentId to KoiTicketForEachElement', () {
+      final forEachElement = EditorElement(
+        id: 'parent_1',
+        element: const KoiTicketForEachElement(
+          listKey: 'items',
+          templates: [KoiTextElement(text: 'Old')],
+        ),
+      );
+      final state = EditorState(initialElements: [forEachElement]);
+
+      // 1. Add to specific index
+      final child1 = EditorElement(
+        id: 'child_1',
+        element: const KoiTextElement(text: 'Child 1'),
+      );
+      state.execute(AddElementCommand(child1, parentId: 'parent_1', index: 0));
+
+      var parent = state.elements.first.element as KoiTicketForEachElement;
+      expect(parent.templates.length, 2);
+      expect((parent.templates[0] as KoiTextElement).text, 'Child 1');
+      expect((parent.templates[1] as KoiTextElement).text, 'Old');
+
+      // 2. Add to end (null index)
+      final child2 = EditorElement(
+        id: 'child_2',
+        element: const KoiTextElement(text: 'Child 2'),
+      );
+      state.execute(AddElementCommand(child2, parentId: 'parent_1'));
+      
+      parent = state.elements.first.element as KoiTicketForEachElement;
+      expect(parent.templates.length, 3);
+      expect((parent.templates[2] as KoiTextElement).text, 'Child 2');
+
+      // 3. Undo additions
+      state.undo(); // undo child2
+      parent = state.elements.first.element as KoiTicketForEachElement;
+      expect(parent.templates.length, 2);
+
+      state.undo(); // undo child1
+      parent = state.elements.first.element as KoiTicketForEachElement;
+      expect(parent.templates.length, 1);
+      expect((parent.templates[0] as KoiTextElement).text, 'Old');
+
+      // 4. Invalid parentId - no-op
+      final child3 = EditorElement(
+        id: 'child_3',
+        element: const KoiTextElement(text: 'Child 3'),
+      );
+      state.execute(AddElementCommand(child3, parentId: 'invalid_id'));
+      expect(state.elements.length, 1);
+      parent = state.elements.first.element as KoiTicketForEachElement;
+      expect(parent.templates.length, 1);
+
+      // 5. Parent is not KoiTicketForEachElement - no-op
+      final textElement = EditorElement(
+        id: 'parent_2',
+        element: const KoiTextElement(text: 'Parent'),
+      );
+      state.updateElements([textElement]);
+      state.execute(AddElementCommand(child3, parentId: 'parent_2'));
+      expect((state.elements.first.element as KoiTextElement).text, 'Parent');
+    });
+
     test('RemoveElementCommand and Undo/Redo', () {
       final element = EditorElement(
         id: '2',
