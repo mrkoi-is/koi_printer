@@ -130,7 +130,7 @@ class CenterCanvas extends StatelessWidget {
   }
 
   Widget _buildLabelContent(BuildContext context, EditorState state) {
-    const scale = 1.5; // 编辑器放大系数：1 dot = 1.5 px，避免元素过小无法点击
+    final scale = state.labelScale; // 编辑器放大系数：1 dot = scale px，避免元素过小无法点击
     double labelWidth = 400;
     double labelHeight = 300;
     
@@ -145,37 +145,73 @@ class CenterCanvas extends StatelessWidget {
       }
     }
 
-    return Container(
-      width: labelWidth,
-      height: labelHeight,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: Colors.grey.shade300),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 4,
-            offset: const Offset(0, 1),
+    return Stack(
+      children: [
+        Container(
+          width: labelWidth,
+          height: labelHeight,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(color: Colors.grey.shade300),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.1),
+                blurRadius: 4,
+                offset: const Offset(0, 1),
+              ),
+            ],
           ),
-        ],
-      ),
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: state.elements.map((editorElement) {
-          return _EditableLabelElementWrap(
-            key: ValueKey(editorElement.id),
-            element: editorElement,
-            isSelected: state.selectedElementId == editorElement.id,
-            scale: scale,
-            onSelect: () => context.read<EditorState>().selectElement(editorElement.id),
-            onDelete: () {
-              context.read<EditorState>().execute(
-                RemoveElementCommand(editorElement.id),
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: state.elements.map((editorElement) {
+              return _EditableLabelElementWrap(
+                key: ValueKey(editorElement.id),
+                element: editorElement,
+                isSelected: state.selectedElementId == editorElement.id,
+                scale: scale,
+                onSelect: () => context.read<EditorState>().selectElement(editorElement.id),
+                onDelete: () {
+                  context.read<EditorState>().execute(
+                    RemoveElementCommand(editorElement.id),
+                  );
+                },
               );
-            },
-          );
-        }).toList(),
-      ),
+            }).toList(),
+          ),
+        ),
+        Positioned(
+          right: 16,
+          top: 16,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.1),
+                  blurRadius: 4,
+                )
+              ],
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.zoom_out, size: 20),
+                  onPressed: () => context.read<EditorState>().zoomOut(),
+                  tooltip: '缩小',
+                ),
+                Text('${(scale * 100).toInt()}%', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                IconButton(
+                  icon: const Icon(Icons.zoom_in, size: 20),
+                  onPressed: () => context.read<EditorState>().zoomIn(),
+                  tooltip: '放大',
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -399,6 +435,10 @@ class _EditableLabelElementWrapState extends State<_EditableLabelElementWrap> {
     } else if (el is KoiLabelReverseElement) {
       return KoiLabelReverseElement(
         x: el.x + dx, y: el.y + dy, width: el.width, height: el.height,
+      );
+    } else if (el is KoiLabelImageElement) {
+      return KoiLabelImageElement(
+        x: el.x + dx, y: el.y + dy, imageBytes: el.imageBytes, width: el.width,
       );
     }
     return el;

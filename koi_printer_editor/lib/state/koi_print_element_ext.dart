@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'package:koi_printer/koi_printer.dart';
 
 /// 为打印元素提供局部 copyWith 方法，避免在编辑属性时手动重写所有字段导致漏参。
@@ -199,6 +200,34 @@ extension KoiLabelReverseElementEditorExt on KoiLabelReverseElement {
       y: y ?? this.y,
       width: width ?? this.width,
       height: height ?? this.height,
+    );
+  }
+}
+
+extension KoiLabelImageElementExt on KoiLabelImageElement {
+  KoiLabelImageElement copyWith({
+    int? x,
+    int? y,
+    Uint8List? imageBytes,
+    int? width,
+  }) {
+    return KoiLabelImageElement(
+      x: x ?? this.x,
+      y: y ?? this.y,
+      imageBytes: imageBytes ?? this.imageBytes,
+      width: width ?? this.width,
+    );
+  }
+}
+
+extension KoiLabelForEachElementExt on KoiLabelForEachElement {
+  KoiLabelForEachElement copyWith({
+    String? listKey,
+    List<KoiLabelElement>? templates,
+  }) {
+    return KoiLabelForEachElement(
+      listKey: listKey ?? this.listKey,
+      templates: templates ?? this.templates,
     );
   }
 }

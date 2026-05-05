@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:koi_printer/koi_printer.dart';
 import 'package:koi_printer_editor/state/editor_command.dart';
@@ -115,6 +116,11 @@ class _ComponentsTab extends StatelessWidget {
             label: '空白行 (Spacer)',
             onAdd: () => _addNode(context, const KoiSpacerElement(lines: 1)),
           ),
+          _PaletteItem(
+            icon: Icons.code,
+            label: '原始指令 (Raw)',
+            onAdd: () => _addNode(context, const KoiRawCommandElement('SIZE 40 mm,30 mm\nGAP 2 mm,0 mm')),
+          ),
         ],
       );
     } else {
@@ -146,15 +152,30 @@ class _ComponentsTab extends StatelessWidget {
             label: '矩形框 (Box)',
             onAdd: () => _addNode(context, const KoiLabelBoxElement(x: 10, y: 10, width: 200, height: 100)),
           ),
-          _PaletteItem(
-            icon: Icons.horizontal_rule,
-            label: '直线 (Line)',
-            onAdd: () => _addNode(context, const KoiLabelLineElement(x: 10, y: 10, width: 200, height: 2)),
-          ),
-          _PaletteItem(
+                _PaletteItem(
             icon: Icons.format_color_fill,
             label: '反白区域 (Reverse)',
             onAdd: () => _addNode(context, const KoiLabelReverseElement(x: 10, y: 10, width: 200, height: 100)),
+          ),
+          _PaletteItem(
+            icon: Icons.list_alt_rounded,
+            label: '循环列表容器 (ForEach)',
+            onAdd: () => _addNode(context, const KoiLabelForEachElement(listKey: 'items', templates: [])),
+          ),
+          _PaletteItem(
+            icon: Icons.image,
+            label: '绝对图片 (Image)',
+            onAdd: () => _addNode(context, KoiLabelImageElement(x: 10, y: 10, imageBytes: Uint8List(0), width: 100)),
+          ),
+          _PaletteItem(
+            icon: Icons.print,
+            label: '触发打印 (Print)',
+            onAdd: () => _addNode(context, const KoiLabelPrintElement(copies: 1, sets: 1)),
+          ),
+          _PaletteItem(
+            icon: Icons.code,
+            label: '原始指令 (Raw)',
+            onAdd: () => _addNode(context, const KoiRawCommandElement('PRINT 1,1')),
           ),
         ],
       );
@@ -164,6 +185,7 @@ class _ComponentsTab extends StatelessWidget {
 
 class _PaletteItem extends StatelessWidget {
   const _PaletteItem({required this.icon, required this.label, required this.onAdd});
+
   final IconData icon;
   final String label;
   final VoidCallback onAdd;
@@ -220,7 +242,7 @@ class _LayerTreeTab extends StatelessWidget {
           label = '文本: ${(el.element as KoiTextElement).text}';
         } else if (el.element is KoiTicketForEachElement) {
           icon = Icons.list_alt_rounded;
-          label = '列表容器 (${(el.element as KoiTicketForEachElement).listKey})';
+          label = '小票循环 (${(el.element as KoiTicketForEachElement).listKey})';
         } else if (el.element is KoiDividerElement) {
           icon = Icons.horizontal_rule;
           label = '分割线';
@@ -258,6 +280,18 @@ class _LayerTreeTab extends StatelessWidget {
         } else if (el.element is KoiLabelReverseElement) {
           icon = Icons.format_color_fill;
           label = '反白区域 (Reverse)';
+        } else if (el.element is KoiLabelImageElement) {
+          icon = Icons.image;
+          label = '绝对图片 (Image)';
+        } else if (el.element is KoiLabelPrintElement) {
+          icon = Icons.print;
+          label = '触发打印 (${(el.element as KoiLabelPrintElement).copies} 份)';
+        } else if (el.element is KoiLabelForEachElement) {
+          icon = Icons.list_alt_rounded;
+          label = '标签循环 (${(el.element as KoiLabelForEachElement).listKey})';
+        } else if (el.element is KoiRawCommandElement) {
+          icon = Icons.code;
+          label = '原始指令 (Raw)';
         } else {
           icon = Icons.widgets;
           label = '未知组件';

@@ -16,6 +16,10 @@ import 'package:koi_printer_editor/widgets/inspectors/positioned_barcode_element
 import 'package:koi_printer_editor/widgets/inspectors/positioned_qr_code_element_inspector.dart';
 import 'package:koi_printer_editor/widgets/inspectors/label_line_element_inspector.dart';
 import 'package:koi_printer_editor/widgets/inspectors/label_reverse_element_inspector.dart';
+import 'package:koi_printer_editor/widgets/inspectors/label_print_element_inspector.dart';
+import 'package:koi_printer_editor/widgets/inspectors/raw_command_element_inspector.dart';
+import 'package:koi_printer_editor/widgets/inspectors/label_image_element_inspector.dart';
+import 'package:koi_printer_editor/widgets/inspectors/label_for_each_element_inspector.dart';
 import 'package:koi_printer/koi_printer.dart'; // 需要导出相关模型类
 
 class RightInspector extends StatefulWidget {
@@ -42,6 +46,10 @@ class _RightInspectorState extends State<RightInspector> {
       r.register<KoiPositionedQrCodeElement>(PositionedQrCodeElementInspector());
       r.register<KoiLabelLineElement>(LabelLineElementInspector());
       r.register<KoiLabelReverseElement>(LabelReverseElementInspector());
+      r.register<KoiLabelPrintElement>(LabelPrintElementInspector());
+      r.register<KoiRawCommandElement>(RawCommandElementInspector());
+      r.register<KoiLabelImageElement>(LabelImageElementInspector());
+      r.register<KoiLabelForEachElement>(LabelForEachElementInspector());
     });
   }
 

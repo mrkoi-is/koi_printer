@@ -27,12 +27,29 @@ class EditorState extends ChangeNotifier with EditorManifestMixin, EditorSchemaM
   List<EditorElement> _elements;
   String? _selectedElementId;
   bool? _isExplicitLabelMode;
+  double _labelScale = 1.5; // Default visual scale for labels
 
   // 历史栈
   final List<EditorCommand> _undoStack = [];
   final List<EditorCommand> _redoStack = [];
 
   List<EditorElement> get elements => _elements;
+  double get labelScale => _labelScale;
+
+  void zoomIn() {
+    if (_labelScale < 3.0) {
+      _labelScale += 0.25;
+      notifyListeners();
+    }
+  }
+
+  void zoomOut() {
+    if (_labelScale > 0.5) {
+      _labelScale -= 0.25;
+      notifyListeners();
+    }
+  }
+
   bool get isTicketMode {
     if (_elements.isNotEmpty) {
       return _elements.first.element is KoiTicketElement;

@@ -359,8 +359,33 @@ class KoiPreviewRenderer {
       KoiLabelBoxElement() => _posBox(element, textColor, scale),
       KoiLabelLineElement() => _posLine(element, textColor, scale),
       KoiLabelReverseElement() => _posReverse(element, textColor, scale),
+      KoiLabelImageElement() => _posImage(element, textColor, scale),
       _ => const SizedBox.shrink(),
     };
+  }
+
+  static Widget _posImage(KoiLabelImageElement e, Color color, double scale) {
+    if (e.imageBytes.isEmpty) {
+      return Positioned(
+        left: e.x * scale,
+        top: e.y * scale,
+        child: Container(
+          width: e.width != null ? e.width! * scale : 100 * scale,
+          height: 100 * scale,
+          color: Colors.grey.withValues(alpha: 0.3),
+          child: const Center(child: Icon(Icons.image, color: Colors.grey)),
+        ),
+      );
+    }
+    return Positioned(
+      left: e.x * scale,
+      top: e.y * scale,
+      child: Image.memory(
+        e.imageBytes,
+        width: e.width != null ? e.width! * scale : null,
+        fit: BoxFit.contain,
+      ),
+    );
   }
 
   static Widget _posLine(KoiLabelLineElement e, Color color, double scale) {
