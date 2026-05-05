@@ -278,7 +278,7 @@
 
 ---
 
-## CHECKPOINT 10: GitHub Actions CI 覆盖率门槛
+## CHECKPOINT 10: GitHub Actions CI 覆盖率门槛 [DONE]
 
 **包:** 全局 `.github/workflows/ci.yml`  
 **预计用时:** 1 hour  
