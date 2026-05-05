@@ -17,9 +17,10 @@ class QrCodeElementInspector extends ElementInspectorBuilder<KoiQrCodeElement> {
               const Text('二维码数据 (Data)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.blue)),
               const SizedBox(height: 12),
               TextFormField(
+                key: ValueKey(element.data),
                 initialValue: element.data,
                 decoration: const InputDecoration(labelText: '二维码内容', border: OutlineInputBorder()),
-                onChanged: (val) => update(context, elementId, element, element.copyWith(data: val)),
+                onChanged: (val) => update(context, elementId, element.copyWith(data: val)),
               ),
             ],
           ),
@@ -42,7 +43,7 @@ class QrCodeElementInspector extends ElementInspectorBuilder<KoiQrCodeElement> {
                   ButtonSegment(value: KoiTextAlign.right, icon: Icon(Icons.format_align_right), label: Text('右')),
                 ],
                 selected: {element.align},
-                onSelectionChanged: (set) => update(context, elementId, element, element.copyWith(align: set.first)),
+                onSelectionChanged: (set) => update(context, elementId, element.copyWith(align: set.first)),
               ),
               
               const SizedBox(height: 16),
@@ -54,7 +55,7 @@ class QrCodeElementInspector extends ElementInspectorBuilder<KoiQrCodeElement> {
                 divisions: 15,
                 label: 'Size ${element.size.index + 1}',
                 onChanged: (val) {
-                  update(context, elementId, element, element.copyWith(size: KoiQrSize.values[val.toInt()]));
+                  update(context, elementId, element.copyWith(size: KoiQrSize.values[val.toInt()]));
                 },
               ),
 
@@ -64,7 +65,7 @@ class QrCodeElementInspector extends ElementInspectorBuilder<KoiQrCodeElement> {
                 decoration: const InputDecoration(labelText: '纠错级别', border: OutlineInputBorder()),
                 items: KoiQrCorrection.values.map((c) => DropdownMenuItem(value: c, child: Text(c.name.toUpperCase()))).toList(),
                 onChanged: (val) {
-                  if (val != null) update(context, elementId, element, element.copyWith(correction: val));
+                  if (val != null) update(context, elementId, element.copyWith(correction: val));
                 },
               ),
             ],

@@ -78,6 +78,11 @@ class _ComponentsTab extends StatelessWidget {
           onAdd: () => _addNode(context, const KoiQrCodeElement(data: 'https://mrkoi.io')),
         ),
         _PaletteItem(
+          icon: Icons.barcode_reader,
+          label: '条形码 (Barcode)',
+          onAdd: () => _addNode(context, const KoiBarcodeElement(data: '1234567890')),
+        ),
+        _PaletteItem(
           icon: Icons.view_column,
           label: '多列排版 (Row)',
           onAdd: () => _addNode(context, const KoiTextRowElement(

@@ -181,7 +181,7 @@ class EditorState extends ChangeNotifier {
   }
 
   void addSchemaField(KoiTemplateField field) {
-    _schema = List.from(_schema)..add(field);
+    _schema = List<KoiTemplateField>.from(_schema)..add(field);
     notifyListeners();
   }
 
@@ -203,4 +203,3 @@ class EditorState extends ChangeNotifier {
     }
   }
 }
-

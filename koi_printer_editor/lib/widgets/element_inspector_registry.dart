@@ -7,12 +7,16 @@ import 'package:provider/provider.dart';
 abstract class ElementInspectorBuilder<T extends KoiTicketElement> {
   Widget build(BuildContext context, String elementId, T element);
 
-  /// 封装便捷的更新钩子，避免在使用侧重复写 read[EditorState]().execute...
-  void update(BuildContext context, String elementId, T oldElement, T newElement) {
-    context.read<EditorState>().execute(
+  /// 封装便捷的更新钩子。从 EditorState 获取最新元素作为 oldElement，
+  /// 避免闭包捕获的过期引用导致 Undo 链断裂。
+  void update(BuildContext context, String elementId, T newElement) {
+    final state = context.read<EditorState>();
+    final current = state.elements.where((e) => e.id == elementId).firstOrNull;
+    if (current == null) return;
+    state.execute(
       UpdateElementCommand(
         elementId: elementId,
-        oldElement: oldElement,
+        oldElement: current.element,
         newElement: newElement,
       ),
     );
@@ -25,9 +29,17 @@ class InspectorRegistry {
   static final InspectorRegistry instance = InspectorRegistry._();
 
   final Map<Type, ElementInspectorBuilder> _builders = {};
+  bool _initialized = false;
 
   void register<T extends KoiTicketElement>(ElementInspectorBuilder<T> builder) {
     _builders[T] = builder;
+  }
+
+  /// 确保注册只执行一次，防止热重载时重复创建 Builder 实例。
+  void ensureInitialized(void Function(InspectorRegistry r) registerFn) {
+    if (_initialized) return;
+    _initialized = true;
+    registerFn(this);
   }
 
   Widget buildInspector(BuildContext context, String elementId, KoiTicketElement element) {

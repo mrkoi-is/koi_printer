@@ -17,9 +17,10 @@ class TicketForEachElementInspector extends ElementInspectorBuilder<KoiTicketFor
               const Text('数据循环 (Data Loop)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.blue)),
               const SizedBox(height: 12),
               TextFormField(
+                key: ValueKey(element.listKey),
                 initialValue: element.listKey,
                 decoration: const InputDecoration(labelText: '绑定的数组变量 (List Key)', border: OutlineInputBorder()),
-                onChanged: (val) => update(context, elementId, element, element.copyWith(listKey: val)),
+                onChanged: (val) => update(context, elementId, element.copyWith(listKey: val)),
               ),
               const SizedBox(height: 12),
               const Text('提示：在左侧画布选中此区域后，点击左侧组件库即可向该循环内添加元素。', style: TextStyle(color: Colors.grey, fontSize: 12)),

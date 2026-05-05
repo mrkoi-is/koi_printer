@@ -17,9 +17,10 @@ class BarcodeElementInspector extends ElementInspectorBuilder<KoiBarcodeElement>
               const Text('条码数据 (Data)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.blue)),
               const SizedBox(height: 12),
               TextFormField(
+                key: ValueKey(element.data),
                 initialValue: element.data,
                 decoration: const InputDecoration(labelText: '条形码内容', border: OutlineInputBorder()),
-                onChanged: (val) => update(context, elementId, element, element.copyWith(data: val)),
+                onChanged: (val) => update(context, elementId, element.copyWith(data: val)),
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<KoiBarcodeType>(
@@ -27,7 +28,7 @@ class BarcodeElementInspector extends ElementInspectorBuilder<KoiBarcodeElement>
                 decoration: const InputDecoration(labelText: '条码格式 (Format)', border: OutlineInputBorder()),
                 items: KoiBarcodeType.values.map((t) => DropdownMenuItem(value: t, child: Text(t.name.toUpperCase()))).toList(),
                 onChanged: (val) {
-                  if (val != null) update(context, elementId, element, element.copyWith(type: val));
+                  if (val != null) update(context, elementId, element.copyWith(type: val));
                 },
               ),
             ],
@@ -51,7 +52,7 @@ class BarcodeElementInspector extends ElementInspectorBuilder<KoiBarcodeElement>
                   ButtonSegment(value: KoiTextAlign.right, icon: Icon(Icons.format_align_right), label: Text('右')),
                 ],
                 selected: {element.align},
-                onSelectionChanged: (set) => update(context, elementId, element, element.copyWith(align: set.first)),
+                onSelectionChanged: (set) => update(context, elementId, element.copyWith(align: set.first)),
               ),
               
               const SizedBox(height: 16),
@@ -63,7 +64,7 @@ class BarcodeElementInspector extends ElementInspectorBuilder<KoiBarcodeElement>
                 divisions: 4,
                 label: 'Width ${element.width}',
                 onChanged: (val) {
-                  update(context, elementId, element, element.copyWith(width: val.toInt()));
+                  update(context, elementId, element.copyWith(width: val.toInt()));
                 },
               ),
 
@@ -76,7 +77,7 @@ class BarcodeElementInspector extends ElementInspectorBuilder<KoiBarcodeElement>
                 divisions: 14,
                 label: '${element.height} px',
                 onChanged: (val) {
-                  update(context, elementId, element, element.copyWith(height: val.toInt()));
+                  update(context, elementId, element.copyWith(height: val.toInt()));
                 },
               ),
               
@@ -86,7 +87,7 @@ class BarcodeElementInspector extends ElementInspectorBuilder<KoiBarcodeElement>
                 decoration: const InputDecoration(labelText: '文字位置 (HRI)', border: OutlineInputBorder()),
                 items: KoiBarcodeTextPosition.values.map((p) => DropdownMenuItem(value: p, child: Text(p.name))).toList(),
                 onChanged: (val) {
-                  if (val != null) update(context, elementId, element, element.copyWith(textPosition: val));
+                  if (val != null) update(context, elementId, element.copyWith(textPosition: val));
                 },
               ),
             ],

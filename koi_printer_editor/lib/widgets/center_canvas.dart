@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:koi_printer_editor/state/editor_command.dart';
 import 'package:koi_printer_editor/state/editor_state.dart';
+import 'package:koi_printer_editor/state/koi_print_element_ext.dart';
 import 'package:koi_printer/koi_printer.dart';
 import 'package:provider/provider.dart';
 
@@ -81,18 +82,7 @@ class _EditableElementWrap extends StatelessWidget {
       for (var f in fields) {
         t = t.replaceAll('{{${f.key}}}', '<${f.label}>');
       }
-      return KoiTextElement(
-        text: t,
-        size: e.size,
-        widthSize: e.widthSize,
-        heightSize: e.heightSize,
-        align: e.align,
-        bold: e.bold,
-        reverse: e.reverse,
-        underline: e.underline,
-        underlineStyle: e.underlineStyle,
-        font: e.font,
-      );
+      return e.copyWith(text: t);
     } else if (e is KoiTextRowElement) {
       return KoiTextRowElement(
         columns: e.columns.map((c) {
@@ -176,11 +166,8 @@ class _EditableElementWrap extends StatelessWidget {
        );
     }
 
-    // 编辑模式下给中文别名加个底色（如果是文本）
-    if (!state.isPreviewMode) {
-      // 因为我们无法直接侵入 KoiPreviewRenderer 内部修改单个字的底色，
-      // 所以我们依赖上面的 _processEditMode 将文字变成 <运单号> 来做视觉提示
-    }
+    // 编辑模式下依赖 _processEditMode 将 {{变量}} 替换为 <中文标签> 做视觉提示，
+    // 因为无法直接侵入 KoiPreviewRenderer 内部修改单个字的底色。
 
     return GestureDetector(
       onTap: onSelect,

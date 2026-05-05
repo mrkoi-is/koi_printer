@@ -274,9 +274,17 @@ class TopToolbar extends StatelessWidget {
             TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('取消')),
             FilledButton(
               onPressed: () {
+                final id = idCtrl.text.trim();
+                final name = nameCtrl.text.trim();
+                if (id.isEmpty || name.isEmpty) {
+                  ScaffoldMessenger.of(ctx).showSnackBar(
+                    const SnackBar(content: Text('模板 ID 和名称不能为空')),
+                  );
+                  return;
+                }
                 context.read<EditorState>().updateManifestMetadata(
-                  id: idCtrl.text.trim(),
-                  name: nameCtrl.text.trim(),
+                  id: id,
+                  name: name,
                   category: categoryCtrl.text.trim(),
                   description: descCtrl.text.trim(),
                 );
@@ -338,4 +346,3 @@ class TopToolbar extends StatelessWidget {
     );
   }
 }
-

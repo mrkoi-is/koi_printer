@@ -29,7 +29,7 @@ class TextElementInspector extends ElementInspectorBuilder<KoiTextElement> {
           _DataBindingField(
             elementId: elementId,
             element: element,
-            onUpdate: (newText) => update(context, elementId, element, element.copyWith(text: newText)),
+            onUpdate: (newText) => update(context, elementId, element.copyWith(text: newText)),
           ),
         ],
       ),
@@ -55,7 +55,7 @@ class TextElementInspector extends ElementInspectorBuilder<KoiTextElement> {
               ButtonSegment(value: KoiTextAlign.right, icon: Icon(Icons.format_align_right), label: Text('右')),
             ],
             selected: {element.align},
-            onSelectionChanged: (set) => update(context, elementId, element, element.copyWith(align: set.first)),
+            onSelectionChanged: (set) => update(context, elementId, element.copyWith(align: set.first)),
           ),
           
           const SizedBox(height: 16),
@@ -67,17 +67,17 @@ class TextElementInspector extends ElementInspectorBuilder<KoiTextElement> {
               FilterChip(
                 label: const Text('加粗'),
                 selected: element.bold,
-                onSelected: (val) => update(context, elementId, element, element.copyWith(bold: val)),
+                onSelected: (val) => update(context, elementId, element.copyWith(bold: val)),
               ),
               FilterChip(
                 label: const Text('反白'),
                 selected: element.reverse,
-                onSelected: (val) => update(context, elementId, element, element.copyWith(reverse: val)),
+                onSelected: (val) => update(context, elementId, element.copyWith(reverse: val)),
               ),
               FilterChip(
                 label: const Text('下划线'),
                 selected: element.underline,
-                onSelected: (val) => update(context, elementId, element, element.copyWith(underline: val)),
+                onSelected: (val) => update(context, elementId, element.copyWith(underline: val)),
               ),
             ],
           ),
@@ -92,7 +92,7 @@ class TextElementInspector extends ElementInspectorBuilder<KoiTextElement> {
             divisions: 7,
             label: '${element.size.index + 1}x',
             onChanged: (val) {
-              update(context, elementId, element, element.copyWith(size: KoiTextSize.values[val.toInt()]));
+              update(context, elementId, element.copyWith(size: KoiTextSize.values[val.toInt()]));
             },
           ),
         ],
@@ -173,6 +173,7 @@ class _DataBindingFieldState extends State<_DataBindingField> {
         const SizedBox(height: 12),
         if (_modeIndex == 0) ...[
            TextFormField(
+             key: ValueKey('static_$text'),
              initialValue: text,
              decoration: const InputDecoration(labelText: '纯文本内容', border: OutlineInputBorder()),
              maxLines: 3,
@@ -189,6 +190,7 @@ class _DataBindingFieldState extends State<_DataBindingField> {
            ),
         ] else ...[
            TextFormField(
+             key: ValueKey('expr_$text'),
              initialValue: text,
              decoration: const InputDecoration(labelText: '模板表达式', border: OutlineInputBorder()),
              maxLines: 3,

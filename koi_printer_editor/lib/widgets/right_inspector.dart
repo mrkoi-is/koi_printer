@@ -21,18 +21,12 @@ class _RightInspectorState extends State<RightInspector> {
   @override
   void initState() {
     super.initState();
-    _registerInspectors();
-  }
-
-  void _registerInspectors() {
-    final r = InspectorRegistry.instance;
-    r.register<KoiTextElement>(TextElementInspector());
-    r.register<KoiQrCodeElement>(QrCodeElementInspector());
-    r.register<KoiBarcodeElement>(BarcodeElementInspector());
-    r.register<KoiTicketForEachElement>(TicketForEachElementInspector());
-    // 后续可以在这里注册更多组件:
-    // r.register<KoiLabelBoxElement>(BoxElementInspector());
-    // r.register<KoiTextRowElement>(TextRowElementInspector());
+    InspectorRegistry.instance.ensureInitialized((r) {
+      r.register<KoiTextElement>(TextElementInspector());
+      r.register<KoiQrCodeElement>(QrCodeElementInspector());
+      r.register<KoiBarcodeElement>(BarcodeElementInspector());
+      r.register<KoiTicketForEachElement>(TicketForEachElementInspector());
+    });
   }
 
   @override
