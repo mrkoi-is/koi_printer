@@ -4,7 +4,7 @@ import 'package:koi_printer_editor/state/editor_command.dart';
 import 'package:koi_printer_editor/state/editor_state.dart';
 import 'package:provider/provider.dart';
 
-abstract class ElementInspectorBuilder<T extends KoiTicketElement> {
+abstract class ElementInspectorBuilder<T extends KoiPrintElement> {
   Widget build(BuildContext context, String elementId, T element);
 
   /// 封装便捷的更新钩子。从 EditorState 获取最新元素作为 oldElement，
@@ -31,7 +31,7 @@ class InspectorRegistry {
   final Map<Type, ElementInspectorBuilder> _builders = {};
   bool _initialized = false;
 
-  void register<T extends KoiTicketElement>(ElementInspectorBuilder<T> builder) {
+  void register<T extends KoiPrintElement>(ElementInspectorBuilder<T> builder) {
     _builders[T] = builder;
   }
 
@@ -42,7 +42,7 @@ class InspectorRegistry {
     registerFn(this);
   }
 
-  Widget buildInspector(BuildContext context, String elementId, KoiTicketElement element) {
+  Widget buildInspector(BuildContext context, String elementId, KoiPrintElement element) {
     final builder = _builders[element.runtimeType];
     if (builder != null) {
       // 这里的 dynamic 强转是因为 Map<Type, ...> 擦除了泛型，但我们在 register 时保证了类型对应

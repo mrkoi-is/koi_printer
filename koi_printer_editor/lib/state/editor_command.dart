@@ -23,10 +23,12 @@ class AddElementCommand extends EditorCommand {
         final parent = elements[pIndex].element;
         if (parent is KoiTicketForEachElement) {
           final newTemplates = List<KoiTicketElement>.from(parent.templates);
+          if (element.element is! KoiTicketElement) return;
+          final ticketEl = element.element as KoiTicketElement;
           if (index != null && index! >= 0 && index! <= newTemplates.length) {
-            newTemplates.insert(index!, element.element);
+            newTemplates.insert(index!, ticketEl);
           } else {
-            newTemplates.add(element.element);
+            newTemplates.add(ticketEl);
           }
           elements[pIndex] = elements[pIndex].copyWith(
             element: KoiTicketForEachElement(
@@ -59,7 +61,9 @@ class AddElementCommand extends EditorCommand {
         final parent = elements[pIndex].element;
         if (parent is KoiTicketForEachElement) {
           final newTemplates = List<KoiTicketElement>.from(parent.templates);
-          newTemplates.remove(element.element);
+          if (element.element is KoiTicketElement) {
+            newTemplates.remove(element.element as KoiTicketElement);
+          }
           elements[pIndex] = elements[pIndex].copyWith(
             element: KoiTicketForEachElement(
               listKey: parent.listKey,
@@ -118,8 +122,8 @@ class UpdateElementCommand extends EditorCommand {
   });
 
   final String elementId;
-  final KoiTicketElement oldElement;
-  final KoiTicketElement newElement;
+  final KoiPrintElement oldElement;
+  final KoiPrintElement newElement;
 
   @override
   void execute(EditorState state) {
@@ -131,7 +135,7 @@ class UpdateElementCommand extends EditorCommand {
     _replace(state, oldElement);
   }
 
-  void _replace(EditorState state, KoiTicketElement replacement) {
+  void _replace(EditorState state, KoiPrintElement replacement) {
     final elements = List<EditorElement>.from(state.elements);
     final index = elements.indexWhere((e) => e.id == elementId);
     if (index != -1) {

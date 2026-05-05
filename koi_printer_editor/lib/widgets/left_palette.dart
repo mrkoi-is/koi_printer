@@ -47,8 +47,21 @@ class LeftPalette extends StatelessWidget {
 class _ComponentsTab extends StatelessWidget {
   String _genId() => DateTime.now().microsecondsSinceEpoch.toString();
 
-  void _addNode(BuildContext context, KoiTicketElement element) {
+  void _addNode(BuildContext context, KoiPrintElement element) {
     final state = context.read<EditorState>();
+    
+    // 阻止混合添加
+    if (state.elements.isNotEmpty) {
+      if (state.isTicketMode && element is! KoiTicketElement) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('当前为小票模式，无法添加标签元素')));
+        return;
+      }
+      if (!state.isTicketMode && element is KoiTicketElement) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('当前为标签模式，无法添加小票元素')));
+        return;
+      }
+    }
+    
     final selected = state.selectedElement;
     final String? parentId = (selected?.element is KoiTicketForEachElement) ? selected!.id : null;
     state.execute(AddElementCommand(EditorElement(id: _genId(), element: element), parentId: parentId));
@@ -98,6 +111,16 @@ class _ComponentsTab extends StatelessWidget {
           icon: Icons.space_bar,
           label: '空白行 (Spacer)',
           onAdd: () => _addNode(context, const KoiSpacerElement(lines: 1)),
+        ),
+        const Divider(),
+        const Padding(
+          padding: EdgeInsets.symmetric(vertical: 8),
+          child: Text('标签专属组件 (Label Only)', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey)),
+        ),
+        _PaletteItem(
+          icon: Icons.crop_square,
+          label: '矩形框 (Box)',
+          onAdd: () => _addNode(context, const KoiLabelBoxElement(x: 10, y: 10, width: 200, height: 100)),
         ),
       ],
     );

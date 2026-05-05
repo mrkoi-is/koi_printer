@@ -6,9 +6,14 @@ import 'package:koi_printer_command/src/model/koi_types.dart';
 // 小票元素 (ESC/POS 流式布局) — Ticket Elements
 // ═══════════════════════════════════════════════════════════
 
+/// 基础打印元素
+abstract class KoiPrintElement {
+  const KoiPrintElement();
+}
+
 /// 小票打印元素基类 (sealed)。
 /// Base class for ticket (receipt) print elements using flow layout.
-sealed class KoiTicketElement {
+sealed class KoiTicketElement implements KoiPrintElement {
   const KoiTicketElement();
 }
 
@@ -280,7 +285,7 @@ class KoiTicketForEachElement extends KoiTicketElement {
 
 /// 标签打印元素基类 (sealed)。
 /// Base class for label print elements using positioned (canvas) layout.
-sealed class KoiLabelElement {
+sealed class KoiLabelElement implements KoiPrintElement {
   const KoiLabelElement();
 }
 

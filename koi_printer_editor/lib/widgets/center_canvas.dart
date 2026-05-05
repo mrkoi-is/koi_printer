@@ -76,7 +76,7 @@ class _EditableElementWrap extends StatelessWidget {
   final VoidCallback onSelect;
   final VoidCallback onDelete;
 
-  KoiTicketElement _processEditMode(KoiTicketElement e, List<KoiTemplateField> fields) {
+  KoiPrintElement _processEditMode(KoiPrintElement e, List<KoiTemplateField> fields) {
     if (e is KoiTextElement) {
       String t = e.text;
       for (var f in fields) {
@@ -103,16 +103,23 @@ class _EditableElementWrap extends StatelessWidget {
     
     KoiPrintDocument mockDoc;
     if (state.isPreviewMode) {
-      // 真实数据预览模式
-      mockDoc = const KoiTemplateEngine().expandTicket(
-        KoiTicketDocument(elements: [element.element]),
-        state.mockData,
-      );
+      if (element.element is KoiTicketElement) {
+        // 真实数据预览模式
+        mockDoc = const KoiTemplateEngine().expandTicket(
+          KoiTicketDocument(elements: [element.element as KoiTicketElement]),
+          state.mockData,
+        );
+      } else {
+        mockDoc = KoiLabelDocument(elements: [element.element as KoiLabelElement]);
+      }
     } else {
       // 编辑模式下，替换占位符为中文别名标签
-      mockDoc = KoiTicketDocument(
-        elements: [_processEditMode(element.element, state.schema)],
-      );
+      final processed = _processEditMode(element.element, state.schema);
+      if (processed is KoiTicketElement) {
+        mockDoc = KoiTicketDocument(elements: [processed]);
+      } else {
+        mockDoc = KoiLabelDocument(elements: [processed as KoiLabelElement]);
+      }
     }
 
     final renderWidget = KoiPreviewRenderer.build(

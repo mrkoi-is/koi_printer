@@ -106,3 +106,21 @@ extension KoiTextColumnExt on KoiTextColumn {
     );
   }
 }
+
+extension KoiLabelBoxElementEditorExt on KoiLabelBoxElement {
+  KoiLabelBoxElement copyWith({
+    int? x,
+    int? y,
+    int? width,
+    int? height,
+    int? thickness,
+  }) {
+    return KoiLabelBoxElement(
+      x: x ?? this.x,
+      y: y ?? this.y,
+      width: width ?? this.width,
+      height: height ?? this.height,
+      thickness: thickness ?? this.thickness,
+    );
+  }
+}

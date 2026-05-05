@@ -8,9 +8,9 @@ import 'package:koi_printer_editor/state/mixins/editor_schema_mixin.dart';
 class EditorElement {
   EditorElement({required this.id, required this.element});
   final String id;
-  final KoiTicketElement element;
+  final KoiPrintElement element;
 
-  EditorElement copyWith({String? id, KoiTicketElement? element}) {
+  EditorElement copyWith({String? id, KoiPrintElement? element}) {
     return EditorElement(
       id: id ?? this.id,
       element: element ?? this.element,
@@ -32,7 +32,14 @@ class EditorState extends ChangeNotifier with EditorManifestMixin, EditorSchemaM
   final List<EditorCommand> _redoStack = [];
 
   List<EditorElement> get elements => _elements;
-  KoiPrintDocument get document => KoiTicketDocument(elements: _elements.map((e) => e.element).toList());
+  bool get isTicketMode => _elements.isEmpty || _elements.first.element is KoiTicketElement;
+  
+  KoiPrintDocument get document {
+    if (!isTicketMode) {
+      return KoiLabelDocument(elements: _elements.map((e) => e.element as KoiLabelElement).toList());
+    }
+    return KoiTicketDocument(elements: _elements.map((e) => e.element as KoiTicketElement).toList());
+  }
   String? get selectedElementId => _selectedElementId;
   EditorElement? get selectedElement => _elements.where((e) => e.id == _selectedElementId).firstOrNull;
 
