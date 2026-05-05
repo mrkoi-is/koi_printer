@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:koi_printer/koi_printer.dart';
 
@@ -22,7 +22,7 @@ class KoiTemplateLoader {
         final manifest = KoiTemplateManifest.fromJsonString(jsonStr);
         templates.add(manifest);
       } catch (e) {
-        print('Error loading template $path: $e');
+        debugPrint('Error loading template $path: $e');
       }
     }
 
