@@ -1,0 +1,76 @@
+{
+  "manifestVersion": 1,
+  "id": "payment_request_v1",
+  "name": "请款单 (Payment)",
+  "version": 1,
+  "category": "payment",
+  "description": "请款申请单，含审批签字留白",
+  "schema": [
+    {
+      "key": "requestUser",
+      "label": "请款人"
+    },
+    {
+      "key": "requestAmount",
+      "label": "请款金额"
+    },
+    {
+      "key": "reason",
+      "label": "请款事由"
+    }
+  ],
+  "mockData": {
+    "requestUser": "赵六",
+    "requestAmount": "¥ 5,000.00",
+    "reason": "采购新一批打印纸和碳带"
+  },
+  "document": {
+    "documentType": "ticket",
+    "paperSize": 80,
+    "elements": [
+      {
+        "type": "text",
+        "text": "请款单",
+        "size": "size2",
+        "align": "center",
+        "bold": true
+      },
+      {
+        "type": "text",
+        "text": "请款人: {{requestUser}}"
+      },
+      {
+        "type": "text",
+        "text": "请款金额: {{requestAmount}}",
+        "size": "size2",
+        "bold": true
+      },
+      {
+        "type": "text",
+        "text": "请款事由: {{reason}}"
+      },
+      {
+        "type": "spacer",
+        "lines": 2
+      },
+      {
+        "type": "textRow",
+        "columns": [
+          {
+            "text": "审批人签字:"
+          },
+          {
+            "text": "财务签字:"
+          }
+        ]
+      },
+      {
+        "type": "spacer",
+        "lines": 3
+      },
+      {
+        "type": "cut"
+      }
+    ]
+  }
+}

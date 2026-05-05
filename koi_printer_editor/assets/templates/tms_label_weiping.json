@@ -1,0 +1,111 @@
+{
+  "manifestVersion": 1,
+  "id": "tms_label_weiping",
+  "name": "伟平标签 (TMS同步)",
+  "version": 1,
+  "category": "tms",
+  "description": "同步自 TMS 蓝牙打印伟平标签模板",
+  "schema": [
+    {
+      "key": "companyName",
+      "label": "公司名称"
+    },
+    {
+      "key": "toNodeName",
+      "label": "目的网点"
+    },
+    {
+      "key": "receiverName",
+      "label": "收货人"
+    },
+    {
+      "key": "sequnceId",
+      "label": "流水号"
+    },
+    {
+      "key": "totalCount",
+      "label": "件数"
+    },
+    {
+      "key": "fromTime",
+      "label": "发站与时间"
+    },
+    {
+      "key": "staffName",
+      "label": "开单人"
+    }
+  ],
+  "mockData": {
+    "companyName": "伟平快运",
+    "toNodeName": "广州白云",
+    "receiverName": "李四",
+    "sequnceId": "00124",
+    "totalCount": "5",
+    "fromTime": "深圳: 2026-05-04",
+    "staffName": "王五"
+  },
+  "document": {
+    "documentType": "label",
+    "elements": [
+      {
+        "type": "labelSetup",
+        "widthMm": 75,
+        "heightMm": 50
+      },
+      {
+        "type": "positionedText",
+        "x": 10,
+        "y": 20,
+        "text": "{{companyName}}",
+        "xScale": 2,
+        "yScale": 2,
+        "bold": true
+      },
+      {
+        "type": "positionedText",
+        "x": 360,
+        "y": 20,
+        "text": "{{toNodeName}}",
+        "xScale": 3,
+        "yScale": 3,
+        "bold": true
+      },
+      {
+        "type": "positionedText",
+        "x": 10,
+        "y": 100,
+        "text": "{{receiverName}}",
+        "xScale": 2,
+        "yScale": 2
+      },
+      {
+        "type": "positionedText",
+        "x": 10,
+        "y": 200,
+        "text": "{{sequnceId}}",
+        "xScale": 2,
+        "yScale": 2
+      },
+      {
+        "type": "positionedText",
+        "x": 360,
+        "y": 200,
+        "text": "{{totalCount}}件",
+        "xScale": 2,
+        "yScale": 2
+      },
+      {
+        "type": "positionedText",
+        "x": 10,
+        "y": 280,
+        "text": "{{fromTime}}"
+      },
+      {
+        "type": "positionedText",
+        "x": 360,
+        "y": 280,
+        "text": "{{staffName}}"
+      }
+    ]
+  }
+}

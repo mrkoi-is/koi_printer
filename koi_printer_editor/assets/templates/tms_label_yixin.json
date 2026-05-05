@@ -1,0 +1,68 @@
+{
+  "manifestVersion": 1,
+  "id": "tms_label_yixin",
+  "name": "亿鑫标签 (TMS同步)",
+  "version": 1,
+  "category": "tms",
+  "description": "同步自 TMS 蓝牙打印亿鑫物流标签模板 78×60mm",
+  "schema": [
+    {
+      "key": "receiverName",
+      "label": "收货人"
+    },
+    {
+      "key": "sequnceId",
+      "label": "流水号"
+    },
+    {
+      "key": "totalCount",
+      "label": "件数"
+    },
+    {
+      "key": "toNodeName",
+      "label": "目的网点"
+    }
+  ],
+  "mockData": {
+    "receiverName": "赵六",
+    "sequnceId": "00127",
+    "totalCount": "5",
+    "toNodeName": "重庆渝北"
+  },
+  "document": {
+    "documentType": "label",
+    "elements": [
+      {
+        "type": "labelSetup",
+        "widthMm": 78,
+        "heightMm": 60
+      },
+      {
+        "type": "positionedText",
+        "x": 40,
+        "y": 10,
+        "text": "{{receiverName}}",
+        "xScale": 5,
+        "yScale": 5,
+        "bold": true
+      },
+      {
+        "type": "positionedText",
+        "x": 80,
+        "y": 200,
+        "text": "{{sequnceId}}-{{totalCount}}",
+        "xScale": 5,
+        "yScale": 5,
+        "bold": true
+      },
+      {
+        "type": "positionedText",
+        "x": 240,
+        "y": 330,
+        "text": "{{toNodeName}}",
+        "xScale": 4,
+        "yScale": 4
+      }
+    ]
+  }
+}

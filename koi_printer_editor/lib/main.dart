@@ -3,15 +3,23 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:koi_printer_editor/editor_screen.dart';
 import 'package:koi_printer_editor/mock_templates.dart';
 import 'package:koi_printer_editor/state/editor_state.dart';
+import 'package:koi_printer_editor/utils/template_loader.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Load templates from JSON assets
+  templateManifests = await KoiTemplateLoader.loadAllTemplates();
+
   runApp(
     ChangeNotifierProvider(
       create: (_) {
         final state = EditorState(initialElements: defaultTemplateElements);
         // 同步 Schema、mockData、manifest 身份 (避免初始状态为空)
-        state.loadManifest(defaultManifest, defaultTemplateElements);
+        if (defaultManifest != null) {
+          state.loadManifest(defaultManifest!, defaultTemplateElements);
+        }
         return state;
       },
       child: const KoiPrinterEditorApp(),

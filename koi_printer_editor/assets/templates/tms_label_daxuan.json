@@ -1,0 +1,99 @@
+{
+  "manifestVersion": 1,
+  "id": "tms_label_daxuan",
+  "name": "达宣标签 (TMS同步)",
+  "version": 1,
+  "category": "tms",
+  "description": "同步自 TMS 蓝牙打印达宣标签模板",
+  "schema": [
+    {
+      "key": "toNodeName",
+      "label": "目的网点"
+    },
+    {
+      "key": "receiverName",
+      "label": "收货人"
+    },
+    {
+      "key": "totalCount",
+      "label": "件数"
+    },
+    {
+      "key": "sequnceId",
+      "label": "流水号"
+    },
+    {
+      "key": "startDate",
+      "label": "开单时间"
+    },
+    {
+      "key": "companyInfo",
+      "label": "公司网点"
+    }
+  ],
+  "mockData": {
+    "toNodeName": "北京朝阳区",
+    "receiverName": "张三丰",
+    "totalCount": "3",
+    "sequnceId": "00123",
+    "startDate": "2026-05-04 12:00:00",
+    "companyInfo": "达宣物流 (深圳科苑站)"
+  },
+  "document": {
+    "documentType": "label",
+    "elements": [
+      {
+        "type": "labelSetup",
+        "widthMm": 75,
+        "heightMm": 50
+      },
+      {
+        "type": "positionedText",
+        "x": 180,
+        "y": 10,
+        "text": "{{toNodeName}}",
+        "xScale": 3,
+        "yScale": 3,
+        "bold": true
+      },
+      {
+        "type": "positionedText",
+        "x": 10,
+        "y": 100,
+        "text": "收货人: {{receiverName}}",
+        "xScale": 2,
+        "yScale": 2
+      },
+      {
+        "type": "positionedText",
+        "x": 480,
+        "y": 100,
+        "text": "{{totalCount}}件",
+        "xScale": 2,
+        "yScale": 2
+      },
+      {
+        "type": "positionedText",
+        "x": 10,
+        "y": 160,
+        "text": "流水号: {{sequnceId}}",
+        "xScale": 2,
+        "yScale": 2
+      },
+      {
+        "type": "positionedText",
+        "x": 10,
+        "y": 220,
+        "text": "开单时间: {{startDate}}",
+        "xScale": 2,
+        "yScale": 2
+      },
+      {
+        "type": "positionedText",
+        "x": 150,
+        "y": 300,
+        "text": "{{companyInfo}}"
+      }
+    ]
+  }
+}

@@ -1,0 +1,133 @@
+{
+  "manifestVersion": 1,
+  "id": "demo_receipt_v1",
+  "name": "简单收据 (Demo)",
+  "version": 1,
+  "category": "demo",
+  "description": "演示模板，含 ForEach 商品循环和二维码",
+  "schema": [
+    {
+      "key": "fee.total",
+      "label": "合计金额"
+    },
+    {
+      "key": "items",
+      "label": "商品列表",
+      "type": "array"
+    }
+  ],
+  "mockData": {
+    "fee": {
+      "total": 188.0
+    },
+    "items": [
+      {
+        "name": "Koi 机械键盘",
+        "qty": 1,
+        "price": 99.0
+      },
+      {
+        "name": "Type-C 数据线",
+        "qty": 2,
+        "price": 19.9
+      }
+    ]
+  },
+  "document": {
+    "documentType": "ticket",
+    "paperSize": 80,
+    "elements": [
+      {
+        "type": "text",
+        "text": "Mr.Koi Store",
+        "size": "size2",
+        "align": "center",
+        "bold": true
+      },
+      {
+        "type": "text",
+        "text": "www.mrkoi.com",
+        "align": "center"
+      },
+      {
+        "type": "divider"
+      },
+      {
+        "type": "textRow",
+        "columns": [
+          {
+            "text": "商品",
+            "ratio": 6
+          },
+          {
+            "text": "数量",
+            "ratio": 2,
+            "align": "center"
+          },
+          {
+            "text": "金额",
+            "ratio": 4,
+            "align": "right"
+          }
+        ]
+      },
+      {
+        "type": "divider"
+      },
+      {
+        "type": "ticketForEach",
+        "listKey": "items",
+        "templates": [
+          {
+            "type": "textRow",
+            "columns": [
+              {
+                "text": "{{name}}",
+                "ratio": 6
+              },
+              {
+                "text": "{{qty}}",
+                "ratio": 2,
+                "align": "center"
+              },
+              {
+                "text": "{{price}}",
+                "ratio": 4,
+                "align": "right"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "divider"
+      },
+      {
+        "type": "textRow",
+        "columns": [
+          {
+            "text": "合计",
+            "ratio": 8,
+            "bold": true
+          },
+          {
+            "text": "¥{{fee.total}}",
+            "ratio": 4,
+            "align": "right"
+          }
+        ]
+      },
+      {
+        "type": "spacer"
+      },
+      {
+        "type": "qrCode",
+        "data": "https://mrkoi.io",
+        "size": "size5"
+      },
+      {
+        "type": "cut"
+      }
+    ]
+  }
+}

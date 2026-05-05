@@ -1,0 +1,192 @@
+{
+  "manifestVersion": 1,
+  "id": "tms_sender_sub_v1",
+  "name": "发货存根联 (TMS)",
+  "version": 1,
+  "category": "tms",
+  "description": "同步自 TMS 蓝牙打印发货存根联，含开拓费",
+  "schema": [
+    {
+      "key": "ticketSn",
+      "label": "运单号"
+    },
+    {
+      "key": "sequnceId",
+      "label": "流水号"
+    },
+    {
+      "key": "nodeRoleInfo",
+      "label": "节点班次"
+    },
+    {
+      "key": "operatorName",
+      "label": "操作员"
+    },
+    {
+      "key": "startDate",
+      "label": "开单时间"
+    },
+    {
+      "key": "recieverName",
+      "label": "收货人"
+    },
+    {
+      "key": "recieverPhone",
+      "label": "收货电话"
+    },
+    {
+      "key": "pickMethod",
+      "label": "取件方式"
+    },
+    {
+      "key": "senderInfo",
+      "label": "发货人"
+    },
+    {
+      "key": "senderPhone",
+      "label": "发货电话"
+    },
+    {
+      "key": "cargoInfo",
+      "label": "货物"
+    },
+    {
+      "key": "cargoCount",
+      "label": "件数"
+    },
+    {
+      "key": "freightFee",
+      "label": "应收运费"
+    },
+    {
+      "key": "preFreightFee",
+      "label": "现付运费"
+    },
+    {
+      "key": "settlementMethod",
+      "label": "结算方式"
+    },
+    {
+      "key": "rebateFee",
+      "label": "开拓费"
+    },
+    {
+      "key": "remark",
+      "label": "备注"
+    }
+  ],
+  "mockData": {
+    "ticketSn": "SF1234567890123",
+    "sequnceId": "0001",
+    "nodeRoleInfo": "深圳->北京 A班",
+    "operatorName": "张三",
+    "startDate": "2026-05-04 12:00",
+    "recieverName": "李四",
+    "recieverPhone": "138****8000",
+    "pickMethod": "派送",
+    "senderInfo": "王五",
+    "senderPhone": "139****9000",
+    "cargoInfo": "电子产品",
+    "cargoCount": "1",
+    "freightFee": "18.00",
+    "preFreightFee": "18.00",
+    "settlementMethod": "现付",
+    "rebateFee": "2.00",
+    "remark": "易碎物品请轻拿轻放"
+  },
+  "document": {
+    "documentType": "ticket",
+    "paperSize": 80,
+    "elements": [
+      {
+        "type": "text",
+        "text": "发货存根联",
+        "size": "size2",
+        "align": "center",
+        "bold": true
+      },
+      {
+        "type": "text",
+        "text": "此联不作为发货和领取代收款凭证!"
+      },
+      {
+        "type": "textRow",
+        "columns": [
+          {
+            "text": "运单号: {{ticketSn}}"
+          },
+          {
+            "text": "流水号: {{sequnceId}}"
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "text": "{{nodeRoleInfo}}"
+      },
+      {
+        "type": "textRow",
+        "columns": [
+          {
+            "text": "操作员: {{operatorName}}"
+          },
+          {
+            "text": "{{startDate}}"
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "text": "收货人: {{recieverName}} [{{pickMethod}}] {{recieverPhone}}",
+        "bold": true
+      },
+      {
+        "type": "text",
+        "text": "发货人: {{senderInfo}} {{senderPhone}}"
+      },
+      {
+        "type": "text",
+        "text": "货物: {{cargoInfo}} 合计: {{cargoCount}}"
+      },
+      {
+        "type": "divider"
+      },
+      {
+        "type": "textRow",
+        "columns": [
+          {
+            "text": "应收运费: {{freightFee}}"
+          },
+          {
+            "text": "现付运费: {{preFreightFee}}"
+          },
+          {
+            "text": "结算: {{settlementMethod}}"
+          }
+        ]
+      },
+      {
+        "type": "divider"
+      },
+      {
+        "type": "text",
+        "text": "开拓费: {{rebateFee}}"
+      },
+      {
+        "type": "text",
+        "text": "备注: {{remark}}"
+      },
+      {
+        "type": "qrCode",
+        "data": "{{ticketSn}}"
+      },
+      {
+        "type": "spacer",
+        "lines": 2
+      },
+      {
+        "type": "cut"
+      }
+    ]
+  }
+}

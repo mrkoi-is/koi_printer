@@ -1,0 +1,117 @@
+{
+  "manifestVersion": 1,
+  "id": "tms_label_taishi",
+  "name": "泰实标签 (TMS同步)",
+  "version": 1,
+  "category": "tms",
+  "description": "同步自 TMS 蓝牙打印泰实物流标签模板 74×45mm",
+  "schema": [
+    {
+      "key": "companyName",
+      "label": "公司名称"
+    },
+    {
+      "key": "fromNodeName",
+      "label": "发站"
+    },
+    {
+      "key": "toNodeName",
+      "label": "目的网点"
+    },
+    {
+      "key": "ticketSn",
+      "label": "运单号"
+    },
+    {
+      "key": "index",
+      "label": "件号"
+    },
+    {
+      "key": "startDate",
+      "label": "开单时间"
+    },
+    {
+      "key": "cargo",
+      "label": "品名"
+    },
+    {
+      "key": "receiverName",
+      "label": "收货人"
+    },
+    {
+      "key": "totalCount",
+      "label": "件数"
+    },
+    {
+      "key": "sequnceId",
+      "label": "流水号"
+    }
+  ],
+  "mockData": {
+    "companyName": "泰实物流",
+    "fromNodeName": "深圳科技园",
+    "toNodeName": "广州天河",
+    "ticketSn": "TS20260504001",
+    "index": "1-3",
+    "startDate": "2026-05-04 12:00",
+    "cargo": "电子元件",
+    "receiverName": "张三",
+    "totalCount": "3",
+    "sequnceId": "00125"
+  },
+  "document": {
+    "documentType": "label",
+    "elements": [
+      {
+        "type": "labelSetup",
+        "widthMm": 74,
+        "heightMm": 45
+      },
+      {
+        "type": "positionedText",
+        "x": 80,
+        "y": 8,
+        "text": "{{companyName}}({{fromNodeName}})"
+      },
+      {
+        "type": "positionedText",
+        "x": 10,
+        "y": 40,
+        "text": "{{toNodeName}}",
+        "xScale": 5,
+        "yScale": 5,
+        "bold": true
+      },
+      {
+        "type": "positionedText",
+        "x": 10,
+        "y": 130,
+        "text": "{{ticketSn}}-{{index}} [{{startDate}}] {{cargo}}"
+      },
+      {
+        "type": "positionedText",
+        "x": 10,
+        "y": 165,
+        "text": "{{receiverName}}",
+        "xScale": 3,
+        "yScale": 3
+      },
+      {
+        "type": "positionedText",
+        "x": 360,
+        "y": 165,
+        "text": "{{totalCount}}件",
+        "xScale": 3,
+        "yScale": 3
+      },
+      {
+        "type": "positionedText",
+        "x": 360,
+        "y": 220,
+        "text": "{{sequnceId}}",
+        "xScale": 3,
+        "yScale": 3
+      }
+    ]
+  }
+}

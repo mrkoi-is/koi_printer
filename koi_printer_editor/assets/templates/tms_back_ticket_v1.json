@@ -1,0 +1,165 @@
+{
+  "manifestVersion": 1,
+  "id": "tms_back_ticket_v1",
+  "name": "原返取货单 (TMS)",
+  "version": 1,
+  "category": "tms",
+  "description": "同步自 TMS 蓝牙打印原返取货单，含客户联和存根联",
+  "schema": [
+    {
+      "key": "companyName",
+      "label": "公司名称"
+    },
+    {
+      "key": "sequnceId",
+      "label": "流水号"
+    },
+    {
+      "key": "fromNodeName",
+      "label": "发站"
+    },
+    {
+      "key": "toNodeName",
+      "label": "目的站"
+    },
+    {
+      "key": "roleName",
+      "label": "班次"
+    },
+    {
+      "key": "operatorId",
+      "label": "操作员编号"
+    },
+    {
+      "key": "ticketSn",
+      "label": "运单号"
+    },
+    {
+      "key": "startDate",
+      "label": "开单时间"
+    },
+    {
+      "key": "senderInfo",
+      "label": "发货人"
+    },
+    {
+      "key": "recieverName",
+      "label": "收货人"
+    },
+    {
+      "key": "cargoInfo",
+      "label": "货物"
+    },
+    {
+      "key": "cargoCount",
+      "label": "件数"
+    },
+    {
+      "key": "remark",
+      "label": "备注"
+    }
+  ],
+  "mockData": {
+    "companyName": "顺丰速运",
+    "sequnceId": "0001",
+    "fromNodeName": "深圳南山",
+    "toNodeName": "北京朝阳",
+    "roleName": "A班",
+    "operatorId": "001",
+    "ticketSn": "SF1234567890123",
+    "startDate": "2026-05-04 12:00",
+    "senderInfo": "王五",
+    "recieverName": "李四",
+    "cargoInfo": "电子产品",
+    "cargoCount": "3",
+    "remark": "原返退件"
+  },
+  "document": {
+    "documentType": "ticket",
+    "paperSize": 80,
+    "elements": [
+      {
+        "type": "text",
+        "text": "{{companyName}}",
+        "size": "size2",
+        "align": "center",
+        "bold": true
+      },
+      {
+        "type": "text",
+        "text": "原返取货客户联",
+        "size": "size2",
+        "align": "center",
+        "bold": true
+      },
+      {
+        "type": "text",
+        "text": "{{sequnceId}}",
+        "size": "size2",
+        "bold": true
+      },
+      {
+        "type": "text",
+        "text": "{{fromNodeName}}->{{toNodeName}} / {{roleName}}",
+        "size": "size2",
+        "bold": true
+      },
+      {
+        "type": "textRow",
+        "columns": [
+          {
+            "text": "操作员"
+          },
+          {
+            "text": "{{operatorId}}",
+            "ratio": 3
+          }
+        ]
+      },
+      {
+        "type": "textRow",
+        "columns": [
+          {
+            "text": "运单号"
+          },
+          {
+            "text": "{{ticketSn}}",
+            "ratio": 2
+          },
+          {
+            "text": "{{startDate}}",
+            "ratio": 2
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "text": "发货人: {{senderInfo}}",
+        "size": "size2",
+        "bold": true
+      },
+      {
+        "type": "text",
+        "text": "收货人: {{recieverName}}",
+        "size": "size2",
+        "bold": true
+      },
+      {
+        "type": "text",
+        "text": "货物: {{cargoInfo}} 共{{cargoCount}}件",
+        "size": "size2",
+        "bold": true
+      },
+      {
+        "type": "divider"
+      },
+      {
+        "type": "spacer",
+        "lines": 2
+      },
+      {
+        "type": "cut"
+      }
+    ]
+  }
+}

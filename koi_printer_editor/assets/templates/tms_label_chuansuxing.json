@@ -1,0 +1,132 @@
+{
+  "manifestVersion": 1,
+  "id": "tms_label_chuansuxing",
+  "name": "川速行标签 (TMS同步)",
+  "version": 1,
+  "category": "tms",
+  "description": "同步自 TMS 蓝牙打印川速行标签模板 74×45mm 含条码",
+  "schema": [
+    {
+      "key": "toNodeName",
+      "label": "目的网点"
+    },
+    {
+      "key": "ticketSn",
+      "label": "运单号"
+    },
+    {
+      "key": "index",
+      "label": "件号"
+    },
+    {
+      "key": "fromNodeName",
+      "label": "发站"
+    },
+    {
+      "key": "startDate",
+      "label": "开单时间"
+    },
+    {
+      "key": "receiverName",
+      "label": "收货人"
+    },
+    {
+      "key": "sequnceId",
+      "label": "流水号"
+    },
+    {
+      "key": "cargo",
+      "label": "品名"
+    },
+    {
+      "key": "companyName",
+      "label": "公司名称"
+    },
+    {
+      "key": "senderName",
+      "label": "发货人"
+    },
+    {
+      "key": "senderPhone",
+      "label": "发货电话"
+    }
+  ],
+  "mockData": {
+    "toNodeName": "成都武侯",
+    "ticketSn": "CSX20260504002",
+    "index": "1-2",
+    "fromNodeName": "深圳南山",
+    "startDate": "2026-05-04",
+    "receiverName": "李四",
+    "sequnceId": "00126",
+    "cargo": "服装",
+    "companyName": "川速行物流",
+    "senderName": "王五",
+    "senderPhone": "139****9000"
+  },
+  "document": {
+    "documentType": "label",
+    "elements": [
+      {
+        "type": "labelSetup",
+        "widthMm": 74,
+        "heightMm": 45
+      },
+      {
+        "type": "positionedText",
+        "x": 120,
+        "y": 8,
+        "text": "{{toNodeName}}",
+        "xScale": 3,
+        "yScale": 3,
+        "bold": true
+      },
+      {
+        "type": "positionedBarcode",
+        "x": 80,
+        "y": 70,
+        "data": "{{ticketSn}}"
+      },
+      {
+        "type": "positionedText",
+        "x": 16,
+        "y": 170,
+        "text": "{{startDate}} [{{fromNodeName}}] {{ticketSn}}-{{index}}"
+      },
+      {
+        "type": "positionedText",
+        "x": 10,
+        "y": 200,
+        "text": "{{receiverName}}",
+        "xScale": 2,
+        "yScale": 2
+      },
+      {
+        "type": "positionedText",
+        "x": 360,
+        "y": 200,
+        "text": "{{sequnceId}}",
+        "xScale": 3,
+        "yScale": 3
+      },
+      {
+        "type": "positionedText",
+        "x": 360,
+        "y": 260,
+        "text": "{{cargo}}"
+      },
+      {
+        "type": "positionedText",
+        "x": 10,
+        "y": 280,
+        "text": "{{senderName}} {{senderPhone}}"
+      },
+      {
+        "type": "positionedText",
+        "x": 300,
+        "y": 280,
+        "text": "{{companyName}}"
+      }
+    ]
+  }
+}

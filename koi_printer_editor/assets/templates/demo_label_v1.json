@@ -1,0 +1,89 @@
+{
+  "manifestVersion": 1,
+  "id": "demo_label_v1",
+  "name": "茶饮杯贴标签 (Label)",
+  "version": 1,
+  "category": "demo",
+  "description": "标准饮品杯贴标签演示，包含绝对定位的文本和框线",
+  "schema": [
+    {
+      "key": "shopName",
+      "label": "门店名称"
+    },
+    {
+      "key": "orderNo",
+      "label": "取餐号"
+    },
+    {
+      "key": "productName",
+      "label": "饮品名称"
+    },
+    {
+      "key": "specs",
+      "label": "规格要求"
+    },
+    {
+      "key": "time",
+      "label": "出杯时间"
+    }
+  ],
+  "mockData": {
+    "shopName": "Koi 奶茶 (科技园店)",
+    "orderNo": "A082",
+    "productName": "招牌波霸奶茶",
+    "specs": "少冰 / 半糖 / 加仙草",
+    "time": "2026-05-04 14:30"
+  },
+  "document": {
+    "documentType": "label",
+    "elements": [
+      {
+        "type": "labelSetup",
+        "widthMm": 40,
+        "heightMm": 30
+      },
+      {
+        "type": "positionedText",
+        "x": 10,
+        "y": 10,
+        "text": "{{shopName}}"
+      },
+      {
+        "type": "positionedText",
+        "x": 10,
+        "y": 40,
+        "text": "{{orderNo}}",
+        "xScale": 2,
+        "yScale": 2,
+        "bold": true
+      },
+      {
+        "type": "positionedText",
+        "x": 10,
+        "y": 90,
+        "text": "{{productName}}",
+        "xScale": 2,
+        "yScale": 2
+      },
+      {
+        "type": "positionedText",
+        "x": 10,
+        "y": 140,
+        "text": "{{specs}}"
+      },
+      {
+        "type": "positionedText",
+        "x": 10,
+        "y": 180,
+        "text": "时间: {{time}}"
+      },
+      {
+        "type": "labelBox",
+        "x": 5,
+        "y": 5,
+        "width": 290,
+        "height": 215
+      }
+    ]
+  }
+}

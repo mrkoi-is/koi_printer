@@ -1,0 +1,173 @@
+{
+  "manifestVersion": 1,
+  "id": "tms_payment_v1",
+  "name": "缴款明细 (TMS)",
+  "version": 1,
+  "category": "tms",
+  "description": "同步自 TMS 蓝牙打印缴款明细单，含 ForEach 对账表",
+  "schema": [
+    {
+      "key": "companyName",
+      "label": "公司名称"
+    },
+    {
+      "key": "type",
+      "label": "缴款类型"
+    },
+    {
+      "key": "nodeName",
+      "label": "网点"
+    },
+    {
+      "key": "operatorName",
+      "label": "操作员"
+    },
+    {
+      "key": "date",
+      "label": "日期"
+    },
+    {
+      "key": "totalPrice",
+      "label": "合计"
+    },
+    {
+      "key": "items",
+      "label": "缴款明细",
+      "type": "array"
+    }
+  ],
+  "mockData": {
+    "companyName": "顺丰速运",
+    "type": "运费",
+    "nodeName": "深圳南山科技园",
+    "operatorName": "张三",
+    "date": "2026-05-04",
+    "totalPrice": "2350.00",
+    "items": [
+      {
+        "ticketSN": "SF001",
+        "freightFee": "18.00",
+        "behalfFee": "500.00",
+        "extFee": "0.00",
+        "preFreightFee": "18.00"
+      },
+      {
+        "ticketSN": "SF002",
+        "freightFee": "25.00",
+        "behalfFee": "600.00",
+        "extFee": "5.00",
+        "preFreightFee": "25.00"
+      }
+    ]
+  },
+  "document": {
+    "documentType": "ticket",
+    "paperSize": 80,
+    "elements": [
+      {
+        "type": "text",
+        "text": "{{companyName}}",
+        "size": "size2",
+        "align": "center",
+        "bold": true
+      },
+      {
+        "type": "text",
+        "text": "{{type}}缴款明细",
+        "size": "size2",
+        "align": "center",
+        "bold": true
+      },
+      {
+        "type": "text",
+        "text": "网点: {{nodeName}}"
+      },
+      {
+        "type": "text",
+        "text": "操作员: {{operatorName}}"
+      },
+      {
+        "type": "text",
+        "text": "日期: {{date}}"
+      },
+      {
+        "type": "divider"
+      },
+      {
+        "type": "textRow",
+        "columns": [
+          {
+            "text": "单号",
+            "ratio": 3
+          },
+          {
+            "text": "运费",
+            "ratio": 2
+          },
+          {
+            "text": "代收",
+            "ratio": 3
+          },
+          {
+            "text": "垫付",
+            "ratio": 2
+          },
+          {
+            "text": "现付",
+            "ratio": 2
+          }
+        ]
+      },
+      {
+        "type": "divider"
+      },
+      {
+        "type": "ticketForEach",
+        "listKey": "items",
+        "templates": [
+          {
+            "type": "textRow",
+            "columns": [
+              {
+                "text": "{{ticketSN}}",
+                "ratio": 3
+              },
+              {
+                "text": "{{freightFee}}",
+                "ratio": 2
+              },
+              {
+                "text": "{{behalfFee}}",
+                "ratio": 3
+              },
+              {
+                "text": "{{extFee}}",
+                "ratio": 2
+              },
+              {
+                "text": "{{preFreightFee}}",
+                "ratio": 2
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "divider"
+      },
+      {
+        "type": "text",
+        "text": "合计: {{totalPrice}}",
+        "size": "size2",
+        "bold": true
+      },
+      {
+        "type": "spacer",
+        "lines": 5
+      },
+      {
+        "type": "cut"
+      }
+    ]
+  }
+}

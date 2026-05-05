@@ -1,0 +1,200 @@
+{
+  "manifestVersion": 1,
+  "id": "tms_issued_v1",
+  "name": "代收发放明细 (TMS)",
+  "version": 1,
+  "category": "tms",
+  "description": "同步自 TMS 蓝牙打印代收发放明细单，含 ForEach 明细",
+  "schema": [
+    {
+      "key": "companyName",
+      "label": "公司名称"
+    },
+    {
+      "key": "nodeName",
+      "label": "网点"
+    },
+    {
+      "key": "operatorName",
+      "label": "操作员"
+    },
+    {
+      "key": "date",
+      "label": "日期"
+    },
+    {
+      "key": "client",
+      "label": "领款人"
+    },
+    {
+      "key": "method",
+      "label": "领款方式"
+    },
+    {
+      "key": "totalCount",
+      "label": "单数"
+    },
+    {
+      "key": "totalPrice",
+      "label": "代收款合计"
+    },
+    {
+      "key": "procedureFee",
+      "label": "手续费"
+    },
+    {
+      "key": "deductibleFee",
+      "label": "抵扣"
+    },
+    {
+      "key": "issuedFee",
+      "label": "结算金额"
+    },
+    {
+      "key": "items",
+      "label": "明细列表",
+      "type": "array"
+    }
+  ],
+  "mockData": {
+    "companyName": "顺丰速运",
+    "nodeName": "深圳南山科技园",
+    "operatorName": "张三",
+    "date": "2026-05-04",
+    "client": "李四",
+    "method": "现金",
+    "totalCount": "3",
+    "totalPrice": "1500.00",
+    "procedureFee": "15.00",
+    "deductibleFee": "0.00",
+    "issuedFee": "1485.00",
+    "items": [
+      {
+        "ticketSN": "SF001",
+        "receiverName": "王五",
+        "behalfFee": "500.00"
+      },
+      {
+        "ticketSN": "SF002",
+        "receiverName": "赵六",
+        "behalfFee": "600.00"
+      },
+      {
+        "ticketSN": "SF003",
+        "receiverName": "钱七",
+        "behalfFee": "400.00"
+      }
+    ]
+  },
+  "document": {
+    "documentType": "ticket",
+    "paperSize": 80,
+    "elements": [
+      {
+        "type": "text",
+        "text": "{{companyName}}代收发放明细",
+        "align": "center"
+      },
+      {
+        "type": "text",
+        "text": "网点: {{nodeName}}"
+      },
+      {
+        "type": "text",
+        "text": "操作员: {{operatorName}}"
+      },
+      {
+        "type": "text",
+        "text": "日期: {{date}}"
+      },
+      {
+        "type": "text",
+        "text": "领款方式: {{method}}  领款人: {{client}}"
+      },
+      {
+        "type": "divider"
+      },
+      {
+        "type": "textRow",
+        "columns": [
+          {
+            "text": "货号",
+            "ratio": 5
+          },
+          {
+            "text": "收货人",
+            "ratio": 3
+          },
+          {
+            "text": "代收",
+            "ratio": 3
+          }
+        ]
+      },
+      {
+        "type": "divider"
+      },
+      {
+        "type": "ticketForEach",
+        "listKey": "items",
+        "templates": [
+          {
+            "type": "textRow",
+            "columns": [
+              {
+                "text": "{{ticketSN}}",
+                "ratio": 5
+              },
+              {
+                "text": "{{receiverName}}",
+                "ratio": 3
+              },
+              {
+                "text": "{{behalfFee}}",
+                "ratio": 3
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "divider"
+      },
+      {
+        "type": "textRow",
+        "columns": [
+          {
+            "text": "合计: {{totalCount}}单"
+          },
+          {
+            "text": "代收款: {{totalPrice}}"
+          }
+        ]
+      },
+      {
+        "type": "textRow",
+        "columns": [
+          {
+            "text": "手续费: {{procedureFee}}"
+          },
+          {
+            "text": "抵扣: {{deductibleFee}}"
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "text": "结算: {{issuedFee}}",
+        "size": "size2",
+        "bold": true
+      },
+      {
+        "type": "spacer",
+        "lines": 2
+      },
+      {
+        "type": "cut"
+      }
+    ]
+  }
+}

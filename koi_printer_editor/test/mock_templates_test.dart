@@ -1,12 +1,17 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:koi_printer/koi_printer.dart';
 import 'package:koi_printer_editor/mock_templates.dart';
-
+import 'package:koi_printer_editor/utils/template_loader.dart';
 
 void main() {
+  setUpAll(() async {
+    TestWidgetsFlutterBinding.ensureInitialized();
+    templateManifests = await KoiTemplateLoader.loadAllTemplates();
+  });
+
   group('manifestToEditorElements 转换', () {
     test('Ticket 文档转换出正确数量的 EditorElement', () {
-      final manifest = templateManifests.first; // 寄件客户联
+      final manifest = templateManifests.firstWhere((m) => m.document is KoiTicketDocument);
       final elements = manifestToEditorElements(manifest);
 
       final doc = manifest.document as KoiTicketDocument;
@@ -105,12 +110,16 @@ void main() {
 
   group('defaultManifest / defaultTemplateElements', () {
     test('defaultManifest 是 templateManifests 的第一个', () {
-      expect(defaultManifest.id, templateManifests.first.id);
+      expect(defaultManifest!.id, templateManifests.first.id);
     });
 
     test('defaultTemplateElements 数量匹配 defaultManifest 文档', () {
-      final doc = defaultManifest.document as KoiTicketDocument;
-      expect(defaultTemplateElements.length, doc.elements.length);
+      final doc = defaultManifest!.document;
+      if (doc is KoiTicketDocument) {
+        expect(defaultTemplateElements.length, doc.elements.length);
+      } else if (doc is KoiLabelDocument) {
+        expect(defaultTemplateElements.length, doc.elements.length);
+      }
     });
   });
 }

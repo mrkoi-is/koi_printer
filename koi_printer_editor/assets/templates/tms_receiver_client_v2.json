@@ -1,0 +1,269 @@
+{
+  "manifestVersion": 1,
+  "id": "tms_receiver_client_v2",
+  "name": "提货客户联 (TMS)",
+  "version": 1,
+  "category": "tms",
+  "description": "同步自 TMS 蓝牙打印完整提货客户联，含费用明细",
+  "schema": [
+    {
+      "key": "companyName",
+      "label": "公司名称"
+    },
+    {
+      "key": "fromNodeInfo",
+      "label": "发货网点"
+    },
+    {
+      "key": "toNodeInfo",
+      "label": "收货网点"
+    },
+    {
+      "key": "sequnceId",
+      "label": "流水号"
+    },
+    {
+      "key": "nodeRoleInfo",
+      "label": "节点班次"
+    },
+    {
+      "key": "operatorInfo",
+      "label": "操作员"
+    },
+    {
+      "key": "ticketSn",
+      "label": "运单号"
+    },
+    {
+      "key": "startDate",
+      "label": "发货日期"
+    },
+    {
+      "key": "senderInfo",
+      "label": "发货人"
+    },
+    {
+      "key": "senderPhone",
+      "label": "发货电话"
+    },
+    {
+      "key": "recieverName",
+      "label": "收货人"
+    },
+    {
+      "key": "recieverPhone",
+      "label": "收货电话"
+    },
+    {
+      "key": "pickMethod",
+      "label": "提货方式"
+    },
+    {
+      "key": "cargoInfo",
+      "label": "货物"
+    },
+    {
+      "key": "cargoCount",
+      "label": "件数"
+    },
+    {
+      "key": "preFreightFee",
+      "label": "现付运费"
+    },
+    {
+      "key": "unpaidFreight",
+      "label": "到付运费"
+    },
+    {
+      "key": "pickFee",
+      "label": "接货费"
+    },
+    {
+      "key": "psFee",
+      "label": "派送费"
+    },
+    {
+      "key": "behalfFee",
+      "label": "代收"
+    },
+    {
+      "key": "transFee",
+      "label": "分拨费"
+    },
+    {
+      "key": "extFee",
+      "label": "垫付费"
+    },
+    {
+      "key": "settlementMethod",
+      "label": "结算方式"
+    },
+    {
+      "key": "downReceivableTotalFee",
+      "label": "提货应收"
+    }
+  ],
+  "mockData": {
+    "companyName": "顺丰速运",
+    "fromNodeInfo": "深圳南山科技园",
+    "toNodeInfo": "北京朝阳国贸",
+    "sequnceId": "0001",
+    "nodeRoleInfo": "深圳->北京 A班",
+    "operatorInfo": "001[张三]",
+    "ticketSn": "SF1234567890123",
+    "startDate": "2026-05-04",
+    "senderInfo": "王五",
+    "senderPhone": "139****9000",
+    "recieverName": "李四",
+    "recieverPhone": "138****8000",
+    "pickMethod": "派送",
+    "cargoInfo": "电子产品",
+    "cargoCount": "1",
+    "preFreightFee": "18.00",
+    "unpaidFreight": "0.00",
+    "pickFee": "0.00",
+    "psFee": "5.00",
+    "behalfFee": "0.00",
+    "transFee": "0.00",
+    "extFee": "0.00",
+    "settlementMethod": "现付",
+    "downReceivableTotalFee": "23.00"
+  },
+  "document": {
+    "documentType": "ticket",
+    "paperSize": 80,
+    "elements": [
+      {
+        "type": "text",
+        "text": "{{companyName}}",
+        "size": "size2",
+        "align": "center",
+        "bold": true
+      },
+      {
+        "type": "text",
+        "text": "发货: {{fromNodeInfo}}"
+      },
+      {
+        "type": "text",
+        "text": "收货: {{toNodeInfo}}"
+      },
+      {
+        "type": "text",
+        "text": "---提货客户联---",
+        "size": "size2",
+        "align": "center",
+        "bold": true
+      },
+      {
+        "type": "text",
+        "text": "流水号: {{sequnceId}}",
+        "size": "size2",
+        "bold": true
+      },
+      {
+        "type": "text",
+        "text": "{{nodeRoleInfo}}",
+        "size": "size2",
+        "bold": true
+      },
+      {
+        "type": "text",
+        "text": "操作员: {{operatorInfo}}"
+      },
+      {
+        "type": "text",
+        "text": "运单号: {{ticketSn}}"
+      },
+      {
+        "type": "text",
+        "text": "发货日期: {{startDate}}"
+      },
+      {
+        "type": "text",
+        "text": "发货人: {{senderInfo}} {{senderPhone}}"
+      },
+      {
+        "type": "text",
+        "text": "收货人"
+      },
+      {
+        "type": "text",
+        "text": "{{recieverName}} {{recieverPhone}}",
+        "size": "size2",
+        "bold": true
+      },
+      {
+        "type": "text",
+        "text": "提货方式: {{pickMethod}}"
+      },
+      {
+        "type": "text",
+        "text": "{{cargoInfo}} 合计: {{cargoCount}}",
+        "size": "size2",
+        "bold": true
+      },
+      {
+        "type": "divider"
+      },
+      {
+        "type": "textRow",
+        "columns": [
+          {
+            "text": "现付运费: {{preFreightFee}}"
+          },
+          {
+            "text": "到付运费: {{unpaidFreight}}"
+          }
+        ]
+      },
+      {
+        "type": "textRow",
+        "columns": [
+          {
+            "text": "接货费: {{pickFee}}"
+          },
+          {
+            "text": "派送费: {{psFee}}"
+          }
+        ]
+      },
+      {
+        "type": "textRow",
+        "columns": [
+          {
+            "text": "代收: {{behalfFee}}"
+          },
+          {
+            "text": "分拨费: {{transFee}}"
+          },
+          {
+            "text": "垫付费: {{extFee}}"
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "text": "结算方式: {{settlementMethod}}",
+        "size": "size2",
+        "bold": true
+      },
+      {
+        "type": "text",
+        "text": "提货应收: {{downReceivableTotalFee}}",
+        "size": "size2",
+        "bold": true
+      },
+      {
+        "type": "divider"
+      },
+      {
+        "type": "spacer",
+        "lines": 2
+      },
+      {
+        "type": "cut"
+      }
+    ]
+  }
+}
