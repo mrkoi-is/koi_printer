@@ -236,6 +236,37 @@ final List<KoiTemplateManifest> templateManifests = [
       KoiCutElement(),
     ]),
   ),
+
+  // ── 茶饮杯贴标签 (Label) ──
+  KoiTemplateManifest(
+    id: 'demo_label_v1',
+    name: '茶饮杯贴标签 (Label)',
+    category: 'demo',
+    description: '标准饮品杯贴标签演示，包含绝对定位的文本和框线',
+    schema: const [
+      KoiTemplateField(key: 'shopName', label: '门店名称'),
+      KoiTemplateField(key: 'orderNo', label: '取餐号'),
+      KoiTemplateField(key: 'productName', label: '饮品名称'),
+      KoiTemplateField(key: 'specs', label: '规格要求'),
+      KoiTemplateField(key: 'time', label: '出杯时间'),
+    ],
+    mockData: const {
+      'shopName': 'Koi 奶茶 (科技园店)',
+      'orderNo': 'A082',
+      'productName': '招牌波霸奶茶',
+      'specs': '少冰 / 半糖 / 加仙草',
+      'time': '2026-05-04 14:30',
+    },
+    document: KoiLabelDocument(elements: [
+      KoiLabelSetupElement(widthMm: 40, heightMm: 30),
+      KoiPositionedTextElement(x: 10, y: 10, text: '{{shopName}}'),
+      KoiPositionedTextElement(x: 10, y: 40, text: '{{orderNo}}', xScale: 2, yScale: 2, bold: true),
+      KoiPositionedTextElement(x: 10, y: 90, text: '{{productName}}', xScale: 2, yScale: 2),
+      KoiPositionedTextElement(x: 10, y: 140, text: '{{specs}}'),
+      KoiPositionedTextElement(x: 10, y: 180, text: '时间: {{time}}'),
+      KoiLabelBoxElement(x: 5, y: 5, width: 290, height: 215, thickness: 2),
+    ]),
+  ),
 ];
 
 // ═══════════════════════════════════════════════════════════
@@ -246,6 +277,8 @@ final List<KoiTemplateManifest> templateManifests = [
 List<EditorElement> manifestToEditorElements(KoiTemplateManifest manifest) {
   final doc = manifest.document;
   if (doc is KoiTicketDocument) {
+    return doc.elements.map((e) => EditorElement(id: _genId(), element: e)).toList();
+  } else if (doc is KoiLabelDocument) {
     return doc.elements.map((e) => EditorElement(id: _genId(), element: e)).toList();
   }
   return [];
