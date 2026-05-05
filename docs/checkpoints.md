@@ -187,7 +187,7 @@
 
 ---
 
-## CHECKPOINT 7: koi_printer + koi_printer_command Lint 清理
+## CHECKPOINT 7: koi_printer + koi_printer_command Lint 清理 [DONE]
 
 **包:** `koi_printer`, `koi_printer_command`  
 **预计用时:** 2 hours  
