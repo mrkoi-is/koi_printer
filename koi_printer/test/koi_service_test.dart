@@ -572,7 +572,24 @@ void main() {
       );
       await manager.connectAll();
 
-      // 应自动创建 adapter 并尝试连接
+      // 应使用注入的 adapter 并尝试连接
+      expect(manager.ticketAdapter, isNotNull);
+      expect(manager.labelAdapter, isNotNull);
+      manager.dispose();
+    });
+
+    test('connectAll dynamically creates adapters if null', () async {
+      const device = KoiDeviceInfo(
+        name: 'Printer-1',
+        address: 'AA:BB',
+        connectionType: KoiConnectionType.ble,
+      );
+      await storage.saveTicketPrinter(device);
+      await storage.saveLabelPrinter(device);
+
+      final manager = KoiPrinterManager(storage: storage);
+      await manager.connectAll();
+
       expect(manager.ticketAdapter, isNotNull);
       expect(manager.labelAdapter, isNotNull);
       manager.dispose();

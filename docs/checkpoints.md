@@ -233,7 +233,7 @@
 
 ---
 
-## CHECKPOINT 8: koi_printer_manager.dart 精确补漏
+## CHECKPOINT 8: koi_printer_manager.dart 精确补漏 [DONE]
 
 **包:** `koi_printer`  
 **预计用时:** 1 hour  
