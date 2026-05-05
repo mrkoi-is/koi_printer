@@ -17,7 +17,71 @@ class CenterCanvas extends StatelessWidget {
       alignment: Alignment.topCenter,
       padding: const EdgeInsets.symmetric(vertical: 32),
       child: SingleChildScrollView(
-        child: state.isTicketMode ? _buildTicketContent(context, state) : _buildLabelContent(context, state),
+        child: state.elements.isEmpty && !state.isModeExplicitlySet
+            ? _buildEmptySelector(context, state)
+            : (state.isTicketMode ? _buildTicketContent(context, state) : _buildLabelContent(context, state)),
+      ),
+    );
+  }
+
+  Widget _buildEmptySelector(BuildContext context, EditorState state) {
+    return Container(
+      width: 400,
+      padding: const EdgeInsets.all(32),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          )
+        ],
+      ),
+      child: Column(
+        children: [
+          const Icon(Icons.print, size: 64, color: Colors.blueGrey),
+          const SizedBox(height: 24),
+          const Text('创建新打印模板', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 8),
+          const Text('请选择您要设计的打印布局模式。注意，模式一旦选择，在添加组件后不可随意更改。', 
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.grey),
+          ),
+          const SizedBox(height: 32),
+          Row(
+            children: [
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    // 默认就是 ticket mode，这里不用做操作，或者直接加一个文本组件
+                    state.setExplicitLabelMode(false);
+                  },
+                  icon: const Icon(Icons.receipt_long),
+                  label: const Text('小票模式\n(流式排版)', textAlign: TextAlign.center),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    state.setExplicitLabelMode(true);
+                  },
+                  icon: const Icon(Icons.label),
+                  label: const Text('标签模式\n(绝对定位)', textAlign: TextAlign.center),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    backgroundColor: Colors.blue.shade50,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -263,7 +327,7 @@ class _EditableElementWrap extends StatelessWidget {
   }
 }
 
-class _EditableLabelElementWrap extends StatelessWidget {
+class _EditableLabelElementWrap extends StatefulWidget {
   const _EditableLabelElementWrap({
     super.key,
     required this.element,
@@ -279,31 +343,77 @@ class _EditableLabelElementWrap extends StatelessWidget {
   final VoidCallback onSelect;
   final VoidCallback onDelete;
 
+  @override
+  State<_EditableLabelElementWrap> createState() => _EditableLabelElementWrapState();
+}
+
+class _EditableLabelElementWrapState extends State<_EditableLabelElementWrap> {
+  KoiPrintElement? _dragStartElement;
+
   KoiPrintElement _processEditMode(KoiPrintElement e, List<KoiTemplateField> fields) {
     if (e is KoiPositionedTextElement) {
       String t = e.text;
       for (var f in fields) {
         t = t.replaceAll('{{${f.key}}}', '<${f.label}>');
       }
-      return KoiPositionedTextElement(
-        x: e.x, y: e.y, text: t,
-        fontSize: e.fontSize, font: e.font,
-        rotation: e.rotation, xScale: e.xScale, yScale: e.yScale, bold: e.bold,
-      );
+      return e.copyWith(text: t);
+    } else if (e is KoiPositionedBarcodeElement) {
+      String t = e.data;
+      for (var f in fields) {
+        t = t.replaceAll('{{${f.key}}}', '<${f.label}>');
+      }
+      return e.copyWith(data: t);
+    } else if (e is KoiPositionedQrCodeElement) {
+      String t = e.data;
+      for (var f in fields) {
+        t = t.replaceAll('{{${f.key}}}', '<${f.label}>');
+      }
+      return e.copyWith(data: t);
     }
     return e;
+  }
+
+  KoiLabelElement _moveElement(KoiLabelElement el, int dx, int dy) {
+    if (el is KoiPositionedTextElement) {
+      return KoiPositionedTextElement(
+        x: el.x + dx, y: el.y + dy, text: el.text,
+        fontSize: el.fontSize, font: el.font,
+        rotation: el.rotation, xScale: el.xScale, yScale: el.yScale, bold: el.bold,
+      );
+    } else if (el is KoiLabelBoxElement) {
+      return KoiLabelBoxElement(
+        x: el.x + dx, y: el.y + dy, width: el.width, height: el.height, thickness: el.thickness,
+      );
+    } else if (el is KoiPositionedBarcodeElement) {
+      return KoiPositionedBarcodeElement(
+        x: el.x + dx, y: el.y + dy, data: el.data, height: el.height, type: el.type,
+      );
+    } else if (el is KoiPositionedQrCodeElement) {
+      return KoiPositionedQrCodeElement(
+        x: el.x + dx, y: el.y + dy, data: el.data, cellSize: el.cellSize,
+      );
+    } else if (el is KoiLabelLineElement) {
+      return KoiLabelLineElement(
+        x: el.x + dx, y: el.y + dy, width: el.width, height: el.height,
+      );
+    } else if (el is KoiLabelReverseElement) {
+      return KoiLabelReverseElement(
+        x: el.x + dx, y: el.y + dy, width: el.width, height: el.height,
+      );
+    }
+    return el;
   }
 
   @override
   Widget build(BuildContext context) {
     final state = context.watch<EditorState>();
-    final el = element.element as KoiLabelElement;
+    final el = widget.element.element as KoiLabelElement;
     
     // Replace text placeholders with schema labels
     final processed = state.isPreviewMode ? el : _processEditMode(el, state.schema) as KoiLabelElement;
 
     // Use the public render method from KoiPreviewRenderer
-    final innerPositioned = KoiPreviewRenderer.renderPositionedElement(processed, Colors.black, scale);
+    final innerPositioned = KoiPreviewRenderer.renderPositionedElement(processed, Colors.black, widget.scale);
 
     if (innerPositioned is! Positioned) {
       return const SizedBox.shrink();
@@ -315,12 +425,41 @@ class _EditableLabelElementWrap extends StatelessWidget {
       width: innerPositioned.width,
       height: innerPositioned.height,
       child: GestureDetector(
-        onTap: onSelect,
+        onTap: widget.onSelect,
+        onPanStart: (details) {
+          if (!widget.isSelected) widget.onSelect();
+          _dragStartElement = widget.element.element;
+        },
+        onPanUpdate: (details) {
+          if (_dragStartElement == null) return;
+          final dx = (details.delta.dx / widget.scale).round();
+          final dy = (details.delta.dy / widget.scale).round();
+          if (dx == 0 && dy == 0) return;
+          
+          final current = state.elements.firstWhere((e) => e.id == widget.element.id).element as KoiLabelElement;
+          final moved = _moveElement(current, dx, dy);
+          state.updateElementNoHistory(widget.element.id, moved);
+        },
+        onPanEnd: (details) {
+          if (_dragStartElement != null) {
+            final current = state.elements.firstWhere((e) => e.id == widget.element.id).element;
+            if (current != _dragStartElement) {
+              // Create a command for history ONLY on end
+              state.updateElementNoHistory(widget.element.id, _dragStartElement!);
+              state.execute(UpdateElementCommand(
+                elementId: widget.element.id,
+                oldElement: _dragStartElement!,
+                newElement: current,
+              ));
+            }
+            _dragStartElement = null;
+          }
+        },
         behavior: HitTestBehavior.opaque,
         child: Container(
           decoration: BoxDecoration(
             border: Border.all(
-              color: isSelected ? Colors.blue : Colors.transparent,
+              color: widget.isSelected ? Colors.blue : Colors.transparent,
               width: 2,
             ),
           ),
@@ -329,13 +468,13 @@ class _EditableLabelElementWrap extends StatelessWidget {
             children: [
               innerPositioned.child,
               
-              if (isSelected)
+              if (widget.isSelected)
                 Positioned(
                   top: -20,
                   right: -20,
                   child: IconButton(
                     icon: const Icon(Icons.delete_forever, color: Colors.red, size: 20),
-                    onPressed: onDelete,
+                    onPressed: widget.onDelete,
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(),
                   ),

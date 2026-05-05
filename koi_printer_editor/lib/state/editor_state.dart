@@ -26,13 +26,36 @@ class EditorState extends ChangeNotifier with EditorManifestMixin, EditorSchemaM
 
   List<EditorElement> _elements;
   String? _selectedElementId;
+  bool? _isExplicitLabelMode;
 
   // 历史栈
   final List<EditorCommand> _undoStack = [];
   final List<EditorCommand> _redoStack = [];
 
   List<EditorElement> get elements => _elements;
-  bool get isTicketMode => _elements.isEmpty || _elements.first.element is KoiTicketElement;
+  bool get isTicketMode {
+    if (_elements.isNotEmpty) {
+      return _elements.first.element is KoiTicketElement;
+    }
+    return _isExplicitLabelMode == true ? false : true;
+  }
+
+  bool get isModeExplicitlySet => _isExplicitLabelMode != null;
+
+  void setExplicitLabelMode(bool isLabel) {
+    if (_elements.isEmpty) {
+      _isExplicitLabelMode = isLabel;
+      if (isLabel) {
+        // Auto-insert LabelSetup when switching to label mode
+        final setup = EditorElement(
+          id: DateTime.now().microsecondsSinceEpoch.toString(), 
+          element: const KoiLabelSetupElement(widthMm: 40, heightMm: 30)
+        );
+        _elements = [setup];
+      }
+      notifyListeners();
+    }
+  }
   
   KoiPrintDocument get document {
     if (!isTicketMode) {
@@ -73,6 +96,14 @@ class EditorState extends ChangeNotifier with EditorManifestMixin, EditorSchemaM
   void updateElements(List<EditorElement> newElements) {
     _elements = newElements;
     notifyListeners();
+  }
+
+  void updateElementNoHistory(String id, KoiPrintElement newElement) {
+    final index = _elements.indexWhere((e) => e.id == id);
+    if (index != -1) {
+      _elements[index] = _elements[index].copyWith(element: newElement);
+      notifyListeners();
+    }
   }
 
   void selectElement(String? id) {
