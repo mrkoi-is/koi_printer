@@ -66,7 +66,7 @@ class KoiPreviewRenderer {
           ),
         ],
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 16),
+      padding: const EdgeInsets.symmetric(vertical: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,

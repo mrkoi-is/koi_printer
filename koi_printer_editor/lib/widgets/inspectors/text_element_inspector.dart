@@ -84,7 +84,7 @@ class TextElementInspector extends ElementInspectorBuilder<KoiTextElement> {
 
           const SizedBox(height: 16),
           // 字体大小
-          const Text('整体缩放倍数', style: TextStyle(fontSize: 12, color: Colors.grey)),
+          const Text('整体缩放倍数 (基础大小)', style: TextStyle(fontSize: 12, color: Colors.grey)),
           Slider(
             value: element.size.index.toDouble(),
             min: 0,
@@ -93,6 +93,40 @@ class TextElementInspector extends ElementInspectorBuilder<KoiTextElement> {
             label: '${element.size.index + 1}x',
             onChanged: (val) {
               update(context, elementId, element.copyWith(size: KoiTextSize.values[val.toInt()]));
+            },
+          ),
+
+          const SizedBox(height: 8),
+          const Text('独立倍宽 (选填，覆盖基础宽度)', style: TextStyle(fontSize: 12, color: Colors.grey)),
+          Slider(
+            value: element.widthSize != null ? element.widthSize!.index.toDouble() : -1,
+            min: -1,
+            max: 7,
+            divisions: 8,
+            label: element.widthSize != null ? '${element.widthSize!.index + 1}x' : '随整体缩放',
+            onChanged: (val) {
+              final newWidthSize = val == -1 ? null : KoiTextSize.values[val.toInt()];
+              update(context, elementId, element.copyWith(
+                widthSize: newWidthSize,
+                clearWidthSize: newWidthSize == null,
+              ));
+            },
+          ),
+
+          const SizedBox(height: 8),
+          const Text('独立倍高 (选填，覆盖基础高度)', style: TextStyle(fontSize: 12, color: Colors.grey)),
+          Slider(
+            value: element.heightSize != null ? element.heightSize!.index.toDouble() : -1,
+            min: -1,
+            max: 7,
+            divisions: 8,
+            label: element.heightSize != null ? '${element.heightSize!.index + 1}x' : '随整体缩放',
+            onChanged: (val) {
+              final newHeightSize = val == -1 ? null : KoiTextSize.values[val.toInt()];
+              update(context, elementId, element.copyWith(
+                heightSize: newHeightSize,
+                clearHeightSize: newHeightSize == null,
+              ));
             },
           ),
         ],
