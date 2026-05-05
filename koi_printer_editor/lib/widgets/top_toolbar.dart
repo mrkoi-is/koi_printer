@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:koi_printer/koi_printer.dart';
@@ -38,16 +39,18 @@ class TopToolbar extends StatelessWidget {
           const VerticalDivider(width: 1, indent: 12, endIndent: 12),
           const SizedBox(width: 8),
           
-          // Paper size dropdown mock
-          DropdownButton<String>(
-            value: '80mm',
+          // Paper size dropdown
+          DropdownButton<double>(
+            value: state.paperWidthPx,
             underline: const SizedBox(),
             items: const [
-              DropdownMenuItem(value: '58mm', child: Text('58mm 小票')),
-              DropdownMenuItem(value: '80mm', child: Text('80mm 小票')),
-              DropdownMenuItem(value: '100x150', child: Text('100x150 面单')),
+              DropdownMenuItem(value: 280.0, child: Text('58mm 小票')),
+              DropdownMenuItem(value: 380.0, child: Text('80mm 小票')),
+              DropdownMenuItem(value: 500.0, child: Text('100x150 面单')),
             ],
-            onChanged: (_) {},
+            onChanged: (val) {
+              if (val != null) context.read<EditorState>().updatePaperWidthPx(val);
+            },
           ),
           
           const Spacer(),
@@ -64,7 +67,13 @@ class TopToolbar extends StatelessWidget {
               Text('预览 (假数据)', style: TextStyle(color: state.isPreviewMode ? theme.colorScheme.primary : Colors.grey, fontWeight: FontWeight.bold)),
             ],
           ),
-          const SizedBox(width: 24),
+          const SizedBox(width: 8),
+          IconButton(
+            icon: const Icon(Icons.data_object),
+            tooltip: '配置测试数据 (Mock Data)',
+            onPressed: () => _showMockDataEditor(context, state),
+          ),
+          const SizedBox(width: 16),
           // Undo / Redo
           IconButton(
             icon: const Icon(Icons.undo),
@@ -78,6 +87,11 @@ class TopToolbar extends StatelessWidget {
           ),
           
           const SizedBox(width: 16),
+          IconButton(
+            icon: const Icon(Icons.settings),
+            tooltip: '模板基础设置',
+            onPressed: () => _showMetadataEditor(context, state),
+          ),
           FilledButton.icon(
             onPressed: () {
               // 构建完整的模板清单信封 (复用当前加载的 manifest 身份)
@@ -88,6 +102,8 @@ class TopToolbar extends StatelessWidget {
                 name: state.currentManifestName.isNotEmpty
                     ? state.currentManifestName
                     : '自定义模板',
+                category: state.currentManifestCategory,
+                description: state.currentManifestDescription,
                 document: state.document,
                 schema: state.schema,
                 mockData: state.mockData,
@@ -227,4 +243,99 @@ class TopToolbar extends StatelessWidget {
       },
     );
   }
+
+  void _showMetadataEditor(BuildContext context, EditorState state) {
+    final idCtrl = TextEditingController(text: state.currentManifestId);
+    final nameCtrl = TextEditingController(text: state.currentManifestName);
+    final categoryCtrl = TextEditingController(text: state.currentManifestCategory);
+    final descCtrl = TextEditingController(text: state.currentManifestDescription);
+
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        return AlertDialog(
+          title: const Text('模板基础设置 (Metadata)'),
+          content: SizedBox(
+            width: 400,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(controller: idCtrl, decoration: const InputDecoration(labelText: '模板 ID (英文/数字)')),
+                const SizedBox(height: 8),
+                TextField(controller: nameCtrl, decoration: const InputDecoration(labelText: '模板名称 (Name)')),
+                const SizedBox(height: 8),
+                TextField(controller: categoryCtrl, decoration: const InputDecoration(labelText: '分类 (Category)')),
+                const SizedBox(height: 8),
+                TextField(controller: descCtrl, decoration: const InputDecoration(labelText: '描述 (Description)'), maxLines: 3),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('取消')),
+            FilledButton(
+              onPressed: () {
+                context.read<EditorState>().updateManifestMetadata(
+                  id: idCtrl.text.trim(),
+                  name: nameCtrl.text.trim(),
+                  category: categoryCtrl.text.trim(),
+                  description: descCtrl.text.trim(),
+                );
+                Navigator.pop(ctx);
+              },
+              child: const Text('保存'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showMockDataEditor(BuildContext context, EditorState state) {
+    final ctrl = TextEditingController(
+      text: const JsonEncoder.withIndent('  ').convert(state.mockData),
+    );
+
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        return AlertDialog(
+          title: const Text('配置测试数据 (Mock Data)'),
+          content: SizedBox(
+            width: 500,
+            height: 400,
+            child: TextField(
+              controller: ctrl,
+              maxLines: null,
+              expands: true,
+              style: const TextStyle(fontFamily: 'SarasaMono', fontSize: 13),
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: '{\n  "key": "value"\n}',
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('取消')),
+            FilledButton(
+              onPressed: () {
+                try {
+                  final data = jsonDecode(ctrl.text);
+                  if (data is Map<String, dynamic>) {
+                    context.read<EditorState>().updateMockData(data);
+                    Navigator.pop(ctx);
+                  } else {
+                    ScaffoldMessenger.of(ctx).showSnackBar(const SnackBar(content: Text('错误：根节点必须是 JSON Object ({})')));
+                  }
+                } catch (e) {
+                  ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(content: Text('JSON 语法错误: $e')));
+                }
+              },
+              child: const Text('应用'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
+

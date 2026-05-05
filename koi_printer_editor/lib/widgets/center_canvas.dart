@@ -18,7 +18,7 @@ class CenterCanvas extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 32),
       child: SingleChildScrollView(
         child: Container(
-          width: 380, // 80mm preview width
+          width: state.paperWidthPx, // 动态纸张宽度
           constraints: const BoxConstraints(minHeight: 500),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -127,7 +127,7 @@ class _EditableElementWrap extends StatelessWidget {
 
     final renderWidget = KoiPreviewRenderer.build(
       document: mockDoc,
-      paperWidthPx: 380,
+      paperWidthPx: state.paperWidthPx,
       fontFamily: 'SarasaMono',
     );
     
@@ -157,7 +157,7 @@ class _EditableElementWrap extends StatelessWidget {
                   final mockInnerDoc = KoiTicketDocument(elements: [_processEditMode(t, state.schema)]);
                   final innerRender = KoiPreviewRenderer.build(
                     document: mockInnerDoc, 
-                    paperWidthPx: 380,
+                    paperWidthPx: state.paperWidthPx,
                     fontFamily: 'SarasaMono',
                   );
                   if (innerRender is Container && innerRender.child is Column) {

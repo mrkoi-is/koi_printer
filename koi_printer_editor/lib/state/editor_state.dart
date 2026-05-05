@@ -28,6 +28,8 @@ class EditorState extends ChangeNotifier {
   // ── 当前模板元数据 (Issue 4: 记住当前 manifest 的身份) ──
   String _currentManifestId = '';
   String _currentManifestName = '';
+  String _currentManifestCategory = '';
+  String _currentManifestDescription = '';
 
   // ── Schema — 直接复用 KoiTemplateField, 不再另造类 (Issue 1) ──
   List<KoiTemplateField> _schema = const [];
@@ -39,6 +41,9 @@ class EditorState extends ChangeNotifier {
   // 预览模式与假数据 (Issue 2: 不再硬编码, 从 manifest 加载)
   bool _isPreviewMode = false;
   Map<String, dynamic> _mockData = {};
+  
+  // 画布纸张大小 (默认为 80mm 即 380px)
+  double _paperWidthPx = 380.0;
 
   List<EditorElement> get elements => _elements;
   KoiPrintDocument get document => KoiTicketDocument(elements: _elements.map((e) => e.element).toList());
@@ -46,6 +51,7 @@ class EditorState extends ChangeNotifier {
   EditorElement? get selectedElement => _elements.where((e) => e.id == _selectedElementId).firstOrNull;
   bool get isPreviewMode => _isPreviewMode;
   Map<String, dynamic> get mockData => _mockData;
+  double get paperWidthPx => _paperWidthPx;
 
   bool get canUndo => _undoStack.isNotEmpty;
   bool get canRedo => _redoStack.isNotEmpty;
@@ -63,6 +69,12 @@ class EditorState extends ChangeNotifier {
 
   /// 当前模板名称 (用于导出时回填)。
   String get currentManifestName => _currentManifestName;
+
+  /// 当前模板分类
+  String get currentManifestCategory => _currentManifestCategory;
+
+  /// 当前模板描述
+  String get currentManifestDescription => _currentManifestDescription;
 
   void togglePreviewMode() {
     _isPreviewMode = !_isPreviewMode;
@@ -87,6 +99,8 @@ class EditorState extends ChangeNotifier {
     // 同步身份 (Issue 4)
     _currentManifestId = manifest.id;
     _currentManifestName = manifest.name;
+    _currentManifestCategory = manifest.category;
+    _currentManifestDescription = manifest.description;
 
     // 同步 Schema (Issue 1: 直接赋值, 无需转换)
     _schema = manifest.schema;
@@ -140,4 +154,53 @@ class EditorState extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  // ── 外部状态变更接口 (UI 交互层使用) ──
+
+  void updatePaperWidthPx(double widthPx) {
+    _paperWidthPx = widthPx;
+    notifyListeners();
+  }
+
+  void updateManifestMetadata({
+    String? id,
+    String? name,
+    String? category,
+    String? description,
+  }) {
+    if (id != null) _currentManifestId = id;
+    if (name != null) _currentManifestName = name;
+    if (category != null) _currentManifestCategory = category;
+    if (description != null) _currentManifestDescription = description;
+    notifyListeners();
+  }
+
+  void updateMockData(Map<String, dynamic> data) {
+    _mockData = data;
+    notifyListeners();
+  }
+
+  void addSchemaField(KoiTemplateField field) {
+    _schema = List.from(_schema)..add(field);
+    notifyListeners();
+  }
+
+  void updateSchemaField(int index, KoiTemplateField field) {
+    if (index >= 0 && index < _schema.length) {
+      final newList = List<KoiTemplateField>.from(_schema);
+      newList[index] = field;
+      _schema = newList;
+      notifyListeners();
+    }
+  }
+
+  void removeSchemaField(int index) {
+    if (index >= 0 && index < _schema.length) {
+      final newList = List<KoiTemplateField>.from(_schema);
+      newList.removeAt(index);
+      _schema = newList;
+      notifyListeners();
+    }
+  }
 }
+

@@ -129,6 +129,69 @@ class _PaletteItem extends StatelessWidget {
 class _DataSchemaTab extends StatelessWidget {
   String _genId() => DateTime.now().microsecondsSinceEpoch.toString();
 
+  void _showFieldDialog(BuildContext context, EditorState state, {int? index}) {
+    final isEdit = index != null;
+    final initialField = isEdit ? state.schema[index] : null;
+
+    final keyCtrl = TextEditingController(text: initialField?.key ?? '');
+    final labelCtrl = TextEditingController(text: initialField?.label ?? '');
+    KoiFieldType type = initialField?.type ?? KoiFieldType.string;
+
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        return StatefulBuilder(
+          builder: (ctx, setState) {
+            return AlertDialog(
+              title: Text(isEdit ? '编辑字段' : '添加字段'),
+              content: SizedBox(
+                width: 300,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(controller: keyCtrl, decoration: const InputDecoration(labelText: '变量 Key (英文/数字)')),
+                    const SizedBox(height: 8),
+                    TextField(controller: labelCtrl, decoration: const InputDecoration(labelText: '展示名称 (Label)')),
+                    const SizedBox(height: 16),
+                    DropdownButtonFormField<KoiFieldType>(
+                      initialValue: type,
+                      decoration: const InputDecoration(labelText: '数据类型 (Type)'),
+                      items: KoiFieldType.values.map((t) => DropdownMenuItem(value: t, child: Text(t.name))).toList(),
+                      onChanged: (val) {
+                        if (val != null) setState(() => type = val);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('取消')),
+                FilledButton(
+                  onPressed: () {
+                    final key = keyCtrl.text.trim();
+                    final label = labelCtrl.text.trim();
+                    if (key.isEmpty || label.isEmpty) {
+                      ScaffoldMessenger.of(ctx).showSnackBar(const SnackBar(content: Text('Key 和 Label 不能为空')));
+                      return;
+                    }
+                    final field = KoiTemplateField(key: key, label: label, type: type);
+                    if (isEdit) {
+                      state.updateSchemaField(index, field);
+                    } else {
+                      state.addSchemaField(field);
+                    }
+                    Navigator.pop(ctx);
+                  },
+                  child: const Text('保存'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final state = context.watch<EditorState>();
@@ -137,32 +200,71 @@ class _DataSchemaTab extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        Text(
-          '单据模型: ${state.schemaEntity}',
-          style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.grey),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Text(
+                '单据模型: ${state.schemaEntity.isEmpty ? '自定义' : state.schemaEntity}',
+                style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.grey),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.add_circle, color: Colors.blue),
+              tooltip: '添加字段',
+              onPressed: () => _showFieldDialog(context, state),
+            ),
+          ],
         ),
-        const SizedBox(height: 16),
-        ...fields.map((field) => ListTile(
-          leading: Icon(
-            field.type == KoiFieldType.string ? Icons.abc : 
-            field.type == KoiFieldType.number ? Icons.numbers : Icons.list,
-          ),
-          title: Text(field.label),
-          subtitle: Text('{{${field.key}}}'),
-          trailing: IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () {
-              context.read<EditorState>().execute(
-                AddElementCommand(
-                  EditorElement(
-                    id: _genId(),
-                    element: KoiTextElement(text: '{{${field.key}}}', size: KoiTextSize.size1),
+        const SizedBox(height: 8),
+        ...fields.asMap().entries.map((entry) {
+          final i = entry.key;
+          final field = entry.value;
+          return Card(
+            margin: const EdgeInsets.only(bottom: 8),
+            child: ListTile(
+              leading: Icon(
+                field.type == KoiFieldType.string ? Icons.abc : 
+                field.type == KoiFieldType.number ? Icons.numbers : Icons.list,
+                color: Colors.blueGrey,
+              ),
+              title: Text(field.label, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+              subtitle: Text('{{${field.key}}}', style: const TextStyle(color: Colors.grey, fontSize: 11)),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.edit, size: 16),
+                    tooltip: '编辑',
+                    onPressed: () => _showFieldDialog(context, state, index: i),
                   ),
-                ),
-              );
-            },
-          ),
-        )),
+                  IconButton(
+                    icon: const Icon(Icons.delete, size: 16, color: Colors.red),
+                    tooltip: '删除',
+                    onPressed: () {
+                      state.removeSchemaField(i);
+                    },
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.add_box, size: 16, color: Colors.blue),
+                    tooltip: '插入文本到画布',
+                    onPressed: () {
+                      state.execute(
+                        AddElementCommand(
+                          EditorElement(
+                            id: _genId(),
+                            element: KoiTextElement(text: '{{${field.key}}}', size: KoiTextSize.size1),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          );
+        }),
       ],
     );
   }
