@@ -134,7 +134,7 @@
 
 ---
 
-## CHECKPOINT 5: KoiElementEditor 标签元素 + 边界情况
+## CHECKPOINT 5: KoiElementEditor 标签元素 + 边界情况 [DONE]
 
 **包:** `koi_printer`  
 **预计用时:** 2 hours  
