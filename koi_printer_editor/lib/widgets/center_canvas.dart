@@ -31,7 +31,7 @@ class CenterCanvas extends StatelessWidget {
               )
             ],
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 16),
           child: ReorderableListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
