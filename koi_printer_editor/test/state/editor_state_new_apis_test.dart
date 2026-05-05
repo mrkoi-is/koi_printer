@@ -88,6 +88,17 @@ void main() {
       expect(state.schema[0].key, 'a');
       expect(state.schema[1].key, 'b');
     });
+
+    test('添加重复 key 抛异常', () {
+      final state = EditorState();
+      state.addSchemaField(
+        const KoiTemplateField(key: 'a', label: 'A'),
+      );
+      expect(
+        () => state.addSchemaField(const KoiTemplateField(key: 'a', label: 'Dup')),
+        throwsException,
+      );
+    });
   });
 
   group('updateSchemaField', () {

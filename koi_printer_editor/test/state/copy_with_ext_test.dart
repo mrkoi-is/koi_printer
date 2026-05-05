@@ -124,4 +124,40 @@ void main() {
       expect(copy.listKey, 'items');
     });
   });
+
+  group('KoiTextRowElement.copyWith', () {
+    const original = KoiTextRowElement(
+      columns: [KoiTextColumn(text: 'A', ratio: 1)],
+    );
+
+    test('只改 columns', () {
+      final copy = original.copyWith(columns: [const KoiTextColumn(text: 'B', ratio: 2)]);
+      expect(copy.columns.length, 1);
+      expect(copy.columns[0].text, 'B');
+      expect(copy.columns[0].ratio, 2);
+    });
+  });
+
+  group('KoiTextColumn.copyWith', () {
+    const original = KoiTextColumn(
+      text: 'A',
+      ratio: 1,
+      align: KoiTextAlign.left,
+      bold: true,
+    );
+
+    test('只改 text', () {
+      final copy = original.copyWith(text: 'B');
+      expect(copy.text, 'B');
+      expect(copy.ratio, original.ratio);
+      expect(copy.align, original.align);
+      expect(copy.bold, original.bold);
+    });
+
+    test('只改 ratio', () {
+      final copy = original.copyWith(ratio: 2);
+      expect(copy.ratio, 2);
+      expect(copy.text, original.text);
+    });
+  });
 }

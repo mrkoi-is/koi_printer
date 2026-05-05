@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:koi_printer_editor/widgets/inspectors/text_element_inspector.dart';
 import 'package:koi_printer_editor/widgets/inspectors/qr_code_element_inspector.dart';
 import 'package:koi_printer_editor/widgets/inspectors/barcode_element_inspector.dart';
+import 'package:koi_printer_editor/widgets/inspectors/text_row_element_inspector.dart';
 import 'package:koi_printer_editor/widgets/inspectors/ticket_for_each_element_inspector.dart';
 import 'package:koi_printer/koi_printer.dart'; // 需要导出相关模型类
 
@@ -26,6 +27,7 @@ class _RightInspectorState extends State<RightInspector> {
       r.register<KoiQrCodeElement>(QrCodeElementInspector());
       r.register<KoiBarcodeElement>(BarcodeElementInspector());
       r.register<KoiTicketForEachElement>(TicketForEachElementInspector());
+      r.register<KoiTextRowElement>(TextRowElementInspector());
     });
   }
 

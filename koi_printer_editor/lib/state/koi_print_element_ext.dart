@@ -80,3 +80,29 @@ extension KoiTicketForEachElementEditorExt on KoiTicketForEachElement {
     );
   }
 }
+
+extension KoiTextRowElementExt on KoiTextRowElement {
+  KoiTextRowElement copyWith({
+    List<KoiTextColumn>? columns,
+  }) {
+    return KoiTextRowElement(
+      columns: columns ?? this.columns,
+    );
+  }
+}
+
+extension KoiTextColumnExt on KoiTextColumn {
+  KoiTextColumn copyWith({
+    String? text,
+    int? ratio,
+    KoiTextAlign? align,
+    bool? bold,
+  }) {
+    return KoiTextColumn(
+      text: text ?? this.text,
+      ratio: ratio ?? this.ratio,
+      align: align ?? this.align,
+      bold: bold ?? this.bold,
+    );
+  }
+}

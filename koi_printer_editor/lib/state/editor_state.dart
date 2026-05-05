@@ -181,6 +181,9 @@ class EditorState extends ChangeNotifier {
   }
 
   void addSchemaField(KoiTemplateField field) {
+    if (_schema.any((e) => e.key == field.key)) {
+      throw Exception('字段 Key "${field.key}" 已存在');
+    }
     _schema = List<KoiTemplateField>.from(_schema)..add(field);
     notifyListeners();
   }
