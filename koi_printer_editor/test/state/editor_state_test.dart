@@ -40,6 +40,15 @@ void main() {
       expect(state.elements.first.id, '1');
       expect(state.canUndo, isTrue);
       expect(state.canRedo, isFalse);
+
+      // Add to root with specific index
+      final element2 = EditorElement(
+        id: '2',
+        element: const KoiTextElement(text: 'Hello 2'),
+      );
+      state.execute(AddElementCommand(element2, index: 0));
+      expect(state.elements.first.id, '2');
+      expect(state.elements.length, 2);
     });
 
     test('AddElementCommand with parentId to KoiTicketForEachElement', () {
@@ -112,10 +121,15 @@ void main() {
       );
       final state = EditorState(initialElements: [element]);
       expect(state.elements.length, 1);
+      
+      // Select the element to ensure it's cleared on removal
+      state.selectElement('2');
+      expect(state.selectedElementId, '2');
 
       // Execute Remove
       state.execute(RemoveElementCommand('2'));
       expect(state.elements, isEmpty);
+      expect(state.selectedElementId, isNull);
 
       // Undo Remove
       state.undo();
@@ -156,6 +170,17 @@ void main() {
       expect(state.elements[0].id, 'B');
       expect(state.elements[1].id, 'C');
       expect(state.elements[2].id, 'A');
+
+      state.undo();
+      expect(state.elements[0].id, 'A');
+      expect(state.elements[1].id, 'B');
+      expect(state.elements[2].id, 'C');
+
+      // Move C (index 2) to before A (index 0)
+      state.execute(ReorderElementsCommand(oldIndex: 2, newIndex: 0));
+      expect(state.elements[0].id, 'C');
+      expect(state.elements[1].id, 'A');
+      expect(state.elements[2].id, 'B');
 
       state.undo();
       expect(state.elements[0].id, 'A');

@@ -165,7 +165,7 @@ void main() {
       expect((updatedElement! as KoiBarcodeElement).align, KoiTextAlign.center);
     });
 
-    testWidgets('edits KoiQrCodeElement align', (tester) async {
+    testWidgets('edits KoiQrCodeElement align and data', (tester) async {
       const element = KoiQrCodeElement(data: '123');
       Object? updatedElement;
       await tester.pumpWidget(MaterialApp(home: Scaffold(body: KoiElementEditor(element: element, onChanged: (val) => updatedElement = val))));
@@ -176,9 +176,13 @@ void main() {
       await tester.tap(find.text('center').last);
       await tester.pumpAndSettle();
       expect((updatedElement! as KoiQrCodeElement).align, KoiTextAlign.center);
+
+      await tester.enterText(find.widgetWithText(TextFormField, 'QR数据 (Data)'), '456');
+      await tester.pump();
+      expect((updatedElement! as KoiQrCodeElement).data, '456');
     });
 
-    testWidgets('edits KoiPositionedTextElement X Y and Bold', (tester) async {
+    testWidgets('edits KoiPositionedTextElement X Y, Text, and Bold', (tester) async {
       const element = KoiPositionedTextElement(text: 'Pos', x: 10, y: 20);
       Object? updatedElement;
       await tester.pumpWidget(MaterialApp(home: Scaffold(body: KoiElementEditor(element: element, onChanged: (val) => updatedElement = val))));
@@ -193,6 +197,10 @@ void main() {
       await tester.enterText(yFinder, '25');
       await tester.pump();
       expect((updatedElement! as KoiPositionedTextElement).y, 25);
+
+      await tester.enterText(find.widgetWithText(TextFormField, '文本内容 (Text)'), 'NewPosText');
+      await tester.pump();
+      expect((updatedElement! as KoiPositionedTextElement).text, 'NewPosText');
 
       final boldFinder = find.widgetWithText(SwitchListTile, '加粗 (Bold)');
       await tester.tap(boldFinder);

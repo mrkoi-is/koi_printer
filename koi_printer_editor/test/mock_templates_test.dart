@@ -23,27 +23,36 @@ void main() {
 
     test('EditorElement.element 与原始文档元素一致', () {
       final manifest = templateManifests.first;
-      final doc = manifest.document as KoiTicketDocument;
+      final doc = manifest.document;
       final elements = manifestToEditorElements(manifest);
 
       for (int i = 0; i < elements.length; i++) {
-        expect(elements[i].element, same(doc.elements[i]),
+        final originalElement = doc is KoiTicketDocument 
+            ? doc.elements[i] 
+            : (doc as KoiLabelDocument).elements[i];
+            
+        expect(elements[i].element, same(originalElement),
             reason: '第 $i 个元素应该是同一引用');
       }
     });
 
-    test('非 Ticket 文档返回空列表', () {
+    test('Label 文档转换出正确数量的 EditorElement', () {
       // 构造一个 Label 类型的 manifest
       final labelManifest = KoiTemplateManifest(
         id: 'label',
         name: 'Label',
+        category: 'test',
+        description: 'test label',
+        schema: const [],
+        mockData: const {},
         document: const KoiLabelDocument(elements: [
           KoiLabelSetupElement(widthMm: 60, heightMm: 40),
         ]),
       );
 
       final elements = manifestToEditorElements(labelManifest);
-      expect(elements, isEmpty);
+      expect(elements.length, 1);
+      expect(elements.first.element, isA<KoiLabelSetupElement>());
     });
   });
 
@@ -61,10 +70,10 @@ void main() {
           reason: '存在重复的 manifest id');
     });
 
-    test('所有 manifest 的 document 都是 KoiTicketDocument', () {
+    test('所有 manifest 的 document 都是 KoiPrintDocument', () {
       for (final m in templateManifests) {
-        expect(m.document, isA<KoiTicketDocument>(),
-            reason: '${m.name} 的 document 类型不是 KoiTicketDocument');
+        expect(m.document, isA<KoiPrintDocument>(),
+            reason: '${m.name} 的 document 类型不合法');
       }
     });
 
@@ -79,10 +88,17 @@ void main() {
         expect(restored.schema.length, m.schema.length,
             reason: '${m.name} round-trip schema 长度不匹配');
 
-        final doc = restored.document as KoiTicketDocument;
-        final originalDoc = m.document as KoiTicketDocument;
-        expect(doc.elements.length, originalDoc.elements.length,
-            reason: '${m.name} round-trip elements 长度不匹配');
+        if (restored.document is KoiTicketDocument) {
+          final doc = restored.document as KoiTicketDocument;
+          final originalDoc = m.document as KoiTicketDocument;
+          expect(doc.elements.length, originalDoc.elements.length,
+              reason: '${m.name} round-trip elements 长度不匹配');
+        } else if (restored.document is KoiLabelDocument) {
+          final doc = restored.document as KoiLabelDocument;
+          final originalDoc = m.document as KoiLabelDocument;
+          expect(doc.elements.length, originalDoc.elements.length,
+              reason: '${m.name} round-trip elements 长度不匹配');
+        }
       }
     });
   });
