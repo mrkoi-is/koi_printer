@@ -1,8 +1,10 @@
 ## 0.2.0
 
-* **Coverage**: achieved 100% test coverage across all services, preview renderers, widgets, and state managers.
-* **Fix**: refined widget interactions in `KoiElementEditor` for all elements.
-* **Refactor**: resolved all static analysis warnings.
+* **Feature**: `koi_printer_editor` fully supports metadata, schema configuration, and dynamic mock data editing.
+* **Feature**: Added Inspector support for `KoiTextRowElement` (multi-column tables).
+* **Coverage**: Achieved ~97% average test coverage across the ecosystem (445 tests total).
+* **Fix**: Refined widget interactions and state management across `KoiElementEditor` and `koi_printer_editor`.
+* **Refactor**: Resolved all static analysis warnings across all packages (0 lint issues).
 
 ## 0.1.0
 
