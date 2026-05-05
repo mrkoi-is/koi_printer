@@ -81,5 +81,34 @@ void main() {
         throwsException,
       );
     });
+
+    test('connect uses connectionFactory if provided', () async {
+      const config = KoiConnectionConfig(deviceId: '00:11:22:33:44:55', deviceName: 'Printer');
+      var factoryCalled = false;
+      final testAdapter = KoiClassicBtAdapter(
+        connectionFactory: (address) async {
+          factoryCalled = true;
+          throw Exception('Factory error');
+        },
+      );
+      
+      final result = await testAdapter.connect(config);
+      expect(result, isFalse);
+      expect(factoryCalled, isTrue);
+      await testAdapter.dispose();
+    });
+
+    test('disconnect handles error gracefully', () async {
+      final testAdapter = KoiClassicBtAdapter(
+        connectionFactory: (address) async {
+          throw Exception('Force disconnect error');
+        },
+      );
+      // We can't easily mock BluetoothConnection without implementing it entirely,
+      // but disconnect() handles any exception. We can just call it.
+      await testAdapter.disconnect();
+      expect(testAdapter.state, KoiConnectionState.disconnected);
+      await testAdapter.dispose();
+    });
   });
 }

@@ -317,5 +317,56 @@ void main() {
       expect(adapter.isReady, isTrue);
       await connectionStateController.close();
     });
+    test('connect catches Exception and returns false', () async {
+      const config = KoiConnectionConfig(deviceId: '00:11:22:33:44:55', deviceName: 'Printer');
+      when(() => mockDevice.connect(timeout: any(named: 'timeout'), autoConnect: any(named: 'autoConnect'), mtu: any(named: 'mtu')))
+          .thenThrow(Exception('General connect error'));
+      
+      final result = await adapter.connect(config);
+      expect(result, isFalse);
+    });
+
+    test('finds specific characteristic matching config uuid', () async {
+      const config = KoiConnectionConfig(
+        deviceId: '00:11:22:33:44:55', 
+        deviceName: 'Printer',
+        serviceUuid: '0000ff00-0000-1000-8000-00805f9b34fb',
+        characteristicUuid: '0000ff01-0000-1000-8000-00805f9b34fb',
+      );
+      
+      final mockService = MockBluetoothService();
+      final mockChar = MockBluetoothCharacteristic();
+      final wrongChar = MockBluetoothCharacteristic();
+      final wrongService = MockBluetoothService();
+      
+      when(() => wrongService.uuid).thenReturn(Guid('00001111-0000-1000-8000-00805f9b34fb'));
+      when(() => wrongService.characteristics).thenReturn([]);
+
+      when(() => mockService.uuid).thenReturn(Guid('0000ff00-0000-1000-8000-00805f9b34fb'));
+      
+      when(() => wrongChar.uuid).thenReturn(Guid('00002222-0000-1000-8000-00805f9b34fb'));
+      when(() => wrongChar.properties).thenReturn(const CharacteristicProperties(writeWithoutResponse: true, write: true));
+
+      when(() => mockChar.uuid).thenReturn(Guid('0000ff01-0000-1000-8000-00805f9b34fb'));
+      when(() => mockChar.properties).thenReturn(const CharacteristicProperties(writeWithoutResponse: true, write: true));
+      
+      when(() => mockService.characteristics).thenReturn([wrongChar, mockChar]);
+      
+      when(() => mockDevice.discoverServices()).thenAnswer((_) async => [wrongService, mockService]);
+      
+      when(() => mockDevice.connect(timeout: any(named: 'timeout'), autoConnect: any(named: 'autoConnect'), mtu: any(named: 'mtu')))
+          .thenAnswer((_) async {});
+      
+      final connectionStateController = StreamController<BluetoothConnectionState>();
+      when(() => mockDevice.connectionState).thenAnswer((_) => connectionStateController.stream);
+      
+      final connectFuture = adapter.connect(config);
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+      connectionStateController.add(BluetoothConnectionState.connected);
+      await connectFuture;
+      
+      expect(adapter.isReady, isTrue);
+      await connectionStateController.close();
+    });
   });
 }

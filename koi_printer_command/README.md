@@ -1,7 +1,7 @@
 # koi_printer_command
 
 ![CI](https://github.com/mrkoi-is/koi_printer/actions/workflows/ci.yml/badge.svg)
-
+![Coverage](https://img.shields.io/badge/coverage-97%25-brightgreen.svg)
 The low-level instruction set and rendering engine for the `koi_printer` ecosystem.
 
 ## Features

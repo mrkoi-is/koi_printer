@@ -18,12 +18,13 @@ class LeftPalette extends StatelessWidget {
         border: Border(right: BorderSide(color: theme.dividerColor)),
       ),
       child: DefaultTabController(
-        length: 2,
+        length: 3,
         child: Column(
           children: [
             const TabBar(
               tabs: [
                 Tab(text: '组件库'),
+                Tab(text: '图层'),
                 Tab(text: '数据源'),
               ],
             ),
@@ -31,6 +32,7 @@ class LeftPalette extends StatelessWidget {
               child: TabBarView(
                 children: [
                   _ComponentsTab(),
+                  const _LayerTreeTab(),
                   _DataSchemaTab(),
                 ],
               ),
@@ -127,6 +129,91 @@ class _PaletteItem extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _LayerTreeTab extends StatelessWidget {
+  const _LayerTreeTab();
+
+  @override
+  Widget build(BuildContext context) {
+    final state = context.watch<EditorState>();
+    final elements = state.elements;
+
+    if (elements.isEmpty) {
+      return const Center(child: Text('画布为空', style: TextStyle(color: Colors.grey)));
+    }
+
+    return ReorderableListView.builder(
+      padding: const EdgeInsets.all(8),
+      itemCount: elements.length,
+      onReorder: (oldIndex, newIndex) {
+        state.execute(ReorderElementsCommand(oldIndex: oldIndex, newIndex: newIndex));
+      },
+      itemBuilder: (context, index) {
+        final el = elements[index];
+        final isSelected = state.selectedElementId == el.id;
+        
+        IconData icon;
+        String label;
+        if (el.element is KoiTextElement) {
+          icon = Icons.text_fields;
+          label = '文本: ${(el.element as KoiTextElement).text}';
+        } else if (el.element is KoiTicketForEachElement) {
+          icon = Icons.list_alt_rounded;
+          label = '列表容器 (${(el.element as KoiTicketForEachElement).listKey})';
+        } else if (el.element is KoiDividerElement) {
+          icon = Icons.horizontal_rule;
+          label = '分割线';
+        } else if (el.element is KoiQrCodeElement) {
+          icon = Icons.qr_code;
+          label = '二维码: ${(el.element as KoiQrCodeElement).data}';
+        } else if (el.element is KoiBarcodeElement) {
+          icon = Icons.barcode_reader;
+          label = '条形码: ${(el.element as KoiBarcodeElement).data}';
+        } else if (el.element is KoiTextRowElement) {
+          icon = Icons.view_column;
+          label = '多列排版 (${(el.element as KoiTextRowElement).columns.length} 列)';
+        } else if (el.element is KoiSpacerElement) {
+          icon = Icons.space_bar;
+          label = '空白行 (${(el.element as KoiSpacerElement).lines} 行)';
+        } else {
+          icon = Icons.widgets;
+          label = '未知组件';
+        }
+
+        return Card(
+          key: ValueKey(el.id),
+          elevation: isSelected ? 2 : 0,
+          color: isSelected ? Colors.blue.withValues(alpha: 0.1) : null,
+          margin: const EdgeInsets.only(bottom: 4),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+            side: BorderSide(
+              color: isSelected ? Colors.blue : Colors.grey.shade300,
+              width: isSelected ? 1.5 : 1,
+            ),
+          ),
+          child: ListTile(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+            leading: Icon(icon, color: isSelected ? Colors.blue : Colors.blueGrey, size: 20),
+            title: Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                color: isSelected ? Colors.blue.shade900 : Colors.black87,
+              ),
+            ),
+            selected: isSelected,
+            onTap: () => state.selectElement(el.id),
+            trailing: const Icon(Icons.drag_handle, color: Colors.grey, size: 20),
+          ),
+        );
+      },
     );
   }
 }

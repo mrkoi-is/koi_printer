@@ -1,8 +1,9 @@
 ## 0.2.0
 
 * **Feature**: `koi_printer_editor` fully supports metadata, schema configuration, and dynamic mock data editing.
+* **Feature**: Added "Layers" (图层面板) tab to `LeftPalette` with drag-to-reorder support.
 * **Feature**: Added Inspector support for `KoiTextRowElement` (multi-column tables).
-* **Coverage**: Achieved ~97% average test coverage across the ecosystem (445 tests total).
+* **Coverage**: Achieved >94% average test coverage across the ecosystem (445+ tests total).
 * **Fix**: Refined widget interactions and state management across `KoiElementEditor` and `koi_printer_editor`.
 * **Refactor**: Resolved all static analysis warnings across all packages (0 lint issues).
 

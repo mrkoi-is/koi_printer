@@ -1,6 +1,6 @@
 ## 0.2.0
 
-* **Coverage**: achieved 100% test coverage across all protocol renderers and parsers.
+* **Coverage**: achieved 97% test coverage across all protocol renderers and parsers.
 * **Refactor**: resolved all static analysis lint warnings (including long lines, cascade invocations).
 
 ## 0.1.0

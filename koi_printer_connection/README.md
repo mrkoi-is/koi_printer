@@ -1,7 +1,7 @@
 # koi_printer_connection
 
 ![CI](https://github.com/mrkoi-is/koi_printer/actions/workflows/ci.yml/badge.svg)
-
+![Coverage](https://img.shields.io/badge/coverage-94.2%25-brightgreen.svg)
 The connection layer for the `koi_printer` ecosystem.
 
 ## Features
