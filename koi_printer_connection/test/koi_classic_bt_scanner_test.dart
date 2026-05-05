@@ -1,7 +1,8 @@
-import 'package:flutter_test/flutter_test.dart';
-import 'package:koi_printer_connection/src/scanner/koi_classic_bt_scanner.dart';
-
+// ignore_for_file: lines_longer_than_80_chars // rationale: long strings in tests
 import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:koi_printer_connection/src/model/koi_discovered_device.dart';
+import 'package:koi_printer_connection/src/scanner/koi_classic_bt_scanner.dart';
 
 void main() {
   group('KoiClassicBtScanner', () {
@@ -11,7 +12,7 @@ void main() {
       TestWidgetsFlutterBinding.ensureInitialized();
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
         const MethodChannel('flutter_bluetooth_serial/methods'),
-        (MethodCall methodCall) async {
+        (methodCall) async {
           if (methodCall.method == 'getBondedDevices') {
             return [
               {'address': '00:11:22:33:44:55', 'name': 'Printer A', 'type': 1, 'isConnected': false, 'bondState': 12}
@@ -32,7 +33,7 @@ void main() {
 
     test('scan returns a stream and devices', () async {
       final stream = scanner.scan(timeout: const Duration(milliseconds: 100));
-      expect(stream, isA<Stream>());
+      expect(stream, isA<Stream<KoiDiscoveredDevice>>());
 
       final devices = await stream.toList();
       expect(devices.length, 1);
@@ -46,7 +47,7 @@ void main() {
     test('scan handles getBondedDevices error', () async {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
         const MethodChannel('flutter_bluetooth_serial/methods'),
-        (MethodCall methodCall) async {
+        (methodCall) async {
           throw Exception('Simulated error');
         },
       );

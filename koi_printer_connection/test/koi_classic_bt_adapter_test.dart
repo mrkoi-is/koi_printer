@@ -1,7 +1,7 @@
+// ignore_for_file: lines_longer_than_80_chars // rationale: long strings in tests
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:koi_printer_connection/koi_printer_connection.dart';
-import 'package:koi_printer_connection/src/adapter/koi_classic_bt_adapter.dart';
 
 void main() {
   group('KoiClassicBtAdapter', () {
@@ -32,7 +32,7 @@ void main() {
     });
 
     test('connect fails gracefully on missing plugin/invalid mac', () async {
-      final config = KoiConnectionConfig(deviceId: '00:11:22:33:44:55', deviceName: 'Printer');
+      const config = KoiConnectionConfig(deviceId: '00:11:22:33:44:55', deviceName: 'Printer');
       // In test env, flutter_bluetooth_serial channel throws MissingPluginException
       // The adapter catches it and returns false.
       final result = await adapter.connect(config);
@@ -44,7 +44,7 @@ void main() {
     test('connect succeeds with mocked MethodChannel', () async {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
         const MethodChannel('flutter_bluetooth_serial/methods'),
-        (MethodCall methodCall) async {
+        (methodCall) async {
           if (methodCall.method == 'connect') {
             return 1;
           }
@@ -52,7 +52,7 @@ void main() {
         },
       );
 
-      final config = KoiConnectionConfig(deviceId: '00:11:22:33:44:55', deviceName: 'Printer');
+      const config = KoiConnectionConfig(deviceId: '00:11:22:33:44:55', deviceName: 'Printer');
       final result = await adapter.connect(config);
       
       expect(result, isTrue);
@@ -62,7 +62,7 @@ void main() {
       // sendChunks might throw because EventChannel is not mocked, but we can catch it
       try {
         await adapter.sendChunks([[0x01, 0x02]]);
-      } catch (e) {
+      } on Object catch (_) {
         // It's fine if it throws due to platform channel missing
       }
 

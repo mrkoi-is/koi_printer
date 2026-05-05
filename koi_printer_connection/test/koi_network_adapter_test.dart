@@ -1,7 +1,7 @@
+// ignore_for_file: lines_longer_than_80_chars // rationale: long strings in tests
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:koi_printer_connection/koi_printer_connection.dart';
-import 'package:koi_printer_connection/src/adapter/koi_network_adapter.dart';
 
 void main() {
   group('KoiNetworkAdapter', () {
@@ -29,7 +29,7 @@ void main() {
     });
 
     test('connect fails gracefully on invalid host', () async {
-      final config = KoiConnectionConfig(deviceId: '255.255.255.255', deviceName: 'Printer', port: 9100, connectionTimeout: const Duration(milliseconds: 100));
+      const config = KoiConnectionConfig(deviceId: '255.255.255.255', deviceName: 'Printer', connectionTimeout: Duration(milliseconds: 100));
       final result = await adapter.connect(config);
       expect(result, false);
       expect(adapter.state, KoiConnectionState.disconnected);
@@ -59,9 +59,7 @@ void main() {
       
       final receivedData = <int>[];
       server.listen((socket) {
-        socket.listen((data) {
-          receivedData.addAll(data);
-        });
+        socket.listen(receivedData.addAll);
       });
 
       final config = KoiConnectionConfig(deviceId: '127.0.0.1', deviceName: 'LocalPrinter', port: port, connectionTimeout: const Duration(milliseconds: 100));

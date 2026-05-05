@@ -34,6 +34,7 @@ class KoiKeyboardScanner {
   /// 扫码结果数据流。
   Stream<String> get scanStream => _scanController.stream;
 
+  /// Handles the hardware key event and processes character stream.
   @visibleForTesting
   bool handleKeyEvent(KeyEvent event) {
     if (event is KeyDownEvent) {

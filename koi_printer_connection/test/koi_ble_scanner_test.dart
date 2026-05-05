@@ -97,12 +97,10 @@ void main() {
       );
       final noName = _makeMockScanResult(
         deviceId: 'AA:BB:CC:DD:EE:02',
-        platformName: '', // 无名称
       );
 
       final stream = scanner.scan(
         timeout: const Duration(milliseconds: 200),
-        withNames: true,
       );
       final devices = <KoiDiscoveredDevice>[];
       final sub = stream.listen(devices.add);
@@ -120,7 +118,6 @@ void main() {
     test('scan includes nameless devices when withNames=false', () async {
       final noName = _makeMockScanResult(
         deviceId: 'AA:BB:CC:DD:EE:01',
-        platformName: '',
       );
 
       final stream = scanner.scan(

@@ -1,8 +1,9 @@
+// ignore_for_file: lines_longer_than_80_chars // rationale: long strings in tests
 import 'dart:async';
+
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:koi_printer_connection/koi_printer_connection.dart';
-import 'package:koi_printer_connection/src/adapter/koi_ble_adapter.dart';
-import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockBluetoothDevice extends Mock implements BluetoothDevice {}
@@ -53,7 +54,7 @@ void main() {
     });
 
     test('connect matches specific service and characteristic UUIDs', () async {
-      final config = KoiConnectionConfig(
+      const config = KoiConnectionConfig(
         deviceId: '00:11:22:33:44:55', 
         deviceName: 'Printer',
         serviceUuid: '000018f0-0000-1000-8000-00805f9b34fb',
@@ -68,16 +69,12 @@ void main() {
       when(() => mockService1.uuid).thenReturn(Guid('00001800-0000-1000-8000-00805f9b34fb'));
       when(() => mockService2.uuid).thenReturn(Guid('000018f0-0000-1000-8000-00805f9b34fb'));
       when(() => mockChar1.uuid).thenReturn(Guid('00002a00-0000-1000-8000-00805f9b34fb'));
-      when(() => mockChar1.properties).thenReturn(CharacteristicProperties(
-        broadcast: false, read: true, writeWithoutResponse: false, write: false,
-        notify: false, indicate: false, authenticatedSignedWrites: false,
-        extendedProperties: false, notifyEncryptionRequired: false, indicateEncryptionRequired: false,
+      when(() => mockChar1.properties).thenReturn(const CharacteristicProperties(
+        read: true,
       ));
       when(() => mockChar2.uuid).thenReturn(Guid('00002af1-0000-1000-8000-00805f9b34fb'));
-      when(() => mockChar2.properties).thenReturn(CharacteristicProperties(
-        broadcast: false, read: false, writeWithoutResponse: true, write: true,
-        notify: false, indicate: false, authenticatedSignedWrites: false,
-        extendedProperties: false, notifyEncryptionRequired: false, indicateEncryptionRequired: false,
+      when(() => mockChar2.properties).thenReturn(const CharacteristicProperties(
+        writeWithoutResponse: true, write: true,
       ));
       
       when(() => mockService1.characteristics).thenReturn([mockChar1]);
@@ -110,17 +107,15 @@ void main() {
     });
 
     test('connect discovers services and becomes ready', () async {
-      final config = KoiConnectionConfig(deviceId: '00:11:22:33:44:55', deviceName: 'Printer');
+      const config = KoiConnectionConfig(deviceId: '00:11:22:33:44:55', deviceName: 'Printer');
       
       final mockService = MockBluetoothService();
       final mockChar = MockBluetoothCharacteristic();
       
       when(() => mockService.uuid).thenReturn(Guid('0000ff00-0000-1000-8000-00805f9b34fb'));
       when(() => mockChar.uuid).thenReturn(Guid('0000ff01-0000-1000-8000-00805f9b34fb'));
-      when(() => mockChar.properties).thenReturn(CharacteristicProperties(
-        broadcast: false, read: false, writeWithoutResponse: true, write: true,
-        notify: false, indicate: false, authenticatedSignedWrites: false,
-        extendedProperties: false, notifyEncryptionRequired: false, indicateEncryptionRequired: false,
+      when(() => mockChar.properties).thenReturn(const CharacteristicProperties(
+        writeWithoutResponse: true, write: true,
       ));
       
       when(() => mockService.characteristics).thenReturn([mockChar]);
@@ -151,7 +146,7 @@ void main() {
     });
 
     test('disconnect updates state', () async {
-      final config = KoiConnectionConfig(deviceId: '00:11:22:33:44:55', deviceName: 'Printer');
+      const config = KoiConnectionConfig(deviceId: '00:11:22:33:44:55', deviceName: 'Printer');
       final connectionStateController = StreamController<BluetoothConnectionState>();
       when(() => mockDevice.connectionState).thenAnswer((_) => connectionStateController.stream);
       when(() => mockDevice.connect(timeout: any(named: 'timeout'), autoConnect: any(named: 'autoConnect'), mtu: any(named: 'mtu')))
@@ -178,17 +173,15 @@ void main() {
     });
 
     test('sendChunks writes to characteristic', () async {
-      final config = KoiConnectionConfig(deviceId: '00:11:22:33:44:55', deviceName: 'Printer');
+      const config = KoiConnectionConfig(deviceId: '00:11:22:33:44:55', deviceName: 'Printer');
       
       final mockService = MockBluetoothService();
       final mockChar = MockBluetoothCharacteristic();
       
       when(() => mockService.uuid).thenReturn(Guid('0000ff00-0000-1000-8000-00805f9b34fb'));
       when(() => mockChar.uuid).thenReturn(Guid('0000ff01-0000-1000-8000-00805f9b34fb'));
-      when(() => mockChar.properties).thenReturn(CharacteristicProperties(
-        broadcast: false, read: false, writeWithoutResponse: true, write: true,
-        notify: false, indicate: false, authenticatedSignedWrites: false,
-        extendedProperties: false, notifyEncryptionRequired: false, indicateEncryptionRequired: false,
+      when(() => mockChar.properties).thenReturn(const CharacteristicProperties(
+        writeWithoutResponse: true, write: true,
       ));
       
       when(() => mockService.characteristics).thenReturn([mockChar]);
@@ -220,7 +213,7 @@ void main() {
     });
 
     test('connect retries on ANDROID_SPECIFIC_ERROR (133 error)', () async {
-      final config = KoiConnectionConfig(deviceId: '00:11:22:33:44:55', deviceName: 'Printer');
+      const config = KoiConnectionConfig(deviceId: '00:11:22:33:44:55', deviceName: 'Printer');
       
       var connectAttempts = 0;
       when(() => mockDevice.connect(timeout: any(named: 'timeout'), autoConnect: any(named: 'autoConnect'), mtu: any(named: 'mtu')))
@@ -251,17 +244,15 @@ void main() {
     });
 
     test('sendChunks throws error and catches it', () async {
-      final config = KoiConnectionConfig(deviceId: '00:11:22:33:44:55', deviceName: 'Printer');
+      const config = KoiConnectionConfig(deviceId: '00:11:22:33:44:55', deviceName: 'Printer');
       
       final mockService = MockBluetoothService();
       final mockChar = MockBluetoothCharacteristic();
       
       when(() => mockService.uuid).thenReturn(Guid('0000ff00-0000-1000-8000-00805f9b34fb'));
       when(() => mockChar.uuid).thenReturn(Guid('0000ff01-0000-1000-8000-00805f9b34fb'));
-      when(() => mockChar.properties).thenReturn(CharacteristicProperties(
-        broadcast: false, read: false, writeWithoutResponse: true, write: true,
-        notify: false, indicate: false, authenticatedSignedWrites: false,
-        extendedProperties: false, notifyEncryptionRequired: false, indicateEncryptionRequired: false,
+      when(() => mockChar.properties).thenReturn(const CharacteristicProperties(
+        writeWithoutResponse: true, write: true,
       ));
       
       when(() => mockService.characteristics).thenReturn([mockChar]);
@@ -285,7 +276,7 @@ void main() {
     });
 
     test('ignores system UUIDs when searching for characteristics', () async {
-      final config = KoiConnectionConfig(deviceId: '00:11:22:33:44:55', deviceName: 'Printer');
+      const config = KoiConnectionConfig(deviceId: '00:11:22:33:44:55', deviceName: 'Printer');
       
       final sysService = MockBluetoothService();
       final sysChar = MockBluetoothCharacteristic();
@@ -299,20 +290,14 @@ void main() {
       when(() => normalService.uuid).thenReturn(Guid('0000ff00-0000-1000-8000-00805f9b34fb'));
       when(() => normalChar.uuid).thenReturn(Guid('0000ff01-0000-1000-8000-00805f9b34fb'));
       
-      when(() => normalChar.properties).thenReturn(CharacteristicProperties(
-        broadcast: false, read: false, writeWithoutResponse: true, write: true,
-        notify: false, indicate: false, authenticatedSignedWrites: false,
-        extendedProperties: false, notifyEncryptionRequired: false, indicateEncryptionRequired: false,
+      when(() => normalChar.properties).thenReturn(const CharacteristicProperties(
+        writeWithoutResponse: true, write: true,
       ));
-      when(() => sysChar.properties).thenReturn(CharacteristicProperties(
-        broadcast: false, read: true, writeWithoutResponse: false, write: false,
-        notify: false, indicate: false, authenticatedSignedWrites: false,
-        extendedProperties: false, notifyEncryptionRequired: false, indicateEncryptionRequired: false,
+      when(() => sysChar.properties).thenReturn(const CharacteristicProperties(
+        read: true,
       ));
-      when(() => sysChar2.properties).thenReturn(CharacteristicProperties(
-        broadcast: false, read: true, writeWithoutResponse: false, write: true,
-        notify: false, indicate: false, authenticatedSignedWrites: false,
-        extendedProperties: false, notifyEncryptionRequired: false, indicateEncryptionRequired: false,
+      when(() => sysChar2.properties).thenReturn(const CharacteristicProperties(
+        read: true, write: true,
       ));
       
       when(() => sysService.characteristics).thenReturn([sysChar]);

@@ -1,3 +1,4 @@
+// ignore_for_file: lines_longer_than_80_chars // rationale: long strings in tests
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:koi_printer_connection/src/scanner/koi_keyboard_scanner.dart';
@@ -27,14 +28,13 @@ void main() {
 
     test('captures barcode followed by enter', () async {
       final results = <String>[];
-      final sub = scanner.scanStream.listen((data) {
-        results.add(data);
-      });
+      final sub = scanner.scanStream.listen(results.add);
 
-      scanner.handleKeyEvent(createEvent(LogicalKeyboardKey.keyA, character: 'A'));
-      scanner.handleKeyEvent(createEvent(LogicalKeyboardKey.keyB, character: 'B'));
-      scanner.handleKeyEvent(createEvent(LogicalKeyboardKey.keyC, character: 'C'));
-      scanner.handleKeyEvent(createEvent(LogicalKeyboardKey.enter));
+      scanner
+        ..handleKeyEvent(createEvent(LogicalKeyboardKey.keyA, character: 'A'))
+        ..handleKeyEvent(createEvent(LogicalKeyboardKey.keyB, character: 'B'))
+        ..handleKeyEvent(createEvent(LogicalKeyboardKey.keyC, character: 'C'))
+        ..handleKeyEvent(createEvent(LogicalKeyboardKey.enter));
 
       await Future<void>.delayed(const Duration(milliseconds: 10));
 
@@ -45,17 +45,16 @@ void main() {
 
     test('clears buffer on timeout', () async {
       final results = <String>[];
-      final sub = scanner.scanStream.listen((data) {
-        results.add(data);
-      });
+      final sub = scanner.scanStream.listen(results.add);
 
       scanner.handleKeyEvent(createEvent(LogicalKeyboardKey.keyA, character: 'A'));
       
       // Wait longer than timeout
       await Future<void>.delayed(const Duration(milliseconds: 150));
 
-      scanner.handleKeyEvent(createEvent(LogicalKeyboardKey.keyB, character: 'B'));
-      scanner.handleKeyEvent(createEvent(LogicalKeyboardKey.enter));
+      scanner
+        ..handleKeyEvent(createEvent(LogicalKeyboardKey.keyB, character: 'B'))
+        ..handleKeyEvent(createEvent(LogicalKeyboardKey.enter));
 
       await Future<void>.delayed(const Duration(milliseconds: 10));
 
@@ -66,9 +65,7 @@ void main() {
 
     test('ignores enter if buffer empty', () async {
       final results = <String>[];
-      final sub = scanner.scanStream.listen((data) {
-        results.add(data);
-      });
+      final sub = scanner.scanStream.listen(results.add);
 
       scanner.handleKeyEvent(createEvent(LogicalKeyboardKey.enter));
       
@@ -81,13 +78,12 @@ void main() {
     
     test('handles non-character keys', () async {
       final results = <String>[];
-      final sub = scanner.scanStream.listen((data) {
-        results.add(data);
-      });
+      final sub = scanner.scanStream.listen(results.add);
 
       // logicalKey doesn't match enter, and character is null/empty
-      scanner.handleKeyEvent(createEvent(LogicalKeyboardKey.shift));
-      scanner.handleKeyEvent(createEvent(LogicalKeyboardKey.enter));
+      scanner
+        ..handleKeyEvent(createEvent(LogicalKeyboardKey.shift))
+        ..handleKeyEvent(createEvent(LogicalKeyboardKey.enter));
       
       await Future<void>.delayed(const Duration(milliseconds: 10));
 

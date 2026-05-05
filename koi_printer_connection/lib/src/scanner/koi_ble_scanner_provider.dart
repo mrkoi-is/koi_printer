@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:koi_printer_connection/koi_printer_connection.dart' show KoiBleScanner;
+import 'package:koi_printer_connection/src/scanner/koi_ble_scanner.dart' show KoiBleScanner;
 
 /// BLE 扫描的抽象提供者接口。
 /// 将 FlutterBluePlus 的静态 API 包装为可 Mock 的实例方法，

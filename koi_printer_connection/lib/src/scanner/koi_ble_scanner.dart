@@ -33,9 +33,11 @@ class KoiBleScanner {
     StreamSubscription<List<ScanResult>>? scanSub;
 
     void startScan() {
-      _provider.startScan(timeout: timeout).catchError((Object e) {
-        debugPrint('KoiBleScanner: startScan error: $e');
-      });
+      unawaited(
+        _provider.startScan(timeout: timeout).catchError((Object e) {
+          debugPrint('KoiBleScanner: startScan error: $e');
+        }),
+      );
       scanSub = _provider.scanResults.listen((results) {
         for (final result in results) {
           final name = result.device.platformName;
@@ -71,9 +73,11 @@ class KoiBleScanner {
       ..onListen = startScan
       ..onCancel = () {
         unawaited(scanSub?.cancel());
-        _provider.stopScan().catchError((Object e) {
-          debugPrint('KoiBleScanner: stopScan error: $e');
-        });
+        unawaited(
+          _provider.stopScan().catchError((Object e) {
+            debugPrint('KoiBleScanner: stopScan error: $e');
+          }),
+        );
       };
 
     return controller.stream;

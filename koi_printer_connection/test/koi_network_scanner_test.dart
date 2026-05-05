@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -23,7 +22,6 @@ void main() {
         subnet: '127.0.0',
         port: port,
         timeout: const Duration(milliseconds: 50),
-        startIp: 1,
         endIp: 1, // Only scan 127.0.0.1
       ).listen((device) {
         results.add(device.deviceId);
@@ -44,7 +42,6 @@ void main() {
         subnet: '127.0.0',
         port: 19100, // hopefully unused port
         timeout: const Duration(milliseconds: 10),
-        startIp: 1,
         endIp: 2, 
       ).listen((device) {
         results.add(device.deviceId);
