@@ -110,7 +110,7 @@
 
 ---
 
-## CHECKPOINT 4: KoiElementEditor 定位元素 Widget 测试
+## CHECKPOINT 4: KoiElementEditor 定位元素 Widget 测试 [DONE]
 
 **包:** `koi_printer`  
 **预计用时:** 2.5 hours  
