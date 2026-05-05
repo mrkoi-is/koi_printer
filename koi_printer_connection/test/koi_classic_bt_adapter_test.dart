@@ -1,0 +1,85 @@
+import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:koi_printer_connection/koi_printer_connection.dart';
+import 'package:koi_printer_connection/src/adapter/koi_classic_bt_adapter.dart';
+
+void main() {
+  group('KoiClassicBtAdapter', () {
+    late KoiClassicBtAdapter adapter;
+
+    setUp(() {
+      TestWidgetsFlutterBinding.ensureInitialized();
+      adapter = KoiClassicBtAdapter();
+    });
+
+    tearDown(() async {
+      await adapter.dispose();
+    });
+
+    test('initial state is correct', () {
+      expect(adapter.state, KoiConnectionState.disconnected);
+      expect(adapter.connectionType, KoiConnectionType.classicBluetooth);
+      expect(adapter.isReady, false);
+      expect(adapter.config, null);
+      expect(adapter.policy, KoiConnectionPolicy.defaultPolicy);
+      expect(adapter.stateStream, isA<Stream<KoiConnectionState>>());
+      expect(adapter.hardwareStateStream, isA<Stream<KoiPrinterHardwareState>>());
+    });
+
+    test('queryHardwareState returns unknown', () async {
+      final state = await adapter.queryHardwareState();
+      expect(state, KoiPrinterHardwareState.unknown);
+    });
+
+    test('connect fails gracefully on missing plugin/invalid mac', () async {
+      final config = KoiConnectionConfig(deviceId: '00:11:22:33:44:55', deviceName: 'Printer');
+      // In test env, flutter_bluetooth_serial channel throws MissingPluginException
+      // The adapter catches it and returns false.
+      final result = await adapter.connect(config);
+      expect(result, false);
+      expect(adapter.state, KoiConnectionState.disconnected);
+      expect(adapter.config, config);
+    });
+
+    test('connect succeeds with mocked MethodChannel', () async {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
+        const MethodChannel('flutter_bluetooth_serial/methods'),
+        (MethodCall methodCall) async {
+          if (methodCall.method == 'connect') {
+            return 1;
+          }
+          return null;
+        },
+      );
+
+      final config = KoiConnectionConfig(deviceId: '00:11:22:33:44:55', deviceName: 'Printer');
+      final result = await adapter.connect(config);
+      
+      expect(result, isTrue);
+      expect(adapter.isReady, isTrue);
+      expect(adapter.state, KoiConnectionState.ready);
+
+      // sendChunks might throw because EventChannel is not mocked, but we can catch it
+      try {
+        await adapter.sendChunks([[0x01, 0x02]]);
+      } catch (e) {
+        // It's fine if it throws due to platform channel missing
+      }
+
+      await adapter.disconnect();
+      expect(adapter.state, KoiConnectionState.disconnected);
+    });
+
+    test('disconnect does not throw even if not connected', () async {
+      await expectLater(adapter.disconnect(), completes);
+      expect(adapter.state, KoiConnectionState.disconnected);
+    });
+
+    test('sendChunks throws Exception if not connected', () async {
+      expect(
+        () => adapter.sendChunks([[0x01]]),
+        throwsException,
+      );
+    });
+  });
+}

@@ -11,7 +11,10 @@ import 'package:koi_printer_connection/src/model/koi_connection_types.dart';
 /// Classic Bluetooth (Serial Port Profile) adapter.
 class KoiClassicBtAdapter implements KoiPrinterAdapter {
   /// 创建经典蓝牙适配器实例。
-  KoiClassicBtAdapter();
+  KoiClassicBtAdapter({this.connectionFactory});
+
+  /// Factory function for testing.
+  final Future<BluetoothConnection> Function(String address)? connectionFactory;
 
   BluetoothConnection? _connection;
   KoiConnectionConfig? _config;
@@ -57,7 +60,9 @@ class KoiClassicBtAdapter implements KoiPrinterAdapter {
     _updateState(KoiConnectionState.connecting);
 
     try {
-      _connection = await BluetoothConnection.toAddress(config.deviceId);
+      _connection = connectionFactory != null
+          ? await connectionFactory!(config.deviceId)
+          : await BluetoothConnection.toAddress(config.deviceId);
 
       _connection?.input?.listen(
         (data) {

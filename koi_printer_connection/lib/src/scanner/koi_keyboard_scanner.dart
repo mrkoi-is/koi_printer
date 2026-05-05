@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 /// 键盘输入扫描器 (外接扫码枪监听)。
@@ -15,7 +16,7 @@ class KoiKeyboardScanner {
     this.timeout = const Duration(milliseconds: 50),
     this.consumeEvents = false,
   }) {
-    HardwareKeyboard.instance.addHandler(_handleKeyEvent);
+    HardwareKeyboard.instance.addHandler(handleKeyEvent);
   }
 
   /// 两次击键之间的最大间隔时间。
@@ -33,7 +34,8 @@ class KoiKeyboardScanner {
   /// 扫码结果数据流。
   Stream<String> get scanStream => _scanController.stream;
 
-  bool _handleKeyEvent(KeyEvent event) {
+  @visibleForTesting
+  bool handleKeyEvent(KeyEvent event) {
     if (event is KeyDownEvent) {
       final key = event.logicalKey;
 
@@ -65,7 +67,7 @@ class KoiKeyboardScanner {
 
   /// 释放资源并移除键盘监听。
   void dispose() {
-    HardwareKeyboard.instance.removeHandler(_handleKeyEvent);
+    HardwareKeyboard.instance.removeHandler(handleKeyEvent);
     _timer?.cancel();
     unawaited(_scanController.close());
   }
