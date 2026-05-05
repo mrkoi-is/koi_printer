@@ -357,9 +357,22 @@ class KoiPreviewRenderer {
       KoiPositionedBarcodeElement() => _posBarcode(element, textColor, scale),
       KoiPositionedQrCodeElement() => _posQr(element, textColor, scale),
       KoiLabelBoxElement() => _posBox(element, textColor, scale),
+      KoiLabelLineElement() => _posLine(element, textColor, scale),
       KoiLabelReverseElement() => _posReverse(element, textColor, scale),
       _ => const SizedBox.shrink(),
     };
+  }
+
+  static Widget _posLine(KoiLabelLineElement e, Color color, double scale) {
+    return Positioned(
+      left: e.x * scale,
+      top: e.y * scale,
+      child: Container(
+        width: e.width * scale,
+        height: e.height * scale,
+        color: color,
+      ),
+    );
   }
 
   static Widget _posText(

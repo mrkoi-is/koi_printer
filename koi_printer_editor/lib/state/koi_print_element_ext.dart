@@ -126,3 +126,122 @@ extension KoiLabelBoxElementEditorExt on KoiLabelBoxElement {
     );
   }
 }
+
+extension KoiPositionedTextElementEditorExt on KoiPositionedTextElement {
+  KoiPositionedTextElement copyWith({
+    int? x,
+    int? y,
+    String? text,
+    int? fontSize,
+    String? font,
+    int? rotation,
+    int? xScale,
+    int? yScale,
+    bool? bold,
+  }) {
+    return KoiPositionedTextElement(
+      x: x ?? this.x,
+      y: y ?? this.y,
+      text: text ?? this.text,
+      fontSize: fontSize ?? this.fontSize,
+      font: font ?? this.font,
+      rotation: rotation ?? this.rotation,
+      xScale: xScale ?? this.xScale,
+      yScale: yScale ?? this.yScale,
+      bold: bold ?? this.bold,
+    );
+  }
+}
+
+extension KoiPositionedBarcodeElementEditorExt on KoiPositionedBarcodeElement {
+  KoiPositionedBarcodeElement copyWith({
+    int? x,
+    int? y,
+    String? data,
+    int? height,
+    String? type,
+  }) {
+    return KoiPositionedBarcodeElement(
+      x: x ?? this.x,
+      y: y ?? this.y,
+      data: data ?? this.data,
+      height: height ?? this.height,
+      type: type ?? this.type,
+    );
+  }
+}
+
+extension KoiPositionedQrCodeElementEditorExt on KoiPositionedQrCodeElement {
+  KoiPositionedQrCodeElement copyWith({
+    int? x,
+    int? y,
+    String? data,
+    int? cellSize,
+  }) {
+    return KoiPositionedQrCodeElement(
+      x: x ?? this.x,
+      y: y ?? this.y,
+      data: data ?? this.data,
+      cellSize: cellSize ?? this.cellSize,
+    );
+  }
+}
+
+extension KoiLabelReverseElementEditorExt on KoiLabelReverseElement {
+  KoiLabelReverseElement copyWith({
+    int? x,
+    int? y,
+    int? width,
+    int? height,
+  }) {
+    return KoiLabelReverseElement(
+      x: x ?? this.x,
+      y: y ?? this.y,
+      width: width ?? this.width,
+      height: height ?? this.height,
+    );
+  }
+}
+
+extension KoiLabelLineElementEditorExt on KoiLabelLineElement {
+  KoiLabelLineElement copyWith({
+    int? x,
+    int? y,
+    int? width,
+    int? height,
+  }) {
+    return KoiLabelLineElement(
+      x: x ?? this.x,
+      y: y ?? this.y,
+      width: width ?? this.width,
+      height: height ?? this.height,
+    );
+  }
+}
+
+extension KoiLabelSetupElementEditorExt on KoiLabelSetupElement {
+  KoiLabelSetupElement copyWith({
+    int? widthMm,
+    int? heightMm,
+    int? gapMm,
+    int? dpi,
+    int? density,
+    double? speed,
+    int? referenceX,
+    int? referenceY,
+    String? codepage,
+  }) {
+    return KoiLabelSetupElement(
+      widthMm: widthMm ?? this.widthMm,
+      heightMm: heightMm ?? this.heightMm,
+      gapMm: gapMm ?? this.gapMm,
+      dpi: dpi ?? this.dpi,
+      density: density ?? this.density,
+      speed: speed ?? this.speed,
+      referenceX: referenceX ?? this.referenceX,
+      referenceY: referenceY ?? this.referenceY,
+      codepage: codepage ?? this.codepage,
+    );
+  }
+}
+

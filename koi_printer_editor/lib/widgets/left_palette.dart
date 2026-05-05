@@ -69,66 +69,96 @@ class _ComponentsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        _PaletteItem(
-          icon: Icons.list_alt_rounded,
-          label: '循环列表容器 (ForEach)',
-          onAdd: () => _addNode(context, const KoiTicketForEachElement(listKey: 'items', templates: [])),
-        ),
-        _PaletteItem(
-          icon: Icons.text_fields,
-          label: '文本 (Text)',
-          onAdd: () => _addNode(context, const KoiTextElement(text: '默认文本', size: KoiTextSize.size1)),
-        ),
-        _PaletteItem(
-          icon: Icons.horizontal_rule,
-          label: '分割线 (Divider)',
-          onAdd: () => _addNode(context, const KoiDividerElement()),
-        ),
-        _PaletteItem(
-          icon: Icons.qr_code,
-          label: '二维码 (QR Code)',
-          onAdd: () => _addNode(context, const KoiQrCodeElement(data: 'https://mrkoi.io')),
-        ),
-        _PaletteItem(
-          icon: Icons.barcode_reader,
-          label: '条形码 (Barcode)',
-          onAdd: () => _addNode(context, const KoiBarcodeElement(data: '1234567890')),
-        ),
-        _PaletteItem(
-          icon: Icons.view_column,
-          label: '多列排版 (Row)',
-          onAdd: () => _addNode(context, const KoiTextRowElement(
-            columns: [
-              KoiTextColumn(text: '左侧'),
-              KoiTextColumn(text: '右侧', align: KoiTextAlign.right),
-            ],
-          )),
-        ),
-        _PaletteItem(
-          icon: Icons.space_bar,
-          label: '空白行 (Spacer)',
-          onAdd: () => _addNode(context, const KoiSpacerElement(lines: 1)),
-        ),
-        const Divider(),
-        const Padding(
-          padding: EdgeInsets.symmetric(vertical: 8),
-          child: Text('标签专属组件 (Label Only)', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey)),
-        ),
-        _PaletteItem(
-          icon: Icons.text_format,
-          label: '绝对文本 (Text)',
-          onAdd: () => _addNode(context, const KoiPositionedTextElement(x: 10, y: 10, text: '示例文本')),
-        ),
-        _PaletteItem(
-          icon: Icons.crop_square,
-          label: '矩形框 (Box)',
-          onAdd: () => _addNode(context, const KoiLabelBoxElement(x: 10, y: 10, width: 200, height: 100)),
-        ),
-      ],
-    );
+    final state = context.watch<EditorState>();
+    
+    if (state.isTicketMode) {
+      return ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          _PaletteItem(
+            icon: Icons.list_alt_rounded,
+            label: '循环列表容器 (ForEach)',
+            onAdd: () => _addNode(context, const KoiTicketForEachElement(listKey: 'items', templates: [])),
+          ),
+          _PaletteItem(
+            icon: Icons.text_fields,
+            label: '文本 (Text)',
+            onAdd: () => _addNode(context, const KoiTextElement(text: '默认文本', size: KoiTextSize.size1)),
+          ),
+          _PaletteItem(
+            icon: Icons.horizontal_rule,
+            label: '分割线 (Divider)',
+            onAdd: () => _addNode(context, const KoiDividerElement()),
+          ),
+          _PaletteItem(
+            icon: Icons.qr_code,
+            label: '二维码 (QR Code)',
+            onAdd: () => _addNode(context, const KoiQrCodeElement(data: 'https://mrkoi.io')),
+          ),
+          _PaletteItem(
+            icon: Icons.barcode_reader,
+            label: '条形码 (Barcode)',
+            onAdd: () => _addNode(context, const KoiBarcodeElement(data: '1234567890')),
+          ),
+          _PaletteItem(
+            icon: Icons.view_column,
+            label: '多列排版 (Row)',
+            onAdd: () => _addNode(context, const KoiTextRowElement(
+              columns: [
+                KoiTextColumn(text: '左侧'),
+                KoiTextColumn(text: '右侧', align: KoiTextAlign.right),
+              ],
+            )),
+          ),
+          _PaletteItem(
+            icon: Icons.space_bar,
+            label: '空白行 (Spacer)',
+            onAdd: () => _addNode(context, const KoiSpacerElement(lines: 1)),
+          ),
+        ],
+      );
+    } else {
+      return ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          _PaletteItem(
+            icon: Icons.settings_overscan,
+            label: '纸张设置 (Setup)',
+            onAdd: () => _addNode(context, const KoiLabelSetupElement(widthMm: 40, heightMm: 30)),
+          ),
+          _PaletteItem(
+            icon: Icons.text_format,
+            label: '绝对文本 (Text)',
+            onAdd: () => _addNode(context, const KoiPositionedTextElement(x: 10, y: 10, text: '示例文本')),
+          ),
+          _PaletteItem(
+            icon: Icons.barcode_reader,
+            label: '绝对条码 (Barcode)',
+            onAdd: () => _addNode(context, const KoiPositionedBarcodeElement(x: 10, y: 10, data: '123456')),
+          ),
+          _PaletteItem(
+            icon: Icons.qr_code,
+            label: '绝对二维码 (QR)',
+            onAdd: () => _addNode(context, const KoiPositionedQrCodeElement(x: 10, y: 10, data: 'https://mrkoi.io')),
+          ),
+          _PaletteItem(
+            icon: Icons.crop_square,
+            label: '矩形框 (Box)',
+            onAdd: () => _addNode(context, const KoiLabelBoxElement(x: 10, y: 10, width: 200, height: 100)),
+          ),
+          _PaletteItem(
+            icon: Icons.horizontal_rule,
+            label: '直线 (Line)',
+            onAdd: () => _addNode(context, const KoiLabelLineElement(x: 10, y: 10, width: 200, height: 2)),
+          ),
+          _PaletteItem(
+            icon: Icons.format_color_fill,
+            label: '反白区域 (Reverse)',
+            onAdd: () => _addNode(context, const KoiLabelReverseElement(x: 10, y: 10, width: 200, height: 100)),
+          ),
+        ],
+      );
+    }
   }
 }
 
@@ -216,6 +246,18 @@ class _LayerTreeTab extends StatelessWidget {
         } else if (el.element is KoiLabelBoxElement) {
           icon = Icons.crop_square;
           label = '矩形框 (Box)';
+        } else if (el.element is KoiPositionedBarcodeElement) {
+          icon = Icons.barcode_reader;
+          label = '绝对条码: ${(el.element as KoiPositionedBarcodeElement).data}';
+        } else if (el.element is KoiPositionedQrCodeElement) {
+          icon = Icons.qr_code;
+          label = '绝对二维码: ${(el.element as KoiPositionedQrCodeElement).data}';
+        } else if (el.element is KoiLabelLineElement) {
+          icon = Icons.horizontal_rule;
+          label = '直线 (Line)';
+        } else if (el.element is KoiLabelReverseElement) {
+          icon = Icons.format_color_fill;
+          label = '反白区域 (Reverse)';
         } else {
           icon = Icons.widgets;
           label = '未知组件';
