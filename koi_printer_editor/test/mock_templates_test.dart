@@ -6,7 +6,9 @@ import 'package:koi_printer_editor/utils/template_loader.dart';
 void main() {
   setUpAll(() async {
     TestWidgetsFlutterBinding.ensureInitialized();
-    templateManifests = await KoiTemplateLoader.loadAllTemplates();
+    TemplateRegistry.instance.resetForTesting();
+    final loaded = await KoiTemplateLoader.loadAllTemplates();
+    TemplateRegistry.instance.initialize(loaded);
   });
 
   group('manifestToEditorElements 转换', () {

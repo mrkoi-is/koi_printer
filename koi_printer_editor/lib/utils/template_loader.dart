@@ -25,7 +25,18 @@ class KoiTemplateLoader {
         debugPrint('Error loading template $path: $e');
       }
     }
+    // 排序: Ticket 文档优先于 Label，同类型内按 category → name 排列。
+    // 这确保 defaultManifest (列表第一个) 始终是小票模板而非标签模板。
+    templates.sort((a, b) {
+      final aIsTicket = a.document is KoiTicketDocument;
+      final bIsTicket = b.document is KoiTicketDocument;
+      if (aIsTicket != bIsTicket) return aIsTicket ? -1 : 1;
+      final catCmp = a.category.compareTo(b.category);
+      if (catCmp != 0) return catCmp;
+      return a.name.compareTo(b.name);
+    });
 
+    debugPrint('KoiTemplateLoader: loaded ${templates.length} templates');
     return templates;
   }
 }
