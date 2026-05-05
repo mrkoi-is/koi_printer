@@ -13,6 +13,26 @@ void main() {
   // ════════════════════════════════════════════════════════════
 
   group('KoiPrintJobQueue', () {
+    test('KoiPrintJobQueue uses delay profiles correctly', () async {
+      final queue = KoiPrintJobQueue(adapter: MockPrinterAdapter(initialState: KoiConnectionState.ready));
+      
+      const config2021 = KoiPrintConfig(delayProfile: KoiDelayProfile.table2021);
+      const config2018 = KoiPrintConfig(delayProfile: KoiDelayProfile.table2018);
+      const doc = KoiTicketDocument(elements: []);
+
+      // Queue 2 jobs with 2021 profile (200ms delay between them)
+      final p1 = queue.enqueue(KoiPrintJob(documents: [doc], config: config2021));
+      final p2 = queue.enqueue(KoiPrintJob(documents: [doc], config: config2021));
+      await Future.wait([p1, p2]);
+
+      // Queue 2 jobs with 2018 profile (500ms delay between them)
+      final p3 = queue.enqueue(KoiPrintJob(documents: [doc], config: config2018));
+      final p4 = queue.enqueue(KoiPrintJob(documents: [doc], config: config2018));
+      await Future.wait([p3, p4]);
+      
+      expect(queue.length, 0);
+    });
+
     test('enqueue with ready adapter returns success', () async {
       final adapter = MockPrinterAdapter(
         initialState: KoiConnectionState.ready,

@@ -62,6 +62,21 @@ void main() {
       expect(find.text('Right'), findsOneWidget);
     });
 
+    testWidgets('renders TextElement with different width and height scales (stretchY)', (tester) async {
+      const doc = KoiTicketDocument(
+        elements: [
+          KoiTextElement(
+            text: 'Stretched',
+            widthSize: KoiTextSize.size1,
+            heightSize: KoiTextSize.size2,
+          ),
+        ],
+      );
+      final widget = KoiPreviewRenderer.build(document: doc, paperWidthPx: 384);
+      await tester.pumpWidget(MaterialApp(home: Scaffold(body: widget)));
+      expect(find.text('Stretched'), findsOneWidget);
+    });
+
     testWidgets('renders TextElement with all sizes', (tester) async {
       const doc = KoiTicketDocument(
         elements: [

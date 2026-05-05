@@ -255,7 +255,7 @@
 
 ---
 
-## CHECKPOINT 9: koi_preview_renderer.dart + koi_print_job_queue.dart 补漏
+## CHECKPOINT 9: koi_preview_renderer.dart + koi_print_job_queue.dart 补漏 [DONE]
 
 **包:** `koi_printer`  
 **预计用时:** 1 hour  
