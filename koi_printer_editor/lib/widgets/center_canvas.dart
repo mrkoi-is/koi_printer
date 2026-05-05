@@ -151,7 +151,7 @@ class _EditableElementWrap extends StatelessWidget {
                Text('🔄 列表循环区域 (数组: ${forEachElement.listKey})', style: const TextStyle(color: Colors.orange, fontSize: 12, fontWeight: FontWeight.bold)),
                const Divider(color: Colors.orange),
                ...forEachElement.templates.map((t) {
-                  final mockInnerDoc = KoiTicketDocument(elements: [_processEditMode(t, state.schema)]);
+                  final mockInnerDoc = KoiTicketDocument(elements: [_processEditMode(t, state.schema) as KoiTicketElement]);
                   final innerRender = KoiPreviewRenderer.build(
                     document: mockInnerDoc, 
                     paperWidthPx: state.paperWidthPx,

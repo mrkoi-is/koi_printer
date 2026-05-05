@@ -8,6 +8,7 @@ import 'package:koi_printer_command/src/model/koi_types.dart';
 
 /// 基础打印元素
 abstract class KoiPrintElement {
+  /// 基础构造器
   const KoiPrintElement();
 }
 
