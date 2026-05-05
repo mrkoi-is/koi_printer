@@ -118,6 +118,11 @@ class _ComponentsTab extends StatelessWidget {
           child: Text('标签专属组件 (Label Only)', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey)),
         ),
         _PaletteItem(
+          icon: Icons.text_format,
+          label: '绝对文本 (Text)',
+          onAdd: () => _addNode(context, const KoiPositionedTextElement(x: 10, y: 10, text: '示例文本')),
+        ),
+        _PaletteItem(
           icon: Icons.crop_square,
           label: '矩形框 (Box)',
           onAdd: () => _addNode(context, const KoiLabelBoxElement(x: 10, y: 10, width: 200, height: 100)),

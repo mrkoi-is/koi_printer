@@ -66,20 +66,20 @@ class CenterCanvas extends StatelessWidget {
   }
 
   Widget _buildLabelContent(BuildContext context, EditorState state) {
-    var labelWidth = state.paperWidthPx;
-    var labelHeight = state.paperWidthPx * 0.6;
+    const scale = 1.5; // 编辑器放大系数：1 dot = 1.5 px，避免元素过小无法点击
+    double labelWidth = 400;
+    double labelHeight = 300;
     
     for (final e in state.elements) {
       if (e.element is KoiLabelSetupElement) {
         final setup = e.element as KoiLabelSetupElement;
-        labelWidth = setup.widthMm * 3.78;
-        labelHeight = setup.heightMm * 3.78;
+        final dotsW = setup.widthMm / 25.4 * 203;
+        final dotsH = setup.heightMm / 25.4 * 203;
+        labelWidth = dotsW * scale;
+        labelHeight = dotsH * scale;
         break;
       }
     }
-    
-    // 坐标元素缩放比 (dot → px, 基于 203dpi)
-    final scale = labelWidth / (labelWidth / 3.78 * 203 / 25.4);
 
     return Container(
       width: labelWidth,
