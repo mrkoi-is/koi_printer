@@ -20,6 +20,13 @@ import 'package:koi_printer_editor/widgets/inspectors/label_print_element_inspec
 import 'package:koi_printer_editor/widgets/inspectors/raw_command_element_inspector.dart';
 import 'package:koi_printer_editor/widgets/inspectors/label_image_element_inspector.dart';
 import 'package:koi_printer_editor/widgets/inspectors/label_for_each_element_inspector.dart';
+import 'package:koi_printer_editor/widgets/inspectors/label_block_text_element_inspector.dart';
+import 'package:koi_printer_editor/widgets/inspectors/label_circle_element_inspector.dart';
+import 'package:koi_printer_editor/widgets/inspectors/label_ellipse_element_inspector.dart';
+import 'package:koi_printer_editor/widgets/inspectors/label_diagonal_element_inspector.dart';
+import 'package:koi_printer_editor/widgets/inspectors/label_beep_element_inspector.dart';
+import 'package:koi_printer_editor/widgets/inspectors/label_feed_element_inspector.dart';
+import 'package:koi_printer_editor/widgets/inspectors/label_pdf417_element_inspector.dart';
 import 'package:koi_printer/koi_printer.dart'; // 需要导出相关模型类
 
 class RightInspector extends StatefulWidget {
@@ -42,14 +49,25 @@ class _RightInspectorState extends State<RightInspector> {
       r.register<KoiLabelBoxElement>(LabelBoxElementInspector());
       r.register<KoiLabelSetupElement>(LabelSetupElementInspector());
       r.register<KoiPositionedTextElement>(PositionedTextElementInspector());
-      r.register<KoiPositionedBarcodeElement>(PositionedBarcodeElementInspector());
-      r.register<KoiPositionedQrCodeElement>(PositionedQrCodeElementInspector());
+      r.register<KoiPositionedBarcodeElement>(
+        PositionedBarcodeElementInspector(),
+      );
+      r.register<KoiPositionedQrCodeElement>(
+        PositionedQrCodeElementInspector(),
+      );
       r.register<KoiLabelLineElement>(LabelLineElementInspector());
       r.register<KoiLabelReverseElement>(LabelReverseElementInspector());
       r.register<KoiLabelPrintElement>(LabelPrintElementInspector());
       r.register<KoiRawCommandElement>(RawCommandElementInspector());
       r.register<KoiLabelImageElement>(LabelImageElementInspector());
       r.register<KoiLabelForEachElement>(LabelForEachElementInspector());
+      r.register<KoiLabelBlockTextElement>(LabelBlockTextElementInspector());
+      r.register<KoiLabelCircleElement>(LabelCircleElementInspector());
+      r.register<KoiLabelEllipseElement>(LabelEllipseElementInspector());
+      r.register<KoiLabelDiagonalElement>(LabelDiagonalElementInspector());
+      r.register<KoiLabelBeepElement>(LabelBeepElementInspector());
+      r.register<KoiLabelFeedElement>(LabelFeedElementInspector());
+      r.register<KoiLabelPdf417Element>(LabelPdf417ElementInspector());
     });
   }
 
@@ -63,9 +81,11 @@ class _RightInspectorState extends State<RightInspector> {
       return _buildEmptyContainer(theme, '未选中任何组件');
     }
 
-    final selectedEditorElement = state.elements.where((e) => e.id == selectedId).firstOrNull;
+    final selectedEditorElement = state.elements
+        .where((e) => e.id == selectedId)
+        .firstOrNull;
     if (selectedEditorElement == null) {
-       return const SizedBox(width: 300);
+      return const SizedBox(width: 300);
     }
 
     final selectedElement = selectedEditorElement.element;
@@ -92,7 +112,11 @@ class _RightInspectorState extends State<RightInspector> {
               key: ValueKey(selectedId),
               padding: const EdgeInsets.all(16),
               children: [
-                InspectorRegistry.instance.buildInspector(context, selectedId, selectedElement),
+                InspectorRegistry.instance.buildInspector(
+                  context,
+                  selectedId,
+                  selectedElement,
+                ),
               ],
             ),
           ),
@@ -108,8 +132,9 @@ class _RightInspectorState extends State<RightInspector> {
         color: theme.colorScheme.surface,
         border: Border(left: BorderSide(color: theme.dividerColor)),
       ),
-      child: Center(child: Text(text, style: const TextStyle(color: Colors.grey))),
+      child: Center(
+        child: Text(text, style: const TextStyle(color: Colors.grey)),
+      ),
     );
   }
 }
-

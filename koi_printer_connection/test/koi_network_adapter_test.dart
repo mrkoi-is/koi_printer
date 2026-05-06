@@ -29,7 +29,11 @@ void main() {
     });
 
     test('connect fails gracefully on invalid host', () async {
-      const config = KoiConnectionConfig(deviceId: '255.255.255.255', deviceName: 'Printer', connectionTimeout: Duration(milliseconds: 100));
+      const config = KoiConnectionConfig(
+        deviceId: '255.255.255.255',
+        deviceName: 'Printer',
+        connectionTimeout: Duration(milliseconds: 100),
+      );
       final result = await adapter.connect(config);
       expect(result, false);
       expect(adapter.state, KoiConnectionState.disconnected);
@@ -43,32 +47,45 @@ void main() {
 
     test('sendChunks throws StateError if not connected', () async {
       expect(
-        () => adapter.sendChunks([[0x01]]),
+        () => adapter.sendChunks([
+          [0x01],
+        ]),
         throwsStateError,
       );
     });
 
     test('properties access', () {
       expect(adapter.stateStream, isA<Stream<KoiConnectionState>>());
-      expect(adapter.hardwareStateStream, isA<Stream<KoiPrinterHardwareState>>());
+      expect(
+        adapter.hardwareStateStream,
+        isA<Stream<KoiPrinterHardwareState>>(),
+      );
     });
 
     test('successful connection, send chunks, and disconnect', () async {
       final server = await ServerSocket.bind('127.0.0.1', 0);
       final port = server.port;
-      
+
       final receivedData = <int>[];
       server.listen((socket) {
         socket.listen(receivedData.addAll);
       });
 
-      final config = KoiConnectionConfig(deviceId: '127.0.0.1', deviceName: 'LocalPrinter', port: port, connectionTimeout: const Duration(milliseconds: 100));
+      final config = KoiConnectionConfig(
+        deviceId: '127.0.0.1',
+        deviceName: 'LocalPrinter',
+        port: port,
+        connectionTimeout: const Duration(milliseconds: 100),
+      );
       final success = await adapter.connect(config);
       expect(success, true);
       expect(adapter.isReady, true);
       expect(adapter.state, KoiConnectionState.ready);
 
-      await adapter.sendChunks([[0x01, 0x02], [0x03]]);
+      await adapter.sendChunks([
+        [0x01, 0x02],
+        [0x03],
+      ]);
       await Future<void>.delayed(const Duration(milliseconds: 50));
       expect(receivedData, [0x01, 0x02, 0x03]);
 

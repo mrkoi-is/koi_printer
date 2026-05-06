@@ -60,9 +60,10 @@ class KoiClassicBtAdapter implements KoiPrinterAdapter {
     _updateState(KoiConnectionState.connecting);
 
     try {
-      _connection = connectionFactory != null
-          ? await connectionFactory!(config.deviceId)
-          : await BluetoothConnection.toAddress(config.deviceId);
+      _connection =
+          connectionFactory != null
+              ? await connectionFactory!(config.deviceId)
+              : await BluetoothConnection.toAddress(config.deviceId);
 
       _connection?.input?.listen(
         (data) {

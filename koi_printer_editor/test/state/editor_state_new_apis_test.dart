@@ -78,12 +78,8 @@ void main() {
 
     test('多次追加不丢失', () {
       final state = EditorState();
-      state.addSchemaField(
-        const KoiTemplateField(key: 'a', label: 'A'),
-      );
-      state.addSchemaField(
-        const KoiTemplateField(key: 'b', label: 'B'),
-      );
+      state.addSchemaField(const KoiTemplateField(key: 'a', label: 'A'));
+      state.addSchemaField(const KoiTemplateField(key: 'b', label: 'B'));
       expect(state.schema.length, 2);
       expect(state.schema[0].key, 'a');
       expect(state.schema[1].key, 'b');
@@ -91,11 +87,11 @@ void main() {
 
     test('添加重复 key 抛异常', () {
       final state = EditorState();
-      state.addSchemaField(
-        const KoiTemplateField(key: 'a', label: 'A'),
-      );
+      state.addSchemaField(const KoiTemplateField(key: 'a', label: 'A'));
       expect(
-        () => state.addSchemaField(const KoiTemplateField(key: 'a', label: 'Dup')),
+        () => state.addSchemaField(
+          const KoiTemplateField(key: 'a', label: 'Dup'),
+        ),
         throwsException,
       );
     });
@@ -104,9 +100,7 @@ void main() {
   group('updateSchemaField', () {
     test('正常替换字段', () {
       final state = EditorState();
-      state.addSchemaField(
-        const KoiTemplateField(key: 'old', label: '旧'),
-      );
+      state.addSchemaField(const KoiTemplateField(key: 'old', label: '旧'));
       state.updateSchemaField(
         0,
         const KoiTemplateField(key: 'new', label: '新'),
@@ -117,27 +111,17 @@ void main() {
 
     test('越界 index 不会崩溃', () {
       final state = EditorState();
-      state.addSchemaField(
-        const KoiTemplateField(key: 'a', label: 'A'),
-      );
+      state.addSchemaField(const KoiTemplateField(key: 'a', label: 'A'));
       // 不应抛异常
-      state.updateSchemaField(
-        5,
-        const KoiTemplateField(key: 'x', label: 'X'),
-      );
+      state.updateSchemaField(5, const KoiTemplateField(key: 'x', label: 'X'));
       expect(state.schema.length, 1);
       expect(state.schema[0].key, 'a');
     });
 
     test('负数 index 不会崩溃', () {
       final state = EditorState();
-      state.addSchemaField(
-        const KoiTemplateField(key: 'a', label: 'A'),
-      );
-      state.updateSchemaField(
-        -1,
-        const KoiTemplateField(key: 'x', label: 'X'),
-      );
+      state.addSchemaField(const KoiTemplateField(key: 'a', label: 'A'));
+      state.updateSchemaField(-1, const KoiTemplateField(key: 'x', label: 'X'));
       expect(state.schema[0].key, 'a');
     });
   });
@@ -145,12 +129,8 @@ void main() {
   group('removeSchemaField', () {
     test('正常删除字段', () {
       final state = EditorState();
-      state.addSchemaField(
-        const KoiTemplateField(key: 'a', label: 'A'),
-      );
-      state.addSchemaField(
-        const KoiTemplateField(key: 'b', label: 'B'),
-      );
+      state.addSchemaField(const KoiTemplateField(key: 'a', label: 'A'));
+      state.addSchemaField(const KoiTemplateField(key: 'b', label: 'B'));
       state.removeSchemaField(0);
       expect(state.schema.length, 1);
       expect(state.schema[0].key, 'b');
@@ -164,9 +144,7 @@ void main() {
 
     test('负数 index 不会崩溃', () {
       final state = EditorState();
-      state.addSchemaField(
-        const KoiTemplateField(key: 'a', label: 'A'),
-      );
+      state.addSchemaField(const KoiTemplateField(key: 'a', label: 'A'));
       state.removeSchemaField(-1);
       expect(state.schema.length, 1);
     });

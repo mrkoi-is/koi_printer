@@ -230,13 +230,14 @@ class KoiPreviewRenderer {
             color: color,
           ),
           textPadding: 4,
-          errorBuilder: (context, error) => Center(
-            child: Text(
-              '条码数据错误:\n${e.data}',
-              style: const TextStyle(color: Colors.red, fontSize: 12),
-              textAlign: TextAlign.center,
-            ),
-          ),
+          errorBuilder:
+              (context, error) => Center(
+                child: Text(
+                  '条码数据错误:\n${e.data}',
+                  style: const TextStyle(color: Colors.red, fontSize: 12),
+                  textAlign: TextAlign.center,
+                ),
+              ),
         ),
       ),
     );
@@ -449,13 +450,14 @@ class KoiPreviewRenderer {
             fontSize: 10 * scale,
             color: color,
           ),
-          errorBuilder: (context, error) => Center(
-            child: Text(
-              '条码错误: ${e.data}',
-              style: TextStyle(color: Colors.red, fontSize: 10 * scale),
-              textAlign: TextAlign.center,
-            ),
-          ),
+          errorBuilder:
+              (context, error) => Center(
+                child: Text(
+                  '条码错误: ${e.data}',
+                  style: TextStyle(color: Colors.red, fontSize: 10 * scale),
+                  textAlign: TextAlign.center,
+                ),
+              ),
         ),
       ),
     );

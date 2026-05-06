@@ -28,21 +28,25 @@ class _KoiDeviceManagementScreenState extends State<KoiDeviceManagementScreen> {
       final storage = context.read<KoiPrinterStorage>();
       final ticket = storage.getTicketPrinter();
       final label = storage.getLabelPrinter();
-      
+
       setState(() {
         if (ticket != null && globalTicketDevices.isEmpty) {
-          globalTicketDevices.add(KoiBoundDevice(
-            name: ticket.name,
-            deviceId: ticket.address,
-            connectionType: ticket.connectionType,
-          ));
+          globalTicketDevices.add(
+            KoiBoundDevice(
+              name: ticket.name,
+              deviceId: ticket.address,
+              connectionType: ticket.connectionType,
+            ),
+          );
         }
         if (label != null && globalLabelDevices.isEmpty) {
-          globalLabelDevices.add(KoiBoundDevice(
-            name: label.name,
-            deviceId: label.address,
-            connectionType: label.connectionType,
-          ));
+          globalLabelDevices.add(
+            KoiBoundDevice(
+              name: label.name,
+              deviceId: label.address,
+              connectionType: label.connectionType,
+            ),
+          );
         }
       });
     });
@@ -159,7 +163,11 @@ class _EmptyDeviceTile extends StatelessWidget {
 }
 
 class _DeviceTile extends StatelessWidget {
-  const _DeviceTile({required this.device, required this.onDelete, required this.isLabel});
+  const _DeviceTile({
+    required this.device,
+    required this.onDelete,
+    required this.isLabel,
+  });
   final KoiBoundDevice device;
   final VoidCallback onDelete;
   final bool isLabel;
@@ -168,17 +176,23 @@ class _DeviceTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final manager = context.watch<KoiPrinterManager>();
     final adapter = isLabel ? manager.labelAdapter : manager.ticketAdapter;
-    
+
     return StreamBuilder<KoiConnectionState>(
-      stream: adapter?.stateStream ?? Stream.value(KoiConnectionState.disconnected),
+      stream:
+          adapter?.stateStream ?? Stream.value(KoiConnectionState.disconnected),
       initialData: adapter?.state ?? KoiConnectionState.disconnected,
       builder: (context, snapshot) {
         final state = snapshot.data ?? KoiConnectionState.disconnected;
         final isConnected = state == KoiConnectionState.ready;
-        final statusText = isConnected ? '🟢 已连接' : (state == KoiConnectionState.connecting ? '🟡 连接中...' : '🔴 未连接');
+        final statusText = isConnected
+            ? '🟢 已连接'
+            : (state == KoiConnectionState.connecting ? '🟡 连接中...' : '🔴 未连接');
 
         return ListTile(
-          leading: Icon(_iconForType(device.connectionType), color: isConnected ? Colors.blue : Colors.grey),
+          leading: Icon(
+            _iconForType(device.connectionType),
+            color: isConnected ? Colors.blue : Colors.grey,
+          ),
           title: Text(device.name),
           subtitle: Text('${device.deviceId} - $statusText'),
           trailing: PopupMenuButton<String>(
@@ -191,7 +205,13 @@ class _DeviceTile extends StatelessWidget {
                   final docs = isLabel
                       ? const KoiSenderLabelTemplate().build({}, testConfig)
                       : const KoiTestTicketTemplate().build(null, testConfig);
-                  executePrintJob(context, device, docs, isLabel, config: testConfig);
+                  executePrintJob(
+                    context,
+                    device,
+                    docs,
+                    isLabel,
+                    config: testConfig,
+                  );
               }
             },
             itemBuilder: (_) => const [
@@ -200,7 +220,7 @@ class _DeviceTile extends StatelessWidget {
             ],
           ),
         );
-      }
+      },
     );
   }
 
@@ -286,17 +306,17 @@ Future<void> executePrintJob(
   KoiPrintConfig config = const KoiPrintConfig(),
 }) async {
   final manager = context.read<KoiPrinterManager>();
-  
+
   final state = isLabel ? manager.labelState : manager.ticketState;
-  
+
   if (state != KoiConnectionState.ready) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('打印机未连接，已加入后台队列，一旦上线将自动打出...')),
     );
   } else {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('已发送打印任务')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('已发送打印任务')));
   }
 
   try {
@@ -312,7 +332,11 @@ Future<void> executePrintJob(
             final last = elements.isNotEmpty ? elements.last : null;
             final injection = [
               const KoiTextElement(text: '\n'),
-              KoiTextElement(text: pageText, align: KoiTextAlign.center, bold: true),
+              KoiTextElement(
+                text: pageText,
+                align: KoiTextAlign.center,
+                bold: true,
+              ),
               const KoiTextElement(text: '\n'),
             ];
 
@@ -333,11 +357,7 @@ Future<void> executePrintJob(
               name: doc.name,
               elements: [
                 ...doc.elements,
-                KoiPositionedTextElement(
-                  text: pageText,
-                  x: 10,
-                  y: 10,
-                ),
+                KoiPositionedTextElement(text: pageText, x: 10, y: 10),
               ],
             );
           }
@@ -346,9 +366,15 @@ Future<void> executePrintJob(
         final singleCopyConfig = config.copyWith(copies: 1);
 
         if (isLabel) {
-          await manager.printLabelDocument(modifiedDoc as KoiLabelDocument, config: singleCopyConfig);
+          await manager.printLabelDocument(
+            modifiedDoc as KoiLabelDocument,
+            config: singleCopyConfig,
+          );
         } else {
-          await manager.printTicketDocument(modifiedDoc as KoiTicketDocument, config: singleCopyConfig);
+          await manager.printTicketDocument(
+            modifiedDoc as KoiTicketDocument,
+            config: singleCopyConfig,
+          );
         }
       }
     }

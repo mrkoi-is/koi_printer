@@ -11,18 +11,15 @@ class EditorElement {
   final KoiPrintElement element;
 
   EditorElement copyWith({String? id, KoiPrintElement? element}) {
-    return EditorElement(
-      id: id ?? this.id,
-      element: element ?? this.element,
-    );
+    return EditorElement(id: id ?? this.id, element: element ?? this.element);
   }
 }
 
 /// 编辑器全局状态树
-class EditorState extends ChangeNotifier with EditorManifestMixin, EditorSchemaMixin {
-  EditorState({
-    List<EditorElement>? initialElements,
-  }) : _elements = initialElements ?? [];
+class EditorState extends ChangeNotifier
+    with EditorManifestMixin, EditorSchemaMixin {
+  EditorState({List<EditorElement>? initialElements})
+    : _elements = initialElements ?? [];
 
   List<EditorElement> _elements;
   String? _selectedElementId;
@@ -65,23 +62,29 @@ class EditorState extends ChangeNotifier with EditorManifestMixin, EditorSchemaM
       if (isLabel) {
         // Auto-insert LabelSetup when switching to label mode
         final setup = EditorElement(
-          id: DateTime.now().microsecondsSinceEpoch.toString(), 
-          element: const KoiLabelSetupElement(widthMm: 40, heightMm: 30)
+          id: DateTime.now().microsecondsSinceEpoch.toString(),
+          element: const KoiLabelSetupElement(widthMm: 40, heightMm: 30),
         );
         _elements = [setup];
       }
       notifyListeners();
     }
   }
-  
+
   KoiPrintDocument get document {
     if (!isTicketMode) {
-      return KoiLabelDocument(elements: _elements.map((e) => e.element as KoiLabelElement).toList());
+      return KoiLabelDocument(
+        elements: _elements.map((e) => e.element as KoiLabelElement).toList(),
+      );
     }
-    return KoiTicketDocument(elements: _elements.map((e) => e.element as KoiTicketElement).toList());
+    return KoiTicketDocument(
+      elements: _elements.map((e) => e.element as KoiTicketElement).toList(),
+    );
   }
+
   String? get selectedElementId => _selectedElementId;
-  EditorElement? get selectedElement => _elements.where((e) => e.id == _selectedElementId).firstOrNull;
+  EditorElement? get selectedElement =>
+      _elements.where((e) => e.id == _selectedElementId).firstOrNull;
 
   bool get canUndo => _undoStack.isNotEmpty;
   bool get canRedo => _redoStack.isNotEmpty;
@@ -95,16 +98,26 @@ class EditorState extends ChangeNotifier with EditorManifestMixin, EditorSchemaM
   }
 
   /// 从 [KoiTemplateManifest] 加载完整模板 (元素 + Schema + 假数据 + 身份)。
-  void loadManifest(KoiTemplateManifest manifest, List<EditorElement> elements) {
+  void loadManifest(
+    KoiTemplateManifest manifest,
+    List<EditorElement> elements,
+  ) {
     _elements = elements;
     _undoStack.clear();
     _redoStack.clear();
     _selectedElementId = null;
 
-    initManifestIdentity(manifest.id, manifest.name, manifest.category, manifest.description);
+    initManifestIdentity(
+      manifest.id,
+      manifest.name,
+      manifest.category,
+      manifest.description,
+    );
     initSchemaAndMock(
-      manifest.schema, 
-      manifest.mockData.isNotEmpty ? Map<String, dynamic>.from(manifest.mockData) : {}
+      manifest.schema,
+      manifest.mockData.isNotEmpty
+          ? Map<String, dynamic>.from(manifest.mockData)
+          : {},
     );
 
     notifyListeners();

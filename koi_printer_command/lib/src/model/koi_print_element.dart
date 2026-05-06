@@ -386,6 +386,10 @@ class KoiPositionedBarcodeElement extends KoiLabelElement {
     required this.data,
     this.height = 60,
     this.type = '128',
+    this.readable = 1,
+    this.rotation = 0,
+    this.narrow = 2,
+    this.wide = 2,
   });
 
   /// 起始 X 坐标。
@@ -402,6 +406,18 @@ class KoiPositionedBarcodeElement extends KoiLabelElement {
 
   /// 条码类型（如 128）。
   final String type;
+
+  /// 设为1显示直观可读文字，0隐藏可读文字。
+  final int readable;
+
+  /// 旋转角度 (0, 90, 180, 270)。
+  final int rotation;
+
+  /// 窄bar的宽度 (点数)。
+  final int narrow;
+
+  /// 宽bar的宽度 (点数)。
+  final int wide;
 }
 
 /// 坐标定位 QR 码元素。
@@ -412,6 +428,8 @@ class KoiPositionedQrCodeElement extends KoiLabelElement {
     required this.y,
     required this.data,
     this.cellSize = 6,
+    this.eccLevel = 'L',
+    this.rotation = 0,
   });
 
   /// 起始 X 坐标。
@@ -425,6 +443,12 @@ class KoiPositionedQrCodeElement extends KoiLabelElement {
 
   /// 单元格大小（模块宽度）。
   final int cellSize;
+
+  /// 纠错等级 (L, M, Q, H)。
+  final String eccLevel;
+
+  /// 旋转角度 (0, 90, 180, 270)。
+  final int rotation;
 }
 
 /// 标签矩形框元素。
@@ -558,4 +582,212 @@ class KoiRawCommandElement extends KoiLabelElement {
 
   /// 明文指令行, Renderer 自动 GBK 编码并追加 \r\n。
   final String command;
+}
+
+/// 段落排版文本元素 (TSPL BLOCK 支持自动换行)。
+class KoiLabelBlockTextElement extends KoiLabelElement {
+  /// 创建段落排版文本元素。
+  const KoiLabelBlockTextElement({
+    required this.x,
+    required this.y,
+    required this.width,
+    required this.height,
+    required this.text,
+    this.font = 'TSS24.BF2',
+    this.rotation = 0,
+    this.xScale = 1,
+    this.yScale = 1,
+    this.space = 0,
+    this.align = 0,
+    this.fit = 0,
+  });
+
+  /// X 坐标
+  final int x;
+
+  /// Y 坐标
+  final int y;
+
+  /// 宽度
+  final int width;
+
+  /// 高度
+  final int height;
+
+  /// 文本内容
+  final String text;
+
+  /// 字体
+  final String font;
+
+  /// 旋转
+  final int rotation;
+
+  /// X轴缩放
+  final int xScale;
+
+  /// Y轴缩放
+  final int yScale;
+
+  /// 字符间距
+  final int space;
+
+  /// 对齐方式 (0:左, 1:中, 2:右, 3:自适应)
+  final int align;
+
+  /// 缩放填充 (0:不变, 1:自适应)
+  final int fit;
+}
+
+/// 矢量圆元素。
+class KoiLabelCircleElement extends KoiLabelElement {
+  /// 创建圆元素。
+  const KoiLabelCircleElement({
+    required this.x,
+    required this.y,
+    required this.diameter,
+    this.thickness = 2,
+  });
+
+  /// X 坐标
+  final int x;
+
+  /// Y 坐标
+  final int y;
+
+  /// 直径
+  final int diameter;
+
+  /// 线条宽度
+  final int thickness;
+}
+
+/// 矢量椭圆元素。
+class KoiLabelEllipseElement extends KoiLabelElement {
+  /// 创建椭圆元素。
+  const KoiLabelEllipseElement({
+    required this.x,
+    required this.y,
+    required this.width,
+    required this.height,
+    this.thickness = 2,
+  });
+
+  /// X 坐标
+  final int x;
+
+  /// Y 坐标
+  final int y;
+
+  /// 宽度
+  final int width;
+
+  /// 高度
+  final int height;
+
+  /// 线宽
+  final int thickness;
+}
+
+/// 斜线元素。
+class KoiLabelDiagonalElement extends KoiLabelElement {
+  /// 创建斜线元素。
+  const KoiLabelDiagonalElement({
+    required this.x,
+    required this.y,
+    required this.xEnd,
+    required this.yEnd,
+    this.thickness = 2,
+  });
+
+  /// 起点 X
+  final int x;
+
+  /// 起点 Y
+  final int y;
+
+  /// 终点 X
+  final int xEnd;
+
+  /// 终点 Y
+  final int yEnd;
+
+  /// 线宽
+  final int thickness;
+}
+
+/// 标签硬件: 蜂鸣器。
+class KoiLabelBeepElement extends KoiLabelElement {
+  /// 创建蜂鸣器元素。
+  const KoiLabelBeepElement({this.level = 0, this.interval = 100});
+
+  /// 等级/次数
+  final int level;
+
+  /// 间隔/持续时间
+  final int interval;
+}
+
+/// 标签硬件: 切纸。
+class KoiLabelCutElement extends KoiLabelElement {
+  /// 创建切纸指令。
+  const KoiLabelCutElement();
+}
+
+/// 标签硬件: 走纸。
+class KoiLabelFeedElement extends KoiLabelElement {
+  /// 创建走纸指令。
+  const KoiLabelFeedElement({this.dots = 100});
+
+  /// 走纸点数
+  final int dots;
+}
+
+/// 标签 PDF417 二维条码。
+/// TSPL 原生指令: PDF417 x,y,width,height,rotate,option,"data"
+/// CPCL 原生指令: PDF417 参数多行格式
+class KoiLabelPdf417Element extends KoiLabelElement {
+  /// 创建 PDF417 条码元素。
+  const KoiLabelPdf417Element({
+    required this.x,
+    required this.y,
+    required this.data,
+    this.width = 200,
+    this.height = 100,
+    this.rotation = 0,
+    this.errorLevel = 1,
+    this.columns = 3,
+    this.rows = 0,
+    this.option = '',
+  });
+
+  /// 起始 X 坐标（点）。
+  final int x;
+
+  /// 起始 Y 坐标（点）。
+  final int y;
+
+  /// 条码宽度（点）。
+  final int width;
+
+  /// 条码高度（点）。
+  final int height;
+
+  /// 旋转角度 (0/90/180/270)。
+  final int rotation;
+
+  /// 纠错等级 (0-8)，默认 1。
+  final int errorLevel;
+
+  /// 列数 (1-30)，默认 3。
+  final int columns;
+
+  /// 行数 (0-90)，默认 0 (自动计算)。
+  final int rows;
+
+  /// TSPL 可选参数字符串 (如 "E2,W4,H8")。
+  final String option;
+
+  /// 条码数据内容。
+  final String data;
 }

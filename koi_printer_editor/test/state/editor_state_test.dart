@@ -79,7 +79,7 @@ void main() {
         element: const KoiTextElement(text: 'Child 2'),
       );
       state.execute(AddElementCommand(child2, parentId: 'parent_1'));
-      
+
       parent = state.elements.first.element as KoiTicketForEachElement;
       expect(parent.templates.length, 3);
       expect((parent.templates[2] as KoiTextElement).text, 'Child 2');
@@ -121,7 +121,7 @@ void main() {
       );
       final state = EditorState(initialElements: [element]);
       expect(state.elements.length, 1);
-      
+
       // Select the element to ensure it's cleared on removal
       state.selectElement('2');
       expect(state.selectedElementId, '2');
@@ -145,11 +145,13 @@ void main() {
       );
       final state = EditorState(initialElements: [element]);
 
-      state.execute(UpdateElementCommand(
-        elementId: '3',
-        oldElement: const KoiTextElement(text: 'Old'),
-        newElement: const KoiTextElement(text: 'New'),
-      ));
+      state.execute(
+        UpdateElementCommand(
+          elementId: '3',
+          oldElement: const KoiTextElement(text: 'Old'),
+          newElement: const KoiTextElement(text: 'New'),
+        ),
+      );
 
       expect(state.elements.first.element, isA<KoiTextElement>());
       expect((state.elements.first.element as KoiTextElement).text, 'New');
@@ -159,14 +161,23 @@ void main() {
     });
 
     test('ReorderElementsCommand and Undo/Redo', () {
-      final e1 = EditorElement(id: 'A', element: const KoiTextElement(text: 'A'));
-      final e2 = EditorElement(id: 'B', element: const KoiTextElement(text: 'B'));
-      final e3 = EditorElement(id: 'C', element: const KoiTextElement(text: 'C'));
+      final e1 = EditorElement(
+        id: 'A',
+        element: const KoiTextElement(text: 'A'),
+      );
+      final e2 = EditorElement(
+        id: 'B',
+        element: const KoiTextElement(text: 'B'),
+      );
+      final e3 = EditorElement(
+        id: 'C',
+        element: const KoiTextElement(text: 'C'),
+      );
       final state = EditorState(initialElements: [e1, e2, e3]);
 
       // Move A (index 0) to after C (index 3, since ReorderableListView uses length as index)
       state.execute(ReorderElementsCommand(oldIndex: 0, newIndex: 3));
-      
+
       expect(state.elements[0].id, 'B');
       expect(state.elements[1].id, 'C');
       expect(state.elements[2].id, 'A');

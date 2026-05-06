@@ -14,7 +14,7 @@ class KoiBleScanner {
   /// [provider] 可选的扫描提供者，用于依赖注入。
   /// 默认使用 [KoiBleScannerProviderImpl] 委托给真实的 FlutterBluePlus。
   KoiBleScanner({KoiBleScannerProvider? provider})
-      : _provider = provider ?? KoiBleScannerProviderImpl();
+    : _provider = provider ?? KoiBleScannerProviderImpl();
 
   final KoiBleScannerProvider _provider;
 

@@ -10,25 +10,33 @@ void main() {
 
     setUp(() {
       TestWidgetsFlutterBinding.ensureInitialized();
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-        const MethodChannel('flutter_bluetooth_serial/methods'),
-        (methodCall) async {
-          if (methodCall.method == 'getBondedDevices') {
-            return [
-              {'address': '00:11:22:33:44:55', 'name': 'Printer A', 'type': 1, 'isConnected': false, 'bondState': 12}
-            ];
-          }
-          return null;
-        },
-      );
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+            const MethodChannel('flutter_bluetooth_serial/methods'),
+            (methodCall) async {
+              if (methodCall.method == 'getBondedDevices') {
+                return [
+                  {
+                    'address': '00:11:22:33:44:55',
+                    'name': 'Printer A',
+                    'type': 1,
+                    'isConnected': false,
+                    'bondState': 12,
+                  },
+                ];
+              }
+              return null;
+            },
+          );
       scanner = KoiClassicBtScanner();
     });
 
     tearDown(() {
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-        const MethodChannel('flutter_bluetooth_serial/methods'),
-        null,
-      );
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+            const MethodChannel('flutter_bluetooth_serial/methods'),
+            null,
+          );
     });
 
     test('scan returns a stream and devices', () async {
@@ -45,12 +53,13 @@ void main() {
     });
 
     test('scan handles getBondedDevices error', () async {
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-        const MethodChannel('flutter_bluetooth_serial/methods'),
-        (methodCall) async {
-          throw Exception('Simulated error');
-        },
-      );
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+            const MethodChannel('flutter_bluetooth_serial/methods'),
+            (methodCall) async {
+              throw Exception('Simulated error');
+            },
+          );
       final stream = scanner.scan(timeout: const Duration(milliseconds: 100));
       final devices = await stream.toList();
       expect(devices, isEmpty);

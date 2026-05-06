@@ -41,10 +41,12 @@ void main() {
       mockProvider = MockBleScannerProvider();
       scanResultsController = StreamController<List<ScanResult>>.broadcast();
 
-      when(() => mockProvider.startScan(timeout: any(named: 'timeout')))
-          .thenAnswer((_) async {});
-      when(() => mockProvider.scanResults)
-          .thenAnswer((_) => scanResultsController.stream);
+      when(
+        () => mockProvider.startScan(timeout: any(named: 'timeout')),
+      ).thenAnswer((_) async {});
+      when(
+        () => mockProvider.scanResults,
+      ).thenAnswer((_) => scanResultsController.stream);
       when(() => mockProvider.stopScan()).thenAnswer((_) async {});
 
       scanner = KoiBleScanner(provider: mockProvider);
@@ -167,8 +169,9 @@ void main() {
     });
 
     test('scan handles startScan error gracefully', () async {
-      when(() => mockProvider.startScan(timeout: any(named: 'timeout')))
-          .thenAnswer((_) async => throw Exception('BLE not available'));
+      when(
+        () => mockProvider.startScan(timeout: any(named: 'timeout')),
+      ).thenAnswer((_) async => throw Exception('BLE not available'));
 
       final stream = scanner.scan(timeout: const Duration(milliseconds: 100));
       // startScan 的错误被 catchError 捕获，stream 不应崩溃
@@ -192,8 +195,9 @@ void main() {
     });
 
     test('stopScan catches provider error', () async {
-      when(() => mockProvider.stopScan())
-          .thenAnswer((_) async => throw Exception('Stop failed'));
+      when(
+        () => mockProvider.stopScan(),
+      ).thenAnswer((_) async => throw Exception('Stop failed'));
 
       // 不应抛出异常
       await expectLater(scanner.stopScan(), completes);

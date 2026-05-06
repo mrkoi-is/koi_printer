@@ -17,7 +17,7 @@ void main() {
       final queue = KoiPrintJobQueue(
         adapter: MockPrinterAdapter(initialState: KoiConnectionState.ready),
       );
-      
+
       const config2021 = KoiPrintConfig(
         delayProfile: KoiDelayProfile.table2021,
       );
@@ -43,7 +43,7 @@ void main() {
         KoiPrintJob(documents: [doc], config: config2018),
       );
       await Future.wait([p3, p4]);
-      
+
       expect(queue.length, 0);
     });
 

@@ -27,7 +27,9 @@ class TopToolbar extends StatelessWidget {
           const SizedBox(width: 8),
           Text(
             'Koi Printer Studio',
-            style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
           ),
           const SizedBox(width: 16),
           TextButton.icon(
@@ -38,7 +40,7 @@ class TopToolbar extends StatelessWidget {
           const SizedBox(width: 8),
           const VerticalDivider(width: 1, indent: 12, endIndent: 12),
           const SizedBox(width: 8),
-          
+
           // Paper size dropdown
           DropdownButton<double>(
             value: state.paperWidthPx,
@@ -49,22 +51,40 @@ class TopToolbar extends StatelessWidget {
               DropdownMenuItem(value: 500.0, child: Text('100x150 面单')),
             ],
             onChanged: (val) {
-              if (val != null) context.read<EditorState>().updatePaperWidthPx(val);
+              if (val != null)
+                context.read<EditorState>().updatePaperWidthPx(val);
             },
           ),
-          
+
           const Spacer(),
 
           // 预览模式切换
           Row(
             children: [
-              Text('编辑', style: TextStyle(color: state.isPreviewMode ? Colors.grey : theme.colorScheme.primary, fontWeight: FontWeight.bold)),
+              Text(
+                '编辑',
+                style: TextStyle(
+                  color: state.isPreviewMode
+                      ? Colors.grey
+                      : theme.colorScheme.primary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               Switch(
                 value: state.isPreviewMode,
-                onChanged: (_) => context.read<EditorState>().togglePreviewMode(),
+                onChanged: (_) =>
+                    context.read<EditorState>().togglePreviewMode(),
                 activeTrackColor: theme.colorScheme.primary,
               ),
-              Text('预览 (假数据)', style: TextStyle(color: state.isPreviewMode ? theme.colorScheme.primary : Colors.grey, fontWeight: FontWeight.bold)),
+              Text(
+                '预览 (假数据)',
+                style: TextStyle(
+                  color: state.isPreviewMode
+                      ? theme.colorScheme.primary
+                      : Colors.grey,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ],
           ),
           const SizedBox(width: 8),
@@ -77,15 +97,19 @@ class TopToolbar extends StatelessWidget {
           // Undo / Redo
           IconButton(
             icon: const Icon(Icons.undo),
-            onPressed: state.canUndo ? () => context.read<EditorState>().undo() : null,
+            onPressed: state.canUndo
+                ? () => context.read<EditorState>().undo()
+                : null,
             tooltip: '撤销',
           ),
           IconButton(
             icon: const Icon(Icons.redo),
-            onPressed: state.canRedo ? () => context.read<EditorState>().redo() : null,
+            onPressed: state.canRedo
+                ? () => context.read<EditorState>().redo()
+                : null,
             tooltip: '重做',
           ),
-          
+
           const SizedBox(width: 16),
           IconButton(
             icon: const Icon(Icons.settings),
@@ -109,7 +133,7 @@ class TopToolbar extends StatelessWidget {
                 mockData: state.mockData,
               );
               final jsonStr = manifest.toJsonString();
-              
+
               showDialog(
                 context: context,
                 builder: (ctx) {
@@ -121,8 +145,13 @@ class TopToolbar extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('包含: 模板元数据 + Schema (${manifest.schema.length} 字段) + 打印文档',
-                            style: TextStyle(color: Colors.grey.shade600, fontSize: 13)),
+                          Text(
+                            '包含: 模板元数据 + Schema (${manifest.schema.length} 字段) + 打印文档',
+                            style: TextStyle(
+                              color: Colors.grey.shade600,
+                              fontSize: 13,
+                            ),
+                          ),
                           const SizedBox(height: 8),
                           Expanded(
                             child: Container(
@@ -135,7 +164,10 @@ class TopToolbar extends StatelessWidget {
                               child: SingleChildScrollView(
                                 child: SelectableText(
                                   jsonStr,
-                                  style: const TextStyle(fontFamily: 'SarasaMono', fontSize: 12),
+                                  style: const TextStyle(
+                                    fontFamily: 'SarasaMono',
+                                    fontSize: 12,
+                                  ),
                                 ),
                               ),
                             ),
@@ -210,21 +242,34 @@ class TopToolbar extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(m.name,
-                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          Text(
+                            m.name,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
                             textAlign: TextAlign.center,
                           ),
                           const SizedBox(height: 4),
                           if (m.description.isNotEmpty)
-                            Text(m.description,
-                              style: TextStyle(fontSize: 11, color: Colors.grey.shade600),
+                            Text(
+                              m.description,
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: Colors.grey.shade600,
+                              ),
                               textAlign: TextAlign.center,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
                           const SizedBox(height: 4),
-                          Text('${m.schema.length} 个字段',
-                            style: TextStyle(fontSize: 11, color: Colors.blue.shade400)),
+                          Text(
+                            '${m.schema.length} 个字段',
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.blue.shade400,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -247,8 +292,12 @@ class TopToolbar extends StatelessWidget {
   void _showMetadataEditor(BuildContext context, EditorState state) {
     final idCtrl = TextEditingController(text: state.currentManifestId);
     final nameCtrl = TextEditingController(text: state.currentManifestName);
-    final categoryCtrl = TextEditingController(text: state.currentManifestCategory);
-    final descCtrl = TextEditingController(text: state.currentManifestDescription);
+    final categoryCtrl = TextEditingController(
+      text: state.currentManifestCategory,
+    );
+    final descCtrl = TextEditingController(
+      text: state.currentManifestDescription,
+    );
 
     showDialog(
       context: context,
@@ -260,18 +309,36 @@ class TopToolbar extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                TextField(controller: idCtrl, decoration: const InputDecoration(labelText: '模板 ID (英文/数字)')),
+                TextField(
+                  controller: idCtrl,
+                  decoration: const InputDecoration(labelText: '模板 ID (英文/数字)'),
+                ),
                 const SizedBox(height: 8),
-                TextField(controller: nameCtrl, decoration: const InputDecoration(labelText: '模板名称 (Name)')),
+                TextField(
+                  controller: nameCtrl,
+                  decoration: const InputDecoration(labelText: '模板名称 (Name)'),
+                ),
                 const SizedBox(height: 8),
-                TextField(controller: categoryCtrl, decoration: const InputDecoration(labelText: '分类 (Category)')),
+                TextField(
+                  controller: categoryCtrl,
+                  decoration: const InputDecoration(labelText: '分类 (Category)'),
+                ),
                 const SizedBox(height: 8),
-                TextField(controller: descCtrl, decoration: const InputDecoration(labelText: '描述 (Description)'), maxLines: 3),
+                TextField(
+                  controller: descCtrl,
+                  decoration: const InputDecoration(
+                    labelText: '描述 (Description)',
+                  ),
+                  maxLines: 3,
+                ),
               ],
             ),
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('取消')),
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('取消'),
+            ),
             FilledButton(
               onPressed: () {
                 final id = idCtrl.text.trim();
@@ -323,7 +390,10 @@ class TopToolbar extends StatelessWidget {
             ),
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('取消')),
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('取消'),
+            ),
             FilledButton(
               onPressed: () {
                 try {
@@ -332,10 +402,16 @@ class TopToolbar extends StatelessWidget {
                     context.read<EditorState>().updateMockData(data);
                     Navigator.pop(ctx);
                   } else {
-                    ScaffoldMessenger.of(ctx).showSnackBar(const SnackBar(content: Text('错误：根节点必须是 JSON Object ({})')));
+                    ScaffoldMessenger.of(ctx).showSnackBar(
+                      const SnackBar(
+                        content: Text('错误：根节点必须是 JSON Object ({})'),
+                      ),
+                    );
                   }
                 } catch (e) {
-                  ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(content: Text('JSON 语法错误: $e')));
+                  ScaffoldMessenger.of(
+                    ctx,
+                  ).showSnackBar(SnackBar(content: Text('JSON 语法错误: $e')));
                 }
               },
               child: const Text('应用'),

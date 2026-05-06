@@ -66,10 +66,10 @@ class KoiTsplRenderer implements KoiCommandRenderer {
             '${element.y}',
             '"${element.type}"',
             '${element.height}',
-            '1',
-            '0',
-            '2',
-            '2',
+            '${element.readable}',
+            '${element.rotation}',
+            '${element.narrow}',
+            '${element.wide}',
             '"${element.data}"',
           ];
           commands.add(_cmd(parts.join(',')));
@@ -77,10 +77,10 @@ class KoiTsplRenderer implements KoiCommandRenderer {
           final parts = [
             'QRCODE ${element.x}',
             '${element.y}',
-            'L',
+            element.eccLevel,
             '${element.cellSize}',
             'A',
-            '0',
+            '${element.rotation}',
             '"${element.data}"',
           ];
           commands.add(_cmd(parts.join(',')));
@@ -114,6 +114,57 @@ class KoiTsplRenderer implements KoiCommandRenderer {
           } else {
             commands.add(_cmd('PRINT ${element.copies}'));
           }
+        case KoiLabelCircleElement():
+          commands.add(
+            _cmd(
+              'CIRCLE ${element.x},${element.y},${element.diameter},${element.thickness}',
+            ),
+          );
+        case KoiLabelEllipseElement():
+          commands.add(
+            _cmd(
+              'ELLIPSE ${element.x},${element.y},${element.width},${element.height},${element.thickness}',
+            ),
+          );
+        case KoiLabelDiagonalElement():
+          commands.add(
+            _cmd(
+              'DIAGONAL ${element.x},${element.y},${element.xEnd},${element.yEnd},${element.thickness}',
+            ),
+          );
+        case KoiLabelBlockTextElement():
+          final parts = [
+            'BLOCK ${element.x}',
+            '${element.y}',
+            '${element.width}',
+            '${element.height}',
+            '"${element.font}"',
+            '${element.rotation}',
+            '${element.xScale}',
+            '${element.yScale}',
+            '${element.space}',
+            '${element.align}',
+            '${element.fit}',
+            '"${element.text}"',
+          ];
+          commands.add(_cmd(parts.join(',')));
+        case KoiLabelBeepElement():
+          commands.add(_cmd('BEEP ${element.level},${element.interval}'));
+        case KoiLabelCutElement():
+          commands.add(_cmd('CUT'));
+        case KoiLabelFeedElement():
+          commands.add(_cmd('FEED ${element.dots}'));
+        case KoiLabelPdf417Element():
+          final optPart = element.option.isNotEmpty ? '${element.option},' : '';
+          commands.add(
+            _cmd(
+              'PDF417 ${element.x},${element.y},'
+              '${element.width},${element.height},'
+              '${element.rotation},'
+              '$optPart'
+              '"${element.data}"',
+            ),
+          );
         case KoiRawCommandElement():
           commands.add(_cmd(element.command));
         case KoiLabelForEachElement():

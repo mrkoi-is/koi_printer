@@ -11,7 +11,7 @@ class LeftPalette extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Container(
       width: 280,
       decoration: BoxDecoration(
@@ -50,28 +50,39 @@ class _ComponentsTab extends StatelessWidget {
 
   void _addNode(BuildContext context, KoiPrintElement element) {
     final state = context.read<EditorState>();
-    
+
     // 阻止混合添加
     if (state.elements.isNotEmpty) {
       if (state.isTicketMode && element is! KoiTicketElement) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('当前为小票模式，无法添加标签元素')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('当前为小票模式，无法添加标签元素')));
         return;
       }
       if (!state.isTicketMode && element is KoiTicketElement) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('当前为标签模式，无法添加小票元素')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('当前为标签模式，无法添加小票元素')));
         return;
       }
     }
-    
+
     final selected = state.selectedElement;
-    final String? parentId = (selected?.element is KoiTicketForEachElement) ? selected!.id : null;
-    state.execute(AddElementCommand(EditorElement(id: _genId(), element: element), parentId: parentId));
+    final String? parentId = (selected?.element is KoiTicketForEachElement)
+        ? selected!.id
+        : null;
+    state.execute(
+      AddElementCommand(
+        EditorElement(id: _genId(), element: element),
+        parentId: parentId,
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final state = context.watch<EditorState>();
-    
+
     if (state.isTicketMode) {
       return ListView(
         padding: const EdgeInsets.all(16),
@@ -79,12 +90,18 @@ class _ComponentsTab extends StatelessWidget {
           _PaletteItem(
             icon: Icons.list_alt_rounded,
             label: '循环列表容器 (ForEach)',
-            onAdd: () => _addNode(context, const KoiTicketForEachElement(listKey: 'items', templates: [])),
+            onAdd: () => _addNode(
+              context,
+              const KoiTicketForEachElement(listKey: 'items', templates: []),
+            ),
           ),
           _PaletteItem(
             icon: Icons.text_fields,
             label: '文本 (Text)',
-            onAdd: () => _addNode(context, const KoiTextElement(text: '默认文本', size: KoiTextSize.size1)),
+            onAdd: () => _addNode(
+              context,
+              const KoiTextElement(text: '默认文本', size: KoiTextSize.size1),
+            ),
           ),
           _PaletteItem(
             icon: Icons.horizontal_rule,
@@ -94,22 +111,29 @@ class _ComponentsTab extends StatelessWidget {
           _PaletteItem(
             icon: Icons.qr_code,
             label: '二维码 (QR Code)',
-            onAdd: () => _addNode(context, const KoiQrCodeElement(data: 'https://mrkoi.io')),
+            onAdd: () => _addNode(
+              context,
+              const KoiQrCodeElement(data: 'https://mrkoi.io'),
+            ),
           ),
           _PaletteItem(
             icon: Icons.barcode_reader,
             label: '条形码 (Barcode)',
-            onAdd: () => _addNode(context, const KoiBarcodeElement(data: '1234567890')),
+            onAdd: () =>
+                _addNode(context, const KoiBarcodeElement(data: '1234567890')),
           ),
           _PaletteItem(
             icon: Icons.view_column,
             label: '多列排版 (Row)',
-            onAdd: () => _addNode(context, const KoiTextRowElement(
-              columns: [
-                KoiTextColumn(text: '左侧'),
-                KoiTextColumn(text: '右侧', align: KoiTextAlign.right),
-              ],
-            )),
+            onAdd: () => _addNode(
+              context,
+              const KoiTextRowElement(
+                columns: [
+                  KoiTextColumn(text: '左侧'),
+                  KoiTextColumn(text: '右侧', align: KoiTextAlign.right),
+                ],
+              ),
+            ),
           ),
           _PaletteItem(
             icon: Icons.space_bar,
@@ -119,7 +143,10 @@ class _ComponentsTab extends StatelessWidget {
           _PaletteItem(
             icon: Icons.code,
             label: '原始指令 (Raw)',
-            onAdd: () => _addNode(context, const KoiRawCommandElement('SIZE 40 mm,30 mm\nGAP 2 mm,0 mm')),
+            onAdd: () => _addNode(
+              context,
+              const KoiRawCommandElement('SIZE 40 mm,30 mm\nGAP 2 mm,0 mm'),
+            ),
           ),
         ],
       );
@@ -130,52 +157,160 @@ class _ComponentsTab extends StatelessWidget {
           _PaletteItem(
             icon: Icons.settings_overscan,
             label: '纸张设置 (Setup)',
-            onAdd: () => _addNode(context, const KoiLabelSetupElement(widthMm: 40, heightMm: 30)),
+            onAdd: () => _addNode(
+              context,
+              const KoiLabelSetupElement(widthMm: 40, heightMm: 30),
+            ),
           ),
           _PaletteItem(
             icon: Icons.text_format,
             label: '绝对文本 (Text)',
-            onAdd: () => _addNode(context, const KoiPositionedTextElement(x: 10, y: 10, text: '示例文本')),
+            onAdd: () => _addNode(
+              context,
+              const KoiPositionedTextElement(x: 10, y: 10, text: '示例文本'),
+            ),
           ),
           _PaletteItem(
             icon: Icons.barcode_reader,
             label: '绝对条码 (Barcode)',
-            onAdd: () => _addNode(context, const KoiPositionedBarcodeElement(x: 10, y: 10, data: '123456')),
+            onAdd: () => _addNode(
+              context,
+              const KoiPositionedBarcodeElement(x: 10, y: 10, data: '123456'),
+            ),
           ),
           _PaletteItem(
             icon: Icons.qr_code,
             label: '绝对二维码 (QR)',
-            onAdd: () => _addNode(context, const KoiPositionedQrCodeElement(x: 10, y: 10, data: 'https://mrkoi.io')),
+            onAdd: () => _addNode(
+              context,
+              const KoiPositionedQrCodeElement(
+                x: 10,
+                y: 10,
+                data: 'https://mrkoi.io',
+              ),
+            ),
           ),
           _PaletteItem(
             icon: Icons.crop_square,
             label: '矩形框 (Box)',
-            onAdd: () => _addNode(context, const KoiLabelBoxElement(x: 10, y: 10, width: 200, height: 100)),
+            onAdd: () => _addNode(
+              context,
+              const KoiLabelBoxElement(x: 10, y: 10, width: 200, height: 100),
+            ),
           ),
-                _PaletteItem(
+          _PaletteItem(
             icon: Icons.format_color_fill,
             label: '反白区域 (Reverse)',
-            onAdd: () => _addNode(context, const KoiLabelReverseElement(x: 10, y: 10, width: 200, height: 100)),
+            onAdd: () => _addNode(
+              context,
+              const KoiLabelReverseElement(
+                x: 10,
+                y: 10,
+                width: 200,
+                height: 100,
+              ),
+            ),
           ),
           _PaletteItem(
             icon: Icons.list_alt_rounded,
             label: '循环列表容器 (ForEach)',
-            onAdd: () => _addNode(context, const KoiLabelForEachElement(listKey: 'items', templates: [])),
+            onAdd: () => _addNode(
+              context,
+              const KoiLabelForEachElement(listKey: 'items', templates: []),
+            ),
           ),
           _PaletteItem(
             icon: Icons.image,
             label: '绝对图片 (Image)',
-            onAdd: () => _addNode(context, KoiLabelImageElement(x: 10, y: 10, imageBytes: Uint8List(0), width: 100)),
+            onAdd: () => _addNode(
+              context,
+              KoiLabelImageElement(
+                x: 10,
+                y: 10,
+                imageBytes: Uint8List(0),
+                width: 100,
+              ),
+            ),
           ),
           _PaletteItem(
             icon: Icons.print,
             label: '触发打印 (Print)',
-            onAdd: () => _addNode(context, const KoiLabelPrintElement(copies: 1, sets: 1)),
+            onAdd: () => _addNode(
+              context,
+              const KoiLabelPrintElement(copies: 1, sets: 1),
+            ),
+          ),
+          _PaletteItem(
+            icon: Icons.text_snippet,
+            label: '段落文本 (Block)',
+            onAdd: () => _addNode(
+              context,
+              const KoiLabelBlockTextElement(
+                x: 10,
+                y: 10,
+                width: 200,
+                height: 100,
+                text: '自动换行段落文本',
+              ),
+            ),
+          ),
+          _PaletteItem(
+            icon: Icons.radio_button_unchecked,
+            label: '圆形 (Circle)',
+            onAdd: () => _addNode(
+              context,
+              const KoiLabelCircleElement(x: 10, y: 10, diameter: 50),
+            ),
+          ),
+          _PaletteItem(
+            icon: Icons.panorama_horizontal_select,
+            label: '椭圆 (Ellipse)',
+            onAdd: () => _addNode(
+              context,
+              const KoiLabelEllipseElement(
+                x: 10,
+                y: 10,
+                width: 100,
+                height: 50,
+              ),
+            ),
+          ),
+          _PaletteItem(
+            icon: Icons.horizontal_rule_outlined,
+            label: '斜线 (Diagonal)',
+            onAdd: () => _addNode(
+              context,
+              const KoiLabelDiagonalElement(x: 10, y: 10, xEnd: 110, yEnd: 110),
+            ),
+          ),
+          _PaletteItem(
+            icon: Icons.volume_up,
+            label: '蜂鸣器 (Beep)',
+            onAdd: () => _addNode(context, const KoiLabelBeepElement()),
+          ),
+          _PaletteItem(
+            icon: Icons.vertical_align_bottom,
+            label: '走纸 (Feed)',
+            onAdd: () => _addNode(context, const KoiLabelFeedElement()),
+          ),
+          _PaletteItem(
+            icon: Icons.qr_code_scanner,
+            label: 'PDF417 (二维)',
+            onAdd: () => _addNode(
+              context,
+              const KoiLabelPdf417Element(x: 10, y: 10, data: 'PDF417'),
+            ),
+          ),
+          _PaletteItem(
+            icon: Icons.content_cut,
+            label: '切纸 (Cut)',
+            onAdd: () => _addNode(context, const KoiLabelCutElement()),
           ),
           _PaletteItem(
             icon: Icons.code,
             label: '原始指令 (Raw)',
-            onAdd: () => _addNode(context, const KoiRawCommandElement('PRINT 1,1')),
+            onAdd: () =>
+                _addNode(context, const KoiRawCommandElement('PRINT 1,1')),
           ),
         ],
       );
@@ -184,7 +319,11 @@ class _ComponentsTab extends StatelessWidget {
 }
 
 class _PaletteItem extends StatelessWidget {
-  const _PaletteItem({required this.icon, required this.label, required this.onAdd});
+  const _PaletteItem({
+    required this.icon,
+    required this.label,
+    required this.onAdd,
+  });
 
   final IconData icon;
   final String label;
@@ -204,7 +343,11 @@ class _PaletteItem extends StatelessWidget {
               Icon(icon, size: 20),
               const SizedBox(width: 12),
               Expanded(child: Text(label)),
-              const Icon(Icons.add_circle_outline, size: 20, color: Colors.blue),
+              const Icon(
+                Icons.add_circle_outline,
+                size: 20,
+                color: Colors.blue,
+              ),
             ],
           ),
         ),
@@ -222,19 +365,23 @@ class _LayerTreeTab extends StatelessWidget {
     final elements = state.elements;
 
     if (elements.isEmpty) {
-      return const Center(child: Text('画布为空', style: TextStyle(color: Colors.grey)));
+      return const Center(
+        child: Text('画布为空', style: TextStyle(color: Colors.grey)),
+      );
     }
 
     return ReorderableListView.builder(
       padding: const EdgeInsets.all(8),
       itemCount: elements.length,
       onReorder: (oldIndex, newIndex) {
-        state.execute(ReorderElementsCommand(oldIndex: oldIndex, newIndex: newIndex));
+        state.execute(
+          ReorderElementsCommand(oldIndex: oldIndex, newIndex: newIndex),
+        );
       },
       itemBuilder: (context, index) {
         final el = elements[index];
         final isSelected = state.selectedElementId == el.id;
-        
+
         IconData icon;
         String label;
         if (el.element is KoiTextElement) {
@@ -254,7 +401,8 @@ class _LayerTreeTab extends StatelessWidget {
           label = '条形码: ${(el.element as KoiBarcodeElement).data}';
         } else if (el.element is KoiTextRowElement) {
           icon = Icons.view_column;
-          label = '多列排版 (${(el.element as KoiTextRowElement).columns.length} 列)';
+          label =
+              '多列排版 (${(el.element as KoiTextRowElement).columns.length} 列)';
         } else if (el.element is KoiSpacerElement) {
           icon = Icons.space_bar;
           label = '空白行 (${(el.element as KoiSpacerElement).lines} 行)';
@@ -311,7 +459,11 @@ class _LayerTreeTab extends StatelessWidget {
           ),
           child: ListTile(
             contentPadding: const EdgeInsets.symmetric(horizontal: 12),
-            leading: Icon(icon, color: isSelected ? Colors.blue : Colors.blueGrey, size: 20),
+            leading: Icon(
+              icon,
+              color: isSelected ? Colors.blue : Colors.blueGrey,
+              size: 20,
+            ),
             title: Text(
               label,
               maxLines: 1,
@@ -324,7 +476,11 @@ class _LayerTreeTab extends StatelessWidget {
             ),
             selected: isSelected,
             onTap: () => state.selectElement(el.id),
-            trailing: const Icon(Icons.drag_handle, color: Colors.grey, size: 20),
+            trailing: const Icon(
+              Icons.drag_handle,
+              color: Colors.grey,
+              size: 20,
+            ),
           ),
         );
       },
@@ -355,14 +511,31 @@ class _DataSchemaTab extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    TextField(controller: keyCtrl, decoration: const InputDecoration(labelText: '变量 Key (英文/数字)')),
+                    TextField(
+                      controller: keyCtrl,
+                      decoration: const InputDecoration(
+                        labelText: '变量 Key (英文/数字)',
+                      ),
+                    ),
                     const SizedBox(height: 8),
-                    TextField(controller: labelCtrl, decoration: const InputDecoration(labelText: '展示名称 (Label)')),
+                    TextField(
+                      controller: labelCtrl,
+                      decoration: const InputDecoration(
+                        labelText: '展示名称 (Label)',
+                      ),
+                    ),
                     const SizedBox(height: 16),
                     DropdownButtonFormField<KoiFieldType>(
                       initialValue: type,
-                      decoration: const InputDecoration(labelText: '数据类型 (Type)'),
-                      items: KoiFieldType.values.map((t) => DropdownMenuItem(value: t, child: Text(t.name))).toList(),
+                      decoration: const InputDecoration(
+                        labelText: '数据类型 (Type)',
+                      ),
+                      items: KoiFieldType.values
+                          .map(
+                            (t) =>
+                                DropdownMenuItem(value: t, child: Text(t.name)),
+                          )
+                          .toList(),
                       onChanged: (val) {
                         if (val != null) setState(() => type = val);
                       },
@@ -371,16 +544,25 @@ class _DataSchemaTab extends StatelessWidget {
                 ),
               ),
               actions: [
-                TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('取消')),
+                TextButton(
+                  onPressed: () => Navigator.pop(ctx),
+                  child: const Text('取消'),
+                ),
                 FilledButton(
                   onPressed: () {
                     final key = keyCtrl.text.trim();
                     final label = labelCtrl.text.trim();
                     if (key.isEmpty || label.isEmpty) {
-                      ScaffoldMessenger.of(ctx).showSnackBar(const SnackBar(content: Text('Key 和 Label 不能为空')));
+                      ScaffoldMessenger.of(ctx).showSnackBar(
+                        const SnackBar(content: Text('Key 和 Label 不能为空')),
+                      );
                       return;
                     }
-                    final field = KoiTemplateField(key: key, label: label, type: type);
+                    final field = KoiTemplateField(
+                      key: key,
+                      label: label,
+                      type: type,
+                    );
                     if (isEdit) {
                       state.updateSchemaField(index, field);
                     } else {
@@ -402,7 +584,7 @@ class _DataSchemaTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final state = context.watch<EditorState>();
     final fields = state.schema;
-    
+
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
@@ -412,7 +594,10 @@ class _DataSchemaTab extends StatelessWidget {
             Expanded(
               child: Text(
                 '单据模型: ${state.schemaEntity.isEmpty ? '自定义' : state.schemaEntity}',
-                style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.grey),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                ),
                 overflow: TextOverflow.ellipsis,
               ),
             ),
@@ -431,12 +616,24 @@ class _DataSchemaTab extends StatelessWidget {
             margin: const EdgeInsets.only(bottom: 8),
             child: ListTile(
               leading: Icon(
-                field.type == KoiFieldType.string ? Icons.abc : 
-                field.type == KoiFieldType.number ? Icons.numbers : Icons.list,
+                field.type == KoiFieldType.string
+                    ? Icons.abc
+                    : field.type == KoiFieldType.number
+                    ? Icons.numbers
+                    : Icons.list,
                 color: Colors.blueGrey,
               ),
-              title: Text(field.label, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-              subtitle: Text('{{${field.key}}}', style: const TextStyle(color: Colors.grey, fontSize: 11)),
+              title: Text(
+                field.label,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13,
+                ),
+              ),
+              subtitle: Text(
+                '{{${field.key}}}',
+                style: const TextStyle(color: Colors.grey, fontSize: 11),
+              ),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -453,14 +650,21 @@ class _DataSchemaTab extends StatelessWidget {
                     },
                   ),
                   IconButton(
-                    icon: const Icon(Icons.add_box, size: 16, color: Colors.blue),
+                    icon: const Icon(
+                      Icons.add_box,
+                      size: 16,
+                      color: Colors.blue,
+                    ),
                     tooltip: '插入文本到画布',
                     onPressed: () {
                       state.execute(
                         AddElementCommand(
                           EditorElement(
                             id: _genId(),
-                            element: KoiTextElement(text: '{{${field.key}}}', size: KoiTextSize.size1),
+                            element: KoiTextElement(
+                              text: '{{${field.key}}}',
+                              size: KoiTextSize.size1,
+                            ),
                           ),
                         ),
                       );

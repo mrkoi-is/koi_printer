@@ -17,9 +17,11 @@ void main() {
   }
 
   group('LeftPalette Widget Tests', () {
-    testWidgets('Renders 3 tabs and can switch between them', (WidgetTester tester) async {
+    testWidgets('Renders 3 tabs and can switch between them', (
+      WidgetTester tester,
+    ) async {
       final state = EditorState();
-      
+
       await tester.pumpWidget(buildTestApp(const LeftPalette(), state));
       await tester.pumpAndSettle();
 
@@ -42,9 +44,11 @@ void main() {
       expect(find.text('单据模型: 自定义'), findsOneWidget);
     });
 
-    testWidgets('Tapping on a component adds it to the EditorState', (WidgetTester tester) async {
+    testWidgets('Tapping on a component adds it to the EditorState', (
+      WidgetTester tester,
+    ) async {
       final state = EditorState();
-      
+
       await tester.pumpWidget(buildTestApp(const LeftPalette(), state));
       await tester.pumpAndSettle();
 
@@ -55,7 +59,10 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(state.elements.length, 1);
-      expect(state.elements.first.element.runtimeType.toString(), 'KoiTextElement');
+      expect(
+        state.elements.first.element.runtimeType.toString(),
+        'KoiTextElement',
+      );
     });
   });
 }

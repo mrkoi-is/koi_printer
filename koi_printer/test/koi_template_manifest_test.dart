@@ -12,10 +12,8 @@ void main() {
       description: '一个用于测试的模板',
       schema: [
         KoiTemplateField(key: 'title', label: '标题'),
-        KoiTemplateField(
-            key: 'amount', label: '金额', type: KoiFieldType.number),
-        KoiTemplateField(
-            key: 'items', label: '列表', type: KoiFieldType.array),
+        KoiTemplateField(key: 'amount', label: '金额', type: KoiFieldType.number),
+        KoiTemplateField(key: 'items', label: '列表', type: KoiFieldType.array),
       ],
       groups: [
         KoiTemplateGroup(label: '头部', startIndex: 0, endIndex: 2),
@@ -29,11 +27,13 @@ void main() {
           {'name': 'B', 'qty': 2},
         ],
       },
-      document: KoiTicketDocument(elements: [
-        KoiTextElement(text: '{{title}}', bold: true),
-        KoiDividerElement(),
-        KoiCutElement(),
-      ]),
+      document: KoiTicketDocument(
+        elements: [
+          KoiTextElement(text: '{{title}}', bold: true),
+          KoiDividerElement(),
+          KoiCutElement(),
+        ],
+      ),
     );
 
     test('完整 manifest toJson → fromJson round-trip', () {
@@ -108,8 +108,7 @@ void main() {
   });
 
   group('KoiTemplateManifest 稀疏 JSON (可选字段省略)', () {
-    test('省略 category/description/groups/mockData 时 toJson 不包含这些字段',
-        () {
+    test('省略 category/description/groups/mockData 时 toJson 不包含这些字段', () {
       const manifest = KoiTemplateManifest(
         id: 'minimal',
         name: '最小模板',
@@ -206,9 +205,11 @@ void main() {
         name: 'test',
         schema: [
           KoiTemplateField(
-              key: 'price', label: '价格', type: KoiFieldType.number),
-          KoiTemplateField(
-              key: 'items', label: '列表', type: KoiFieldType.array),
+            key: 'price',
+            label: '价格',
+            type: KoiFieldType.number,
+          ),
+          KoiTemplateField(key: 'items', label: '列表', type: KoiFieldType.array),
         ],
         document: KoiTicketDocument(elements: []),
       );

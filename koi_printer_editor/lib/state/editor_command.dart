@@ -16,7 +16,7 @@ class AddElementCommand extends EditorCommand {
   @override
   void execute(EditorState state) {
     final elements = List<EditorElement>.from(state.elements);
-    
+
     if (parentId != null) {
       final pIndex = elements.indexWhere((e) => e.id == parentId);
       if (pIndex != -1) {
@@ -45,7 +45,7 @@ class AddElementCommand extends EditorCommand {
         elements.add(element);
       }
     }
-    
+
     state.updateElements(elements);
     // 选中仍然保留到容器（因为子元素没有 ID 追踪，这是一个简化版实现）
     state.selectElement(parentId ?? element.id);
@@ -54,7 +54,7 @@ class AddElementCommand extends EditorCommand {
   @override
   void undo(EditorState state) {
     final elements = List<EditorElement>.from(state.elements);
-    
+
     if (parentId != null) {
       final pIndex = elements.indexWhere((e) => e.id == parentId);
       if (pIndex != -1) {
@@ -75,7 +75,7 @@ class AddElementCommand extends EditorCommand {
     } else {
       elements.removeWhere((e) => e.id == element.id);
     }
-    
+
     state.updateElements(elements);
     if (state.selectedElementId == element.id) {
       state.selectElement(null);
@@ -146,10 +146,7 @@ class UpdateElementCommand extends EditorCommand {
 }
 
 class ReorderElementsCommand extends EditorCommand {
-  ReorderElementsCommand({
-    required this.oldIndex,
-    required this.newIndex,
-  });
+  ReorderElementsCommand({required this.oldIndex, required this.newIndex});
 
   final int oldIndex;
   final int newIndex;

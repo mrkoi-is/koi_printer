@@ -47,8 +47,10 @@ void main() {
       final results = <String>[];
       final sub = scanner.scanStream.listen(results.add);
 
-      scanner.handleKeyEvent(createEvent(LogicalKeyboardKey.keyA, character: 'A'));
-      
+      scanner.handleKeyEvent(
+        createEvent(LogicalKeyboardKey.keyA, character: 'A'),
+      );
+
       // Wait longer than timeout
       await Future<void>.delayed(const Duration(milliseconds: 150));
 
@@ -68,14 +70,14 @@ void main() {
       final sub = scanner.scanStream.listen(results.add);
 
       scanner.handleKeyEvent(createEvent(LogicalKeyboardKey.enter));
-      
+
       await Future<void>.delayed(const Duration(milliseconds: 10));
 
       expect(results, isEmpty);
 
       await sub.cancel();
     });
-    
+
     test('handles non-character keys', () async {
       final results = <String>[];
       final sub = scanner.scanStream.listen(results.add);
@@ -84,7 +86,7 @@ void main() {
       scanner
         ..handleKeyEvent(createEvent(LogicalKeyboardKey.shift))
         ..handleKeyEvent(createEvent(LogicalKeyboardKey.enter));
-      
+
       await Future<void>.delayed(const Duration(milliseconds: 10));
 
       expect(results, isEmpty);

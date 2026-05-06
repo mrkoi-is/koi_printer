@@ -19,7 +19,9 @@ class CenterCanvas extends StatelessWidget {
       child: SingleChildScrollView(
         child: state.elements.isEmpty && !state.isModeExplicitlySet
             ? _buildEmptySelector(context, state)
-            : (state.isTicketMode ? _buildTicketContent(context, state) : _buildLabelContent(context, state)),
+            : (state.isTicketMode
+                  ? _buildTicketContent(context, state)
+                  : _buildLabelContent(context, state)),
       ),
     );
   }
@@ -36,16 +38,20 @@ class CenterCanvas extends StatelessWidget {
             color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
-          )
+          ),
         ],
       ),
       child: Column(
         children: [
           const Icon(Icons.print, size: 64, color: Colors.blueGrey),
           const SizedBox(height: 24),
-          const Text('创建新打印模板', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          const Text(
+            '创建新打印模板',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
           const SizedBox(height: 8),
-          const Text('请选择您要设计的打印布局模式。注意，模式一旦选择，在添加组件后不可随意更改。', 
+          const Text(
+            '请选择您要设计的打印布局模式。注意，模式一旦选择，在添加组件后不可随意更改。',
             textAlign: TextAlign.center,
             style: TextStyle(color: Colors.grey),
           ),
@@ -59,7 +65,10 @@ class CenterCanvas extends StatelessWidget {
                     state.setExplicitLabelMode(false);
                   },
                   icon: const Icon(Icons.receipt_long),
-                  label: const Text('小票模式\n(流式排版)', textAlign: TextAlign.center),
+                  label: const Text(
+                    '小票模式\n(流式排版)',
+                    textAlign: TextAlign.center,
+                  ),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
@@ -72,7 +81,10 @@ class CenterCanvas extends StatelessWidget {
                     state.setExplicitLabelMode(true);
                   },
                   icon: const Icon(Icons.label),
-                  label: const Text('标签模式\n(绝对定位)', textAlign: TextAlign.center),
+                  label: const Text(
+                    '标签模式\n(绝对定位)',
+                    textAlign: TextAlign.center,
+                  ),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     backgroundColor: Colors.blue.shade50,
@@ -98,7 +110,7 @@ class CenterCanvas extends StatelessWidget {
             color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
-          )
+          ),
         ],
       ),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
@@ -117,7 +129,8 @@ class CenterCanvas extends StatelessWidget {
             key: ValueKey(editorElement.id),
             element: editorElement,
             isSelected: state.selectedElementId == editorElement.id,
-            onSelect: () => context.read<EditorState>().selectElement(editorElement.id),
+            onSelect: () =>
+                context.read<EditorState>().selectElement(editorElement.id),
             onDelete: () {
               context.read<EditorState>().execute(
                 RemoveElementCommand(editorElement.id),
@@ -133,7 +146,7 @@ class CenterCanvas extends StatelessWidget {
     final scale = state.labelScale; // 编辑器放大系数：1 dot = scale px，避免元素过小无法点击
     double labelWidth = 400;
     double labelHeight = 300;
-    
+
     for (final e in state.elements) {
       if (e.element is KoiLabelSetupElement) {
         final setup = e.element as KoiLabelSetupElement;
@@ -169,7 +182,8 @@ class CenterCanvas extends StatelessWidget {
                 element: editorElement,
                 isSelected: state.selectedElementId == editorElement.id,
                 scale: scale,
-                onSelect: () => context.read<EditorState>().selectElement(editorElement.id),
+                onSelect: () =>
+                    context.read<EditorState>().selectElement(editorElement.id),
                 onDelete: () {
                   context.read<EditorState>().execute(
                     RemoveElementCommand(editorElement.id),
@@ -190,7 +204,7 @@ class CenterCanvas extends StatelessWidget {
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 4,
-                )
+                ),
               ],
             ),
             child: Row(
@@ -201,7 +215,13 @@ class CenterCanvas extends StatelessWidget {
                   onPressed: () => context.read<EditorState>().zoomOut(),
                   tooltip: '缩小',
                 ),
-                Text('${(scale * 100).toInt()}%', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                Text(
+                  '${(scale * 100).toInt()}%',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
+                  ),
+                ),
                 IconButton(
                   icon: const Icon(Icons.zoom_in, size: 20),
                   onPressed: () => context.read<EditorState>().zoomIn(),
@@ -230,7 +250,10 @@ class _EditableElementWrap extends StatelessWidget {
   final VoidCallback onSelect;
   final VoidCallback onDelete;
 
-  KoiPrintElement _processEditMode(KoiPrintElement e, List<KoiTemplateField> fields) {
+  KoiPrintElement _processEditMode(
+    KoiPrintElement e,
+    List<KoiTemplateField> fields,
+  ) {
     if (e is KoiTextElement) {
       String t = e.text;
       for (var f in fields) {
@@ -244,7 +267,12 @@ class _EditableElementWrap extends StatelessWidget {
           for (var f in fields) {
             t = t.replaceAll('{{${f.key}}}', '<${f.label}>');
           }
-          return KoiTextColumn(text: t, ratio: c.ratio, align: c.align, bold: c.bold);
+          return KoiTextColumn(
+            text: t,
+            ratio: c.ratio,
+            align: c.align,
+            bold: c.bold,
+          );
         }).toList(),
       );
     }
@@ -254,7 +282,7 @@ class _EditableElementWrap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<EditorState>();
-    
+
     KoiPrintDocument mockDoc;
     if (state.isPreviewMode) {
       if (element.element is KoiTicketElement) {
@@ -264,7 +292,9 @@ class _EditableElementWrap extends StatelessWidget {
           state.mockData,
         );
       } else {
-        mockDoc = KoiLabelDocument(elements: [element.element as KoiLabelElement]);
+        mockDoc = KoiLabelDocument(
+          elements: [element.element as KoiLabelElement],
+        );
       }
     } else {
       // 编辑模式下，替换占位符为中文别名标签
@@ -281,50 +311,66 @@ class _EditableElementWrap extends StatelessWidget {
       paperWidthPx: state.paperWidthPx,
       fontFamily: 'SarasaMono',
     );
-    
+
     Widget child = renderWidget;
     // 提取单个元素的渲染结果（去除外层 Document 容器）
     if (renderWidget is Container && renderWidget.child is Column) {
-       final col = renderWidget.child as Column;
-       if (col.children.isNotEmpty) {
-         child = col.children.first;
-       }
+      final col = renderWidget.child as Column;
+      if (col.children.isNotEmpty) {
+        child = col.children.first;
+      }
     }
 
     if (!state.isPreviewMode && element.element is KoiTicketForEachElement) {
-       final forEachElement = element.element as KoiTicketForEachElement;
-       child = Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.orange, style: BorderStyle.solid),
-            color: Colors.orange.withValues(alpha: 0.05),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-               Text('🔄 列表循环区域 (数组: ${forEachElement.listKey})', style: const TextStyle(color: Colors.orange, fontSize: 12, fontWeight: FontWeight.bold)),
-               const Divider(color: Colors.orange),
-               ...forEachElement.templates.map((t) {
-                  final mockInnerDoc = KoiTicketDocument(elements: [_processEditMode(t, state.schema) as KoiTicketElement]);
-                  final innerRender = KoiPreviewRenderer.build(
-                    document: mockInnerDoc, 
-                    paperWidthPx: state.paperWidthPx,
-                    fontFamily: 'SarasaMono',
-                  );
-                  if (innerRender is Container && innerRender.child is Column) {
-                    final col = innerRender.child as Column;
-                    if (col.children.isNotEmpty) return col.children.first;
-                  }
-                  return innerRender;
-               }),
-               if (forEachElement.templates.isEmpty)
-                 const Padding(
-                   padding: EdgeInsets.all(16), 
-                   child: Center(child: Text('选中此区域，从左侧组件库添加子组件', style: TextStyle(color: Colors.grey, fontSize: 12)))
-                 ),
-            ]
-          )
-       );
+      final forEachElement = element.element as KoiTicketForEachElement;
+      child = Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.orange, style: BorderStyle.solid),
+          color: Colors.orange.withValues(alpha: 0.05),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              '🔄 列表循环区域 (数组: ${forEachElement.listKey})',
+              style: const TextStyle(
+                color: Colors.orange,
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const Divider(color: Colors.orange),
+            ...forEachElement.templates.map((t) {
+              final mockInnerDoc = KoiTicketDocument(
+                elements: [
+                  _processEditMode(t, state.schema) as KoiTicketElement,
+                ],
+              );
+              final innerRender = KoiPreviewRenderer.build(
+                document: mockInnerDoc,
+                paperWidthPx: state.paperWidthPx,
+                fontFamily: 'SarasaMono',
+              );
+              if (innerRender is Container && innerRender.child is Column) {
+                final col = innerRender.child as Column;
+                if (col.children.isNotEmpty) return col.children.first;
+              }
+              return innerRender;
+            }),
+            if (forEachElement.templates.isEmpty)
+              const Padding(
+                padding: EdgeInsets.all(16),
+                child: Center(
+                  child: Text(
+                    '选中此区域，从左侧组件库添加子组件',
+                    style: TextStyle(color: Colors.grey, fontSize: 12),
+                  ),
+                ),
+              ),
+          ],
+        ),
+      );
     }
 
     // 编辑模式下依赖 _processEditMode 将 {{变量}} 替换为 <中文标签> 做视觉提示，
@@ -341,16 +387,17 @@ class _EditableElementWrap extends StatelessWidget {
         ),
         child: Stack(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: child,
-            ),
+            Padding(padding: const EdgeInsets.all(4.0), child: child),
             if (isSelected)
               Positioned(
                 top: 0,
                 right: 0,
                 child: IconButton(
-                  icon: const Icon(Icons.delete_forever, color: Colors.red, size: 20),
+                  icon: const Icon(
+                    Icons.delete_forever,
+                    color: Colors.red,
+                    size: 20,
+                  ),
                   onPressed: onDelete,
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
@@ -380,13 +427,17 @@ class _EditableLabelElementWrap extends StatefulWidget {
   final VoidCallback onDelete;
 
   @override
-  State<_EditableLabelElementWrap> createState() => _EditableLabelElementWrapState();
+  State<_EditableLabelElementWrap> createState() =>
+      _EditableLabelElementWrapState();
 }
 
 class _EditableLabelElementWrapState extends State<_EditableLabelElementWrap> {
   KoiPrintElement? _dragStartElement;
 
-  KoiPrintElement _processEditMode(KoiPrintElement e, List<KoiTemplateField> fields) {
+  KoiPrintElement _processEditMode(
+    KoiPrintElement e,
+    List<KoiTemplateField> fields,
+  ) {
     if (e is KoiPositionedTextElement) {
       String t = e.text;
       for (var f in fields) {
@@ -406,33 +457,59 @@ class _EditableLabelElementWrapState extends State<_EditableLabelElementWrap> {
   KoiLabelElement _moveElement(KoiLabelElement el, int dx, int dy) {
     if (el is KoiPositionedTextElement) {
       return KoiPositionedTextElement(
-        x: el.x + dx, y: el.y + dy, text: el.text,
-        fontSize: el.fontSize, font: el.font,
-        rotation: el.rotation, xScale: el.xScale, yScale: el.yScale, bold: el.bold,
+        x: el.x + dx,
+        y: el.y + dy,
+        text: el.text,
+        fontSize: el.fontSize,
+        font: el.font,
+        rotation: el.rotation,
+        xScale: el.xScale,
+        yScale: el.yScale,
+        bold: el.bold,
       );
     } else if (el is KoiLabelBoxElement) {
       return KoiLabelBoxElement(
-        x: el.x + dx, y: el.y + dy, width: el.width, height: el.height, thickness: el.thickness,
+        x: el.x + dx,
+        y: el.y + dy,
+        width: el.width,
+        height: el.height,
+        thickness: el.thickness,
       );
     } else if (el is KoiPositionedBarcodeElement) {
       return KoiPositionedBarcodeElement(
-        x: el.x + dx, y: el.y + dy, data: el.data, height: el.height, type: el.type,
+        x: el.x + dx,
+        y: el.y + dy,
+        data: el.data,
+        height: el.height,
+        type: el.type,
       );
     } else if (el is KoiPositionedQrCodeElement) {
       return KoiPositionedQrCodeElement(
-        x: el.x + dx, y: el.y + dy, data: el.data, cellSize: el.cellSize,
+        x: el.x + dx,
+        y: el.y + dy,
+        data: el.data,
+        cellSize: el.cellSize,
       );
     } else if (el is KoiLabelLineElement) {
       return KoiLabelLineElement(
-        x: el.x + dx, y: el.y + dy, width: el.width, height: el.height,
+        x: el.x + dx,
+        y: el.y + dy,
+        width: el.width,
+        height: el.height,
       );
     } else if (el is KoiLabelReverseElement) {
       return KoiLabelReverseElement(
-        x: el.x + dx, y: el.y + dy, width: el.width, height: el.height,
+        x: el.x + dx,
+        y: el.y + dy,
+        width: el.width,
+        height: el.height,
       );
     } else if (el is KoiLabelImageElement) {
       return KoiLabelImageElement(
-        x: el.x + dx, y: el.y + dy, imageBytes: el.imageBytes, width: el.width,
+        x: el.x + dx,
+        y: el.y + dy,
+        imageBytes: el.imageBytes,
+        width: el.width,
       );
     }
     return el;
@@ -442,12 +519,18 @@ class _EditableLabelElementWrapState extends State<_EditableLabelElementWrap> {
   Widget build(BuildContext context) {
     final state = context.watch<EditorState>();
     final el = widget.element.element as KoiLabelElement;
-    
+
     // Replace text placeholders with schema labels
-    final processed = state.isPreviewMode ? el : _processEditMode(el, state.schema) as KoiLabelElement;
+    final processed = state.isPreviewMode
+        ? el
+        : _processEditMode(el, state.schema) as KoiLabelElement;
 
     // Use the public render method from KoiPreviewRenderer
-    final innerPositioned = KoiPreviewRenderer.renderPositionedElement(processed, Colors.black, widget.scale);
+    final innerPositioned = KoiPreviewRenderer.renderPositionedElement(
+      processed,
+      Colors.black,
+      widget.scale,
+    );
 
     if (innerPositioned is! Positioned) {
       return const SizedBox.shrink();
@@ -469,22 +552,33 @@ class _EditableLabelElementWrapState extends State<_EditableLabelElementWrap> {
           final dx = (details.delta.dx / widget.scale).round();
           final dy = (details.delta.dy / widget.scale).round();
           if (dx == 0 && dy == 0) return;
-          
-          final current = state.elements.firstWhere((e) => e.id == widget.element.id).element as KoiLabelElement;
+
+          final current =
+              state.elements
+                      .firstWhere((e) => e.id == widget.element.id)
+                      .element
+                  as KoiLabelElement;
           final moved = _moveElement(current, dx, dy);
           state.updateElementNoHistory(widget.element.id, moved);
         },
         onPanEnd: (details) {
           if (_dragStartElement != null) {
-            final current = state.elements.firstWhere((e) => e.id == widget.element.id).element;
+            final current = state.elements
+                .firstWhere((e) => e.id == widget.element.id)
+                .element;
             if (current != _dragStartElement) {
               // Create a command for history ONLY on end
-              state.updateElementNoHistory(widget.element.id, _dragStartElement!);
-              state.execute(UpdateElementCommand(
-                elementId: widget.element.id,
-                oldElement: _dragStartElement!,
-                newElement: current,
-              ));
+              state.updateElementNoHistory(
+                widget.element.id,
+                _dragStartElement!,
+              );
+              state.execute(
+                UpdateElementCommand(
+                  elementId: widget.element.id,
+                  oldElement: _dragStartElement!,
+                  newElement: current,
+                ),
+              );
             }
             _dragStartElement = null;
           }
@@ -501,15 +595,22 @@ class _EditableLabelElementWrapState extends State<_EditableLabelElementWrap> {
             clipBehavior: Clip.none,
             children: [
               innerPositioned.child,
-              
+
               if (widget.isSelected)
                 Positioned(
                   top: 0,
                   right: 0,
                   child: Container(
-                    decoration: const BoxDecoration(color: Colors.white70, shape: BoxShape.circle),
+                    decoration: const BoxDecoration(
+                      color: Colors.white70,
+                      shape: BoxShape.circle,
+                    ),
                     child: IconButton(
-                      icon: const Icon(Icons.delete_forever, color: Colors.red, size: 20),
+                      icon: const Icon(
+                        Icons.delete_forever,
+                        color: Colors.red,
+                        size: 20,
+                      ),
                       onPressed: widget.onDelete,
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),

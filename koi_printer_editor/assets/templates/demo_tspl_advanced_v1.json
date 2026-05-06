@@ -1,0 +1,83 @@
+{
+  "manifestVersion": 1,
+  "id": "demo_tspl_advanced_v1",
+  "name": "TSPL 高级绘图与指令 (TSPL)",
+  "version": 1,
+  "category": "demo",
+  "description": "展示新增的 TSPL BLOCK、矢量绘图以及硬件指令支持",
+  "schema": [
+    {
+      "key": "title",
+      "label": "标题"
+    },
+    {
+      "key": "longText",
+      "label": "超长排版文本"
+    }
+  ],
+  "mockData": {
+    "title": "高级 TSPL 测试",
+    "longText": "这是一个非常长的文本，用来测试 BLOCK 指令自动换行功能的稳定性与效果。此文本将受限于指定的宽高自动折行。"
+  },
+  "document": {
+    "documentType": "label",
+    "elements": [
+      {
+        "type": "labelSetup",
+        "widthMm": 60,
+        "heightMm": 40
+      },
+      {
+        "type": "positionedText",
+        "x": 20,
+        "y": 20,
+        "text": "{{title}}",
+        "xScale": 2,
+        "yScale": 2
+      },
+      {
+        "type": "labelCircle",
+        "x": 200,
+        "y": 50,
+        "diameter": 60,
+        "thickness": 3
+      },
+      {
+        "type": "labelEllipse",
+        "x": 300,
+        "y": 50,
+        "width": 80,
+        "height": 40,
+        "thickness": 2
+      },
+      {
+        "type": "labelDiagonal",
+        "x": 400,
+        "y": 50,
+        "xEnd": 450,
+        "yEnd": 100,
+        "thickness": 4
+      },
+      {
+        "type": "labelBlockText",
+        "x": 20,
+        "y": 150,
+        "width": 400,
+        "height": 100,
+        "text": "{{longText}}"
+      },
+      {
+        "type": "labelBeep",
+        "level": 2,
+        "interval": 200
+      },
+      {
+        "type": "labelFeed",
+        "dots": 50
+      },
+      {
+        "type": "labelCut"
+      }
+    ]
+  }
+}

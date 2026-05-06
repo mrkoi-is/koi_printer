@@ -5,8 +5,10 @@ import 'package:koi_printer/koi_printer.dart';
 class KoiTemplateLoader {
   /// 从 package assets 中异步加载所有的 JSON 模板
   static Future<List<KoiTemplateManifest>> loadAllTemplates() async {
-    final AssetManifest manifest = await AssetManifest.loadFromAssetBundle(rootBundle);
-    
+    final AssetManifest manifest = await AssetManifest.loadFromAssetBundle(
+      rootBundle,
+    );
+
     // 找出所有的模板 JSON 文件
     // 注意：如果是被其他项目依赖，路径会带有 packages/koi_printer_editor/ 前缀
     // 如果是本包自己运行，路径可能是 assets/templates/

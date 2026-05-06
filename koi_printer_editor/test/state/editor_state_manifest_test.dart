@@ -44,8 +44,7 @@ void main() {
 
       expect(state.elements.length, 2);
       expect(state.elements[0].id, 'e_0');
-      expect(
-          (state.elements[0].element as KoiTextElement).text, 'Hello');
+      expect((state.elements[0].element as KoiTextElement).text, 'Hello');
     });
 
     test('同步 schema', () {
@@ -54,7 +53,10 @@ void main() {
         schema: const [
           KoiTemplateField(key: 'title', label: '标题'),
           KoiTemplateField(
-              key: 'amount', label: '金额', type: KoiFieldType.number),
+            key: 'amount',
+            label: '金额',
+            type: KoiFieldType.number,
+          ),
         ],
       );
 
@@ -94,7 +96,9 @@ void main() {
       final state = EditorState();
       // 先添加一个元素建立 undo 历史
       final el = EditorElement(
-          id: '1', element: const KoiTextElement(text: 'X'));
+        id: '1',
+        element: const KoiTextElement(text: 'X'),
+      );
       state.loadTemplate([el]);
       expect(state.elements.length, 1);
 
@@ -109,7 +113,9 @@ void main() {
     test('清空 selectedElementId', () {
       final state = EditorState();
       final el = EditorElement(
-          id: '1', element: const KoiTextElement(text: 'X'));
+        id: '1',
+        element: const KoiTextElement(text: 'X'),
+      );
       state.loadTemplate([el]);
       state.selectElement('1');
       expect(state.selectedElementId, '1');
@@ -165,9 +171,7 @@ void main() {
       final state = EditorState();
       expect(state.schema, isEmpty);
 
-      const fields = [
-        KoiTemplateField(key: 'a', label: 'A'),
-      ];
+      const fields = [KoiTemplateField(key: 'a', label: 'A')];
       state.updateSchema(fields);
 
       expect(state.schema.length, 1);
@@ -176,7 +180,9 @@ void main() {
 
     test('document getter 正确构建 KoiTicketDocument', () {
       final el = EditorElement(
-          id: '1', element: const KoiTextElement(text: 'Test'));
+        id: '1',
+        element: const KoiTextElement(text: 'Test'),
+      );
       final state = EditorState(initialElements: [el]);
 
       final doc = state.document;
@@ -188,9 +194,13 @@ void main() {
 
     test('selectedElement 返回正确元素', () {
       final el1 = EditorElement(
-          id: 'a', element: const KoiTextElement(text: 'A'));
+        id: 'a',
+        element: const KoiTextElement(text: 'A'),
+      );
       final el2 = EditorElement(
-          id: 'b', element: const KoiTextElement(text: 'B'));
+        id: 'b',
+        element: const KoiTextElement(text: 'B'),
+      );
       final state = EditorState(initialElements: [el1, el2]);
 
       state.selectElement('b');

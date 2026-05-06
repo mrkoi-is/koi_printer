@@ -92,16 +92,25 @@ class _BootstrapScreenState extends State<_BootstrapScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.print, size: 64, color: Theme.of(context).colorScheme.primary),
+                  Icon(
+                    Icons.print,
+                    size: 64,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
                   const SizedBox(height: 16),
                   Text(
                     'Koi Printer Studio',
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 24),
                   const SizedBox(width: 200, child: LinearProgressIndicator()),
                   const SizedBox(height: 8),
-                  Text('正在加载模板...', style: TextStyle(color: Colors.grey.shade500, fontSize: 13)),
+                  Text(
+                    '正在加载模板...',
+                    style: TextStyle(color: Colors.grey.shade500, fontSize: 13),
+                  ),
                 ],
               ),
             ),

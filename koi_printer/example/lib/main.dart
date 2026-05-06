@@ -36,7 +36,7 @@ void main() async {
   final sharedPrefs = await SharedPreferences.getInstance();
   final storage = KoiPrinterStorage(sharedPrefs);
   final prefs = KoiUserPreferences(sharedPrefs);
-  
+
   // Initialize Printer Manager and Auto-Connect
   final manager = KoiPrinterManager(storage: storage);
   manager.startAutoConnect();
@@ -206,32 +206,32 @@ class _PreviewScreenState extends State<PreviewScreen> {
                 children: [
                   ActionChip(
                     label: const Text('1份'),
-                    onPressed: () => setState(
-                        () => _config = _config.copyWith(copies: 1)),
+                    onPressed: () =>
+                        setState(() => _config = _config.copyWith(copies: 1)),
                     backgroundColor: effectiveConfig.copies == 1
                         ? Colors.blue.shade100
                         : null,
                   ),
                   ActionChip(
                     label: const Text('5份'),
-                    onPressed: () => setState(
-                        () => _config = _config.copyWith(copies: 5)),
+                    onPressed: () =>
+                        setState(() => _config = _config.copyWith(copies: 5)),
                     backgroundColor: effectiveConfig.copies == 5
                         ? Colors.blue.shade100
                         : null,
                   ),
                   ActionChip(
                     label: const Text('50份 (压力测试)'),
-                    onPressed: () => setState(
-                        () => _config = _config.copyWith(copies: 50)),
+                    onPressed: () =>
+                        setState(() => _config = _config.copyWith(copies: 50)),
                     backgroundColor: effectiveConfig.copies == 50
                         ? Colors.red.shade100
                         : null,
                   ),
                   ActionChip(
                     label: const Text('100份 (极限)'),
-                    onPressed: () => setState(
-                        () => _config = _config.copyWith(copies: 100)),
+                    onPressed: () =>
+                        setState(() => _config = _config.copyWith(copies: 100)),
                     backgroundColor: effectiveConfig.copies == 100
                         ? Colors.red.shade200
                         : null,
@@ -387,7 +387,13 @@ class _PreviewScreenState extends State<PreviewScreen> {
 
           if (devices.isNotEmpty) {
             final device = devices.first;
-            executePrintJob(context, device, docs, isLabel, config: effectiveConfig);
+            executePrintJob(
+              context,
+              device,
+              docs,
+              isLabel,
+              config: effectiveConfig,
+            );
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text('请先前往设置页面绑定$printerTypeName')),

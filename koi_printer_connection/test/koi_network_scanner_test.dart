@@ -17,15 +17,17 @@ void main() {
       final port = server.port;
 
       final results = <String>[];
-      
-      final sub = scanner.scan(
-        subnet: '127.0.0',
-        port: port,
-        timeout: const Duration(milliseconds: 50),
-        endIp: 1, // Only scan 127.0.0.1
-      ).listen((device) {
-        results.add(device.deviceId);
-      });
+
+      final sub = scanner
+          .scan(
+            subnet: '127.0.0',
+            port: port,
+            timeout: const Duration(milliseconds: 50),
+            endIp: 1, // Only scan 127.0.0.1
+          )
+          .listen((device) {
+            results.add(device.deviceId);
+          });
 
       await Future<void>.delayed(const Duration(milliseconds: 100));
       await sub.cancel();
@@ -37,15 +39,17 @@ void main() {
     test('scan ignores unreachable IPs', () async {
       // Don't start any server, so it should be unreachable
       final results = <String>[];
-      
-      final sub = scanner.scan(
-        subnet: '127.0.0',
-        port: 19100, // hopefully unused port
-        timeout: const Duration(milliseconds: 10),
-        endIp: 2, 
-      ).listen((device) {
-        results.add(device.deviceId);
-      });
+
+      final sub = scanner
+          .scan(
+            subnet: '127.0.0',
+            port: 19100, // hopefully unused port
+            timeout: const Duration(milliseconds: 10),
+            endIp: 2,
+          )
+          .listen((device) {
+            results.add(device.deviceId);
+          });
 
       await Future<void>.delayed(const Duration(milliseconds: 50));
       await sub.cancel();

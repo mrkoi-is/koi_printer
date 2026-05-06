@@ -112,10 +112,7 @@ void main() {
       final copy = original.copyWith(listKey: 'orders');
       expect(copy.listKey, 'orders');
       expect(copy.templates.length, 1);
-      expect(
-        (copy.templates[0] as KoiTextElement).text,
-        'inner',
-      );
+      expect((copy.templates[0] as KoiTextElement).text, 'inner');
     });
 
     test('只改 templates', () {
@@ -131,7 +128,9 @@ void main() {
     );
 
     test('只改 columns', () {
-      final copy = original.copyWith(columns: [const KoiTextColumn(text: 'B', ratio: 2)]);
+      final copy = original.copyWith(
+        columns: [const KoiTextColumn(text: 'B', ratio: 2)],
+      );
       expect(copy.columns.length, 1);
       expect(copy.columns[0].text, 'B');
       expect(copy.columns[0].ratio, 2);

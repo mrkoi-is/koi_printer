@@ -4,13 +4,13 @@ import 'package:koi_printer/koi_printer.dart';
 import 'package:koi_printer_editor/state/koi_print_element_ext.dart';
 import 'package:koi_printer_editor/widgets/element_inspector_registry.dart';
 
-class LabelBoxElementInspector
-    extends ElementInspectorBuilder<KoiLabelBoxElement> {
+class LabelDiagonalElementInspector
+    extends ElementInspectorBuilder<KoiLabelDiagonalElement> {
   @override
   Widget build(
     BuildContext context,
     String elementId,
-    KoiLabelBoxElement element,
+    KoiLabelDiagonalElement element,
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -19,7 +19,7 @@ class LabelBoxElementInspector
           children: [
             Expanded(
               child: _buildNumberField(
-                label: 'X 坐标',
+                label: '起点 X',
                 value: element.x,
                 onChanged: (v) =>
                     update(context, elementId, element.copyWith(x: v)),
@@ -28,7 +28,7 @@ class LabelBoxElementInspector
             const SizedBox(width: 8),
             Expanded(
               child: _buildNumberField(
-                label: 'Y 坐标',
+                label: '起点 Y',
                 value: element.y,
                 onChanged: (v) =>
                     update(context, elementId, element.copyWith(y: v)),
@@ -41,19 +41,19 @@ class LabelBoxElementInspector
           children: [
             Expanded(
               child: _buildNumberField(
-                label: '宽度',
-                value: element.width,
+                label: '终点 X',
+                value: element.xEnd,
                 onChanged: (v) =>
-                    update(context, elementId, element.copyWith(width: v)),
+                    update(context, elementId, element.copyWith(xEnd: v)),
               ),
             ),
             const SizedBox(width: 8),
             Expanded(
               child: _buildNumberField(
-                label: '高度',
-                value: element.height,
+                label: '终点 Y',
+                value: element.yEnd,
                 onChanged: (v) =>
-                    update(context, elementId, element.copyWith(height: v)),
+                    update(context, elementId, element.copyWith(yEnd: v)),
               ),
             ),
           ],
@@ -84,9 +84,7 @@ class LabelBoxElementInspector
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       onChanged: (v) {
         final parsed = int.tryParse(v);
-        if (parsed != null) {
-          onChanged(parsed);
-        }
+        if (parsed != null) onChanged(parsed);
       },
     );
   }

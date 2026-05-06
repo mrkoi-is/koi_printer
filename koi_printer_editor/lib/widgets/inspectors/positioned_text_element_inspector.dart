@@ -3,17 +3,25 @@ import 'package:flutter/services.dart';
 import 'package:koi_printer/koi_printer.dart';
 import 'package:koi_printer_editor/widgets/element_inspector_registry.dart';
 
-class PositionedTextElementInspector extends ElementInspectorBuilder<KoiPositionedTextElement> {
+class PositionedTextElementInspector
+    extends ElementInspectorBuilder<KoiPositionedTextElement> {
   @override
-  Widget build(BuildContext context, String elementId, KoiPositionedTextElement element) {
+  Widget build(
+    BuildContext context,
+    String elementId,
+    KoiPositionedTextElement element,
+  ) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Text('绝对定位文本 (Positioned Text)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+          const Text(
+            '绝对定位文本 (Positioned Text)',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+          ),
           const SizedBox(height: 16),
-          
+
           TextFormField(
             initialValue: element.text,
             decoration: const InputDecoration(
@@ -22,15 +30,25 @@ class PositionedTextElementInspector extends ElementInspectorBuilder<KoiPosition
               isDense: true,
             ),
             onChanged: (val) {
-              update(context, elementId, KoiPositionedTextElement(
-                x: element.x, y: element.y, text: val,
-                fontSize: element.fontSize, font: element.font,
-                rotation: element.rotation, xScale: element.xScale, yScale: element.yScale, bold: element.bold,
-              ));
+              update(
+                context,
+                elementId,
+                KoiPositionedTextElement(
+                  x: element.x,
+                  y: element.y,
+                  text: val,
+                  fontSize: element.fontSize,
+                  font: element.font,
+                  rotation: element.rotation,
+                  xScale: element.xScale,
+                  yScale: element.yScale,
+                  bold: element.bold,
+                ),
+              );
             },
           ),
           const SizedBox(height: 16),
-          
+
           Row(
             children: [
               Expanded(
@@ -46,11 +64,21 @@ class PositionedTextElementInspector extends ElementInspectorBuilder<KoiPosition
                   onChanged: (val) {
                     final x = int.tryParse(val);
                     if (x != null) {
-                      update(context, elementId, KoiPositionedTextElement(
-                        x: x, y: element.y, text: element.text,
-                        fontSize: element.fontSize, font: element.font,
-                        rotation: element.rotation, xScale: element.xScale, yScale: element.yScale, bold: element.bold,
-                      ));
+                      update(
+                        context,
+                        elementId,
+                        KoiPositionedTextElement(
+                          x: x,
+                          y: element.y,
+                          text: element.text,
+                          fontSize: element.fontSize,
+                          font: element.font,
+                          rotation: element.rotation,
+                          xScale: element.xScale,
+                          yScale: element.yScale,
+                          bold: element.bold,
+                        ),
+                      );
                     }
                   },
                 ),
@@ -69,11 +97,21 @@ class PositionedTextElementInspector extends ElementInspectorBuilder<KoiPosition
                   onChanged: (val) {
                     final y = int.tryParse(val);
                     if (y != null) {
-                      update(context, elementId, KoiPositionedTextElement(
-                        x: element.x, y: y, text: element.text,
-                        fontSize: element.fontSize, font: element.font,
-                        rotation: element.rotation, xScale: element.xScale, yScale: element.yScale, bold: element.bold,
-                      ));
+                      update(
+                        context,
+                        elementId,
+                        KoiPositionedTextElement(
+                          x: element.x,
+                          y: y,
+                          text: element.text,
+                          fontSize: element.fontSize,
+                          font: element.font,
+                          rotation: element.rotation,
+                          xScale: element.xScale,
+                          yScale: element.yScale,
+                          bold: element.bold,
+                        ),
+                      );
                     }
                   },
                 ),
@@ -81,7 +119,7 @@ class PositionedTextElementInspector extends ElementInspectorBuilder<KoiPosition
             ],
           ),
           const SizedBox(height: 16),
-          
+
           Row(
             children: [
               Expanded(
@@ -97,11 +135,21 @@ class PositionedTextElementInspector extends ElementInspectorBuilder<KoiPosition
                   onChanged: (val) {
                     final s = int.tryParse(val);
                     if (s != null && s >= 1 && s <= 10) {
-                      update(context, elementId, KoiPositionedTextElement(
-                        x: element.x, y: element.y, text: element.text,
-                        fontSize: element.fontSize, font: element.font,
-                        rotation: element.rotation, xScale: s, yScale: element.yScale, bold: element.bold,
-                      ));
+                      update(
+                        context,
+                        elementId,
+                        KoiPositionedTextElement(
+                          x: element.x,
+                          y: element.y,
+                          text: element.text,
+                          fontSize: element.fontSize,
+                          font: element.font,
+                          rotation: element.rotation,
+                          xScale: s,
+                          yScale: element.yScale,
+                          bold: element.bold,
+                        ),
+                      );
                     }
                   },
                 ),
@@ -120,11 +168,21 @@ class PositionedTextElementInspector extends ElementInspectorBuilder<KoiPosition
                   onChanged: (val) {
                     final s = int.tryParse(val);
                     if (s != null && s >= 1 && s <= 10) {
-                      update(context, elementId, KoiPositionedTextElement(
-                        x: element.x, y: element.y, text: element.text,
-                        fontSize: element.fontSize, font: element.font,
-                        rotation: element.rotation, xScale: element.xScale, yScale: s, bold: element.bold,
-                      ));
+                      update(
+                        context,
+                        elementId,
+                        KoiPositionedTextElement(
+                          x: element.x,
+                          y: element.y,
+                          text: element.text,
+                          fontSize: element.fontSize,
+                          font: element.font,
+                          rotation: element.rotation,
+                          xScale: element.xScale,
+                          yScale: s,
+                          bold: element.bold,
+                        ),
+                      );
                     }
                   },
                 ),
@@ -137,11 +195,21 @@ class PositionedTextElementInspector extends ElementInspectorBuilder<KoiPosition
             value: element.bold,
             contentPadding: EdgeInsets.zero,
             onChanged: (val) {
-              update(context, elementId, KoiPositionedTextElement(
-                x: element.x, y: element.y, text: element.text,
-                fontSize: element.fontSize, font: element.font,
-                rotation: element.rotation, xScale: element.xScale, yScale: element.yScale, bold: val,
-              ));
+              update(
+                context,
+                elementId,
+                KoiPositionedTextElement(
+                  x: element.x,
+                  y: element.y,
+                  text: element.text,
+                  fontSize: element.fontSize,
+                  font: element.font,
+                  rotation: element.rotation,
+                  xScale: element.xScale,
+                  yScale: element.yScale,
+                  bold: val,
+                ),
+              );
             },
           ),
         ],

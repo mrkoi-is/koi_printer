@@ -27,20 +27,34 @@ class KoiCpclRenderer implements KoiCommandRenderer {
     final labelDoc = document;
     final commands = <List<int>>[];
 
+    // 提前扫描 copies 以注入到 CPCL 会话头的 quantity 参数
+    var copies = 1;
+    for (final e in labelDoc.elements) {
+      if (e is KoiLabelPrintElement) {
+        copies = e.copies.clamp(1, 1024);
+        break;
+      }
+    }
+
     for (final element in labelDoc.elements) {
       switch (element) {
         case KoiLabelSetupElement():
           final heightDots = (element.heightMm * element.dpi / 25.4).round();
           commands
-            ..add(_cmd('! 0 200 $heightDots 1'))
+            ..add(_cmd('! 0 200 $heightDots $copies'))
             ..add(
               _cmd(
                 'PAGE-WIDTH ${(element.widthMm * element.dpi / 25.4).round()}',
               ),
-            )
-            ..add(_cmd('ENCODING GB18030'));
+            );
+          // 字符编码: 优先使用用户指定的 codepage，否则默认 GB18030
+          final encoding = element.codepage ?? 'GB18030';
+          commands.add(_cmd('ENCODING $encoding'));
           if (element.speed != null) {
             commands.add(_cmd('SPEED ${element.speed!.round()}'));
+          }
+          if (element.density != null) {
+            commands.add(_cmd('TONE ${element.density!.clamp(0, 200)}'));
           }
         case KoiPositionedTextElement():
           if (element.xScale != 1 || element.yScale != 1) {
@@ -103,8 +117,55 @@ class KoiCpclRenderer implements KoiCommandRenderer {
           commands
             ..add(_cmd('FORM'))
             ..add(_cmd('PRINT'));
+        // copies 已在会话头 ! 指令的 quantity 参数中注入
         case KoiRawCommandElement():
           commands.add(_cmd(element.command));
+        case KoiLabelBlockTextElement():
+          final textCmd = _rotatedTextCommand(element.rotation);
+          if (element.xScale != 1 || element.yScale != 1) {
+            commands.add(_cmd('SETMAG ${element.xScale} ${element.yScale}'));
+          }
+          commands.add(
+            _cmd(
+              '$textCmd ${element.font} 0 '
+              '${element.x} ${element.y} ${element.text}',
+            ),
+          );
+          if (element.xScale != 1 || element.yScale != 1) {
+            commands.add(_cmd('SETMAG 1 1'));
+          }
+        case KoiLabelDiagonalElement():
+          commands.add(
+            _cmd(
+              'LINE ${element.x} ${element.y} '
+              '${element.xEnd} ${element.yEnd} ${element.thickness}',
+            ),
+          );
+        case KoiLabelBeepElement():
+          final beepLen = (element.interval / 125.0).round().clamp(1, 20);
+          commands.add(_cmd('BEEP $beepLen'));
+        case KoiLabelFeedElement():
+          commands.add(_cmd('POSTFEED ${element.dots}'));
+        case KoiLabelCutElement():
+          commands.add(_cmd('CUT'));
+        case KoiLabelPdf417Element():
+          // CPCL PDF417 多行格式:
+          // PDF417 direction xPos yPos [xDot yDot cols rows ecc binary]
+          // data
+          // ENDPDF417
+          final dir = element.rotation == 90 ? 'V' : 'H';
+          commands
+            ..add(
+              _cmd(
+                'PDF417 $dir ${element.x} ${element.y} '
+                '2 6 ${element.columns} ${element.rows} '
+                '${element.errorLevel} 0',
+              ),
+            )
+            ..add(_cmd(element.data))
+            ..add(_cmd('ENDPDF417'));
+        case KoiLabelCircleElement():
+        case KoiLabelEllipseElement():
         case KoiLabelForEachElement():
           break;
       }

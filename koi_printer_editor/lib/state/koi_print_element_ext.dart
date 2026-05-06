@@ -85,12 +85,8 @@ extension KoiTicketForEachElementEditorExt on KoiTicketForEachElement {
 }
 
 extension KoiTextRowElementExt on KoiTextRowElement {
-  KoiTextRowElement copyWith({
-    List<KoiTextColumn>? columns,
-  }) {
-    return KoiTextRowElement(
-      columns: columns ?? this.columns,
-    );
+  KoiTextRowElement copyWith({List<KoiTextColumn>? columns}) {
+    return KoiTextRowElement(columns: columns ?? this.columns);
   }
 }
 
@@ -189,12 +185,7 @@ extension KoiPositionedQrCodeElementEditorExt on KoiPositionedQrCodeElement {
 }
 
 extension KoiLabelReverseElementEditorExt on KoiLabelReverseElement {
-  KoiLabelReverseElement copyWith({
-    int? x,
-    int? y,
-    int? width,
-    int? height,
-  }) {
+  KoiLabelReverseElement copyWith({int? x, int? y, int? width, int? height}) {
     return KoiLabelReverseElement(
       x: x ?? this.x,
       y: y ?? this.y,
@@ -232,13 +223,107 @@ extension KoiLabelForEachElementExt on KoiLabelForEachElement {
   }
 }
 
-extension KoiLabelLineElementEditorExt on KoiLabelLineElement {
-  KoiLabelLineElement copyWith({
+extension KoiLabelBlockTextElementExt on KoiLabelBlockTextElement {
+  KoiLabelBlockTextElement copyWith({
     int? x,
     int? y,
     int? width,
     int? height,
+    String? text,
+    String? font,
+    int? rotation,
+    int? xScale,
+    int? yScale,
+    int? space,
+    int? align,
+    int? fit,
   }) {
+    return KoiLabelBlockTextElement(
+      x: x ?? this.x,
+      y: y ?? this.y,
+      width: width ?? this.width,
+      height: height ?? this.height,
+      text: text ?? this.text,
+      font: font ?? this.font,
+      rotation: rotation ?? this.rotation,
+      xScale: xScale ?? this.xScale,
+      yScale: yScale ?? this.yScale,
+      space: space ?? this.space,
+      align: align ?? this.align,
+      fit: fit ?? this.fit,
+    );
+  }
+}
+
+extension KoiLabelCircleElementExt on KoiLabelCircleElement {
+  KoiLabelCircleElement copyWith({
+    int? x,
+    int? y,
+    int? diameter,
+    int? thickness,
+  }) {
+    return KoiLabelCircleElement(
+      x: x ?? this.x,
+      y: y ?? this.y,
+      diameter: diameter ?? this.diameter,
+      thickness: thickness ?? this.thickness,
+    );
+  }
+}
+
+extension KoiLabelEllipseElementExt on KoiLabelEllipseElement {
+  KoiLabelEllipseElement copyWith({
+    int? x,
+    int? y,
+    int? width,
+    int? height,
+    int? thickness,
+  }) {
+    return KoiLabelEllipseElement(
+      x: x ?? this.x,
+      y: y ?? this.y,
+      width: width ?? this.width,
+      height: height ?? this.height,
+      thickness: thickness ?? this.thickness,
+    );
+  }
+}
+
+extension KoiLabelDiagonalElementExt on KoiLabelDiagonalElement {
+  KoiLabelDiagonalElement copyWith({
+    int? x,
+    int? y,
+    int? xEnd,
+    int? yEnd,
+    int? thickness,
+  }) {
+    return KoiLabelDiagonalElement(
+      x: x ?? this.x,
+      y: y ?? this.y,
+      xEnd: xEnd ?? this.xEnd,
+      yEnd: yEnd ?? this.yEnd,
+      thickness: thickness ?? this.thickness,
+    );
+  }
+}
+
+extension KoiLabelBeepElementExt on KoiLabelBeepElement {
+  KoiLabelBeepElement copyWith({int? level, int? interval}) {
+    return KoiLabelBeepElement(
+      level: level ?? this.level,
+      interval: interval ?? this.interval,
+    );
+  }
+}
+
+extension KoiLabelFeedElementExt on KoiLabelFeedElement {
+  KoiLabelFeedElement copyWith({int? dots}) {
+    return KoiLabelFeedElement(dots: dots ?? this.dots);
+  }
+}
+
+extension KoiLabelLineElementEditorExt on KoiLabelLineElement {
+  KoiLabelLineElement copyWith({int? x, int? y, int? width, int? height}) {
     return KoiLabelLineElement(
       x: x ?? this.x,
       y: y ?? this.y,
@@ -274,3 +359,30 @@ extension KoiLabelSetupElementEditorExt on KoiLabelSetupElement {
   }
 }
 
+extension KoiLabelPdf417ElementExt on KoiLabelPdf417Element {
+  KoiLabelPdf417Element copyWith({
+    int? x,
+    int? y,
+    int? width,
+    int? height,
+    int? rotation,
+    int? errorLevel,
+    int? columns,
+    int? rows,
+    String? option,
+    String? data,
+  }) {
+    return KoiLabelPdf417Element(
+      x: x ?? this.x,
+      y: y ?? this.y,
+      width: width ?? this.width,
+      height: height ?? this.height,
+      rotation: rotation ?? this.rotation,
+      errorLevel: errorLevel ?? this.errorLevel,
+      columns: columns ?? this.columns,
+      rows: rows ?? this.rows,
+      option: option ?? this.option,
+      data: data ?? this.data,
+    );
+  }
+}

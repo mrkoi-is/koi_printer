@@ -114,11 +114,13 @@ class KoiTemplateManifest {
       category: json['category'] as String? ?? '',
       description: json['description'] as String? ?? '',
       document: _parseDocument(json['document']),
-      schema: (json['schema'] as List?)
+      schema:
+          (json['schema'] as List?)
               ?.map((e) => _fieldFromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
-      groups: (json['groups'] as List?)
+      groups:
+          (json['groups'] as List?)
               ?.map((e) => _groupFromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
@@ -179,8 +181,7 @@ class KoiTemplateManifest {
   };
 
   /// 序列化为格式化的 JSON 字符串。
-  String toJsonString() =>
-      const JsonEncoder.withIndent('  ').convert(toJson());
+  String toJsonString() => const JsonEncoder.withIndent('  ').convert(toJson());
 
   // ═══════════════════════════════════════════════════════════
   // 内部: Schema 字段序列化

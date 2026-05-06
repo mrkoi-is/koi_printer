@@ -4,13 +4,13 @@ import 'package:koi_printer/koi_printer.dart';
 import 'package:koi_printer_editor/state/koi_print_element_ext.dart';
 import 'package:koi_printer_editor/widgets/element_inspector_registry.dart';
 
-class LabelBoxElementInspector
-    extends ElementInspectorBuilder<KoiLabelBoxElement> {
+class LabelEllipseElementInspector
+    extends ElementInspectorBuilder<KoiLabelEllipseElement> {
   @override
   Widget build(
     BuildContext context,
     String elementId,
-    KoiLabelBoxElement element,
+    KoiLabelEllipseElement element,
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,9 +84,7 @@ class LabelBoxElementInspector
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       onChanged: (v) {
         final parsed = int.tryParse(v);
-        if (parsed != null) {
-          onChanged(parsed);
-        }
+        if (parsed != null) onChanged(parsed);
       },
     );
   }

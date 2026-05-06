@@ -16,7 +16,12 @@ mixin EditorManifestMixin on ChangeNotifier {
   /// Schema 所属实体名 (用于左面板 "单据模型: xxx" 显示)。
   String get schemaEntity => _currentManifestName;
 
-  void initManifestIdentity(String id, String name, String category, String description) {
+  void initManifestIdentity(
+    String id,
+    String name,
+    String category,
+    String description,
+  ) {
     _currentManifestId = id;
     _currentManifestName = name;
     _currentManifestCategory = category;

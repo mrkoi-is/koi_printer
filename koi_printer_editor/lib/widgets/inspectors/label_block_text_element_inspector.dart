@@ -4,17 +4,28 @@ import 'package:koi_printer/koi_printer.dart';
 import 'package:koi_printer_editor/state/koi_print_element_ext.dart';
 import 'package:koi_printer_editor/widgets/element_inspector_registry.dart';
 
-class LabelBoxElementInspector
-    extends ElementInspectorBuilder<KoiLabelBoxElement> {
+class LabelBlockTextElementInspector
+    extends ElementInspectorBuilder<KoiLabelBlockTextElement> {
   @override
   Widget build(
     BuildContext context,
     String elementId,
-    KoiLabelBoxElement element,
+    KoiLabelBlockTextElement element,
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        TextFormField(
+          initialValue: element.text,
+          decoration: const InputDecoration(
+            labelText: '文本内容',
+            border: OutlineInputBorder(),
+          ),
+          maxLines: 3,
+          onChanged: (v) =>
+              update(context, elementId, element.copyWith(text: v)),
+        ),
+        const SizedBox(height: 16),
         Row(
           children: [
             Expanded(
@@ -58,13 +69,6 @@ class LabelBoxElementInspector
             ),
           ],
         ),
-        const SizedBox(height: 16),
-        _buildNumberField(
-          label: '线条粗细',
-          value: element.thickness,
-          onChanged: (v) =>
-              update(context, elementId, element.copyWith(thickness: v)),
-        ),
       ],
     );
   }
@@ -84,9 +88,7 @@ class LabelBoxElementInspector
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       onChanged: (v) {
         final parsed = int.tryParse(v);
-        if (parsed != null) {
-          onChanged(parsed);
-        }
+        if (parsed != null) onChanged(parsed);
       },
     );
   }

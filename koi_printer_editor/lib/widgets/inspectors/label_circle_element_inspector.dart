@@ -4,13 +4,13 @@ import 'package:koi_printer/koi_printer.dart';
 import 'package:koi_printer_editor/state/koi_print_element_ext.dart';
 import 'package:koi_printer_editor/widgets/element_inspector_registry.dart';
 
-class LabelBoxElementInspector
-    extends ElementInspectorBuilder<KoiLabelBoxElement> {
+class LabelCircleElementInspector
+    extends ElementInspectorBuilder<KoiLabelCircleElement> {
   @override
   Widget build(
     BuildContext context,
     String elementId,
-    KoiLabelBoxElement element,
+    KoiLabelCircleElement element,
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -37,26 +37,11 @@ class LabelBoxElementInspector
           ],
         ),
         const SizedBox(height: 16),
-        Row(
-          children: [
-            Expanded(
-              child: _buildNumberField(
-                label: '宽度',
-                value: element.width,
-                onChanged: (v) =>
-                    update(context, elementId, element.copyWith(width: v)),
-              ),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: _buildNumberField(
-                label: '高度',
-                value: element.height,
-                onChanged: (v) =>
-                    update(context, elementId, element.copyWith(height: v)),
-              ),
-            ),
-          ],
+        _buildNumberField(
+          label: '直径',
+          value: element.diameter,
+          onChanged: (v) =>
+              update(context, elementId, element.copyWith(diameter: v)),
         ),
         const SizedBox(height: 16),
         _buildNumberField(
@@ -84,9 +69,7 @@ class LabelBoxElementInspector
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       onChanged: (v) {
         final parsed = int.tryParse(v);
-        if (parsed != null) {
-          onChanged(parsed);
-        }
+        if (parsed != null) onChanged(parsed);
       },
     );
   }

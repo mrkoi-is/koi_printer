@@ -3,17 +3,25 @@ import 'package:flutter/services.dart';
 import 'package:koi_printer/koi_printer.dart';
 import 'package:koi_printer_editor/widgets/element_inspector_registry.dart';
 
-class LabelSetupElementInspector extends ElementInspectorBuilder<KoiLabelSetupElement> {
+class LabelSetupElementInspector
+    extends ElementInspectorBuilder<KoiLabelSetupElement> {
   @override
-  Widget build(BuildContext context, String elementId, KoiLabelSetupElement element) {
+  Widget build(
+    BuildContext context,
+    String elementId,
+    KoiLabelSetupElement element,
+  ) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Text('纸张设置 (Setup)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+          const Text(
+            '纸张设置 (Setup)',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+          ),
           const SizedBox(height: 16),
-          
+
           Row(
             children: [
               Expanded(
@@ -29,17 +37,21 @@ class LabelSetupElementInspector extends ElementInspectorBuilder<KoiLabelSetupEl
                   onChanged: (val) {
                     final width = int.tryParse(val);
                     if (width != null) {
-                      update(context, elementId, KoiLabelSetupElement(
-                        widthMm: width,
-                        heightMm: element.heightMm,
-                        speed: element.speed,
-                        density: element.density,
-                        gapMm: element.gapMm,
-                        dpi: element.dpi,
-                        referenceX: element.referenceX,
-                        referenceY: element.referenceY,
-                        codepage: element.codepage,
-                      ));
+                      update(
+                        context,
+                        elementId,
+                        KoiLabelSetupElement(
+                          widthMm: width,
+                          heightMm: element.heightMm,
+                          speed: element.speed,
+                          density: element.density,
+                          gapMm: element.gapMm,
+                          dpi: element.dpi,
+                          referenceX: element.referenceX,
+                          referenceY: element.referenceY,
+                          codepage: element.codepage,
+                        ),
+                      );
                     }
                   },
                 ),
@@ -58,17 +70,21 @@ class LabelSetupElementInspector extends ElementInspectorBuilder<KoiLabelSetupEl
                   onChanged: (val) {
                     final height = int.tryParse(val);
                     if (height != null) {
-                      update(context, elementId, KoiLabelSetupElement(
-                        widthMm: element.widthMm,
-                        heightMm: height,
-                        speed: element.speed,
-                        density: element.density,
-                        gapMm: element.gapMm,
-                        dpi: element.dpi,
-                        referenceX: element.referenceX,
-                        referenceY: element.referenceY,
-                        codepage: element.codepage,
-                      ));
+                      update(
+                        context,
+                        elementId,
+                        KoiLabelSetupElement(
+                          widthMm: element.widthMm,
+                          heightMm: height,
+                          speed: element.speed,
+                          density: element.density,
+                          gapMm: element.gapMm,
+                          dpi: element.dpi,
+                          referenceX: element.referenceX,
+                          referenceY: element.referenceY,
+                          codepage: element.codepage,
+                        ),
+                      );
                     }
                   },
                 ),

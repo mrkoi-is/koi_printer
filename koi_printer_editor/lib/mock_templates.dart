@@ -33,19 +33,26 @@ class TemplateRegistry {
 }
 
 /// 便捷访问器 — 保持外部调用代码的简洁性。
-List<KoiTemplateManifest> get templateManifests => TemplateRegistry.instance.manifests;
+List<KoiTemplateManifest> get templateManifests =>
+    TemplateRegistry.instance.manifests;
 
 /// 将 Manifest 的 document.elements 转换为编辑器可用的 EditorElement 列表。
 List<EditorElement> manifestToEditorElements(KoiTemplateManifest manifest) {
   final doc = manifest.document;
   if (doc is KoiTicketDocument) {
-    return doc.elements.map((e) => EditorElement(id: _genId(), element: e)).toList();
+    return doc.elements
+        .map((e) => EditorElement(id: _genId(), element: e))
+        .toList();
   } else if (doc is KoiLabelDocument) {
-    return doc.elements.map((e) => EditorElement(id: _genId(), element: e)).toList();
+    return doc.elements
+        .map((e) => EditorElement(id: _genId(), element: e))
+        .toList();
   }
   return [];
 }
 
 /// 默认加载的模板 (通常是列表的第一个)。
-KoiTemplateManifest? get defaultManifest => templateManifests.isNotEmpty ? templateManifests.first : null;
-List<EditorElement> get defaultTemplateElements => defaultManifest != null ? manifestToEditorElements(defaultManifest!) : [];
+KoiTemplateManifest? get defaultManifest =>
+    templateManifests.isNotEmpty ? templateManifests.first : null;
+List<EditorElement> get defaultTemplateElements =>
+    defaultManifest != null ? manifestToEditorElements(defaultManifest!) : [];

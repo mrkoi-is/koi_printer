@@ -10,7 +10,10 @@ mixin EditorSchemaMixin on ChangeNotifier {
   Map<String, dynamic> get mockData => _mockData;
   bool get isPreviewMode => _isPreviewMode;
 
-  void initSchemaAndMock(List<KoiTemplateField> newSchema, Map<String, dynamic> newMockData) {
+  void initSchemaAndMock(
+    List<KoiTemplateField> newSchema,
+    Map<String, dynamic> newMockData,
+  ) {
     _schema = newSchema;
     _mockData = newMockData;
   }

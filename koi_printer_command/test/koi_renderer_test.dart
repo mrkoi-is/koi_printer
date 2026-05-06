@@ -413,10 +413,50 @@ void main() {
             y: 10,
             height: 50,
             data: '123',
+            readable: 0,
+            rotation: 90,
+            narrow: 3,
+            wide: 6,
+          ),
+          KoiPositionedQrCodeElement(
+            x: 20,
+            y: 20,
+            data: 'QR',
+            cellSize: 4,
+            eccLevel: 'M',
+            rotation: 180,
           ),
           KoiLabelBoxElement(x: 10, y: 10, width: 20, height: 20),
           KoiLabelReverseElement(x: 10, y: 10, width: 20, height: 20),
           KoiLabelLineElement(x: 10, y: 10, width: 20, height: 20),
+          KoiLabelCircleElement(x: 10, y: 10, diameter: 20, thickness: 3),
+          KoiLabelEllipseElement(
+            x: 10,
+            y: 10,
+            width: 20,
+            height: 30,
+            thickness: 2,
+          ),
+          KoiLabelDiagonalElement(
+            x: 10,
+            y: 10,
+            xEnd: 30,
+            yEnd: 30,
+            thickness: 4,
+          ),
+          KoiLabelBlockTextElement(
+            x: 5,
+            y: 5,
+            width: 100,
+            height: 50,
+            text: 'Block',
+            space: 1,
+            align: 1,
+            fit: 1,
+          ),
+          KoiLabelBeepElement(level: 2, interval: 200),
+          KoiLabelFeedElement(dots: 50),
+          KoiLabelCutElement(),
           KoiLabelPrintElement(copies: 2, sets: 2),
           KoiLabelForEachElement(listKey: 'items', templates: []),
         ],
@@ -430,10 +470,21 @@ void main() {
       expect(output.contains('SPEED 2.0'), isTrue);
       expect(output.contains('REFERENCE 10,10'), isTrue);
       expect(output.contains('CODEPAGE 437'), isTrue);
-      expect(output.contains('BARCODE 10,10,"128",50,1,0,2,2,"123"'), isTrue);
+      expect(output.contains('BARCODE 10,10,"128",50,0,90,3,6,"123"'), isTrue);
+      expect(output.contains('QRCODE 20,20,M,4,A,180,"QR"'), isTrue);
       expect(output.contains('BOX 10,10,30,30,2'), isTrue);
       expect(output.contains('REVERSE 10,10,20,20'), isTrue);
       expect(output.contains('BAR 10,10,20,20'), isTrue);
+      expect(output.contains('CIRCLE 10,10,20,3'), isTrue);
+      expect(output.contains('ELLIPSE 10,10,20,30,2'), isTrue);
+      expect(output.contains('DIAGONAL 10,10,30,30,4'), isTrue);
+      expect(
+        output.contains('BLOCK 5,5,100,50,"TSS24.BF2",0,1,1,1,1,1,"Block"'),
+        isTrue,
+      );
+      expect(output.contains('BEEP 2,200'), isTrue);
+      expect(output.contains('FEED 50'), isTrue);
+      expect(output.contains('CUT'), isTrue);
       expect(output.contains('PRINT 2,2'), isTrue);
     });
 
@@ -766,6 +817,444 @@ void main() {
       expect(text, contains('SPEED 3'));
     });
   });
+
+  // ════════════════════════════════════════════════════════════
+  //  KoiCpclRenderer — Setup 字段完整性测试
+  // ════════════════════════════════════════════════════════════
+
+  group('KoiCpclRenderer Setup 字段转译', () {
+    const renderer = KoiCpclRenderer();
+
+    test('density 转译为 TONE', () {
+      const doc = KoiLabelDocument(
+        elements: [
+          KoiLabelSetupElement(widthMm: 40, heightMm: 30, density: 8),
+        ],
+      );
+      final output = _cpclOutput(renderer, doc);
+      expect(output, contains('TONE 8'));
+    });
+
+    test('density 为 null 时不输出 TONE', () {
+      const doc = KoiLabelDocument(
+        elements: [
+          KoiLabelSetupElement(widthMm: 40, heightMm: 30),
+        ],
+      );
+      final output = _cpclOutput(renderer, doc);
+      expect(output, isNot(contains('TONE')));
+    });
+
+    test('codepage 转译为 ENCODING', () {
+      const doc = KoiLabelDocument(
+        elements: [
+          KoiLabelSetupElement(widthMm: 40, heightMm: 30, codepage: 'UTF-8'),
+        ],
+      );
+      final output = _cpclOutput(renderer, doc);
+      expect(output, contains('ENCODING UTF-8'));
+    });
+
+    test('codepage 为 null 时默认 GB18030', () {
+      const doc = KoiLabelDocument(
+        elements: [
+          KoiLabelSetupElement(widthMm: 40, heightMm: 30),
+        ],
+      );
+      final output = _cpclOutput(renderer, doc);
+      expect(output, contains('ENCODING GB18030'));
+    });
+
+    test('copies 注入到会话头 quantity 参数', () {
+      const doc = KoiLabelDocument(
+        elements: [
+          KoiLabelSetupElement(widthMm: 40, heightMm: 30),
+          KoiLabelPrintElement(copies: 3),
+        ],
+      );
+      final output = _cpclOutput(renderer, doc);
+      // 会话头格式: ! offset hRes vRes height quantity
+      expect(output, contains('! 0 200'));
+      expect(output, contains(' 3\r\n'));
+      // 确认是会话头的 3，而不是其他地方
+      final headerMatch = RegExp(r'! 0 200 \d+ 3');
+      expect(headerMatch.hasMatch(output), isTrue);
+    });
+
+    test('copies 默认为 1', () {
+      const doc = KoiLabelDocument(
+        elements: [
+          KoiLabelSetupElement(widthMm: 40, heightMm: 30),
+          KoiLabelPrintElement(), // 默认 copies=1
+        ],
+      );
+      final output = _cpclOutput(renderer, doc);
+      final headerMatch = RegExp(r'! 0 200 \d+ 1');
+      expect(headerMatch.hasMatch(output), isTrue);
+    });
+
+    test('完整 Setup: speed + density + codepage 全部输出', () {
+      const doc = KoiLabelDocument(
+        elements: [
+          KoiLabelSetupElement(
+            widthMm: 60,
+            heightMm: 40,
+            speed: 4,
+            density: 10,
+            codepage: 'CP850',
+          ),
+        ],
+      );
+      final output = _cpclOutput(renderer, doc);
+      expect(output, contains('SPEED 4'));
+      expect(output, contains('TONE 10'));
+      expect(output, contains('ENCODING CP850'));
+    });
+  });
+
+  // ════════════════════════════════════════════════════════════
+  //  KoiCpclRenderer — 新增元素渲染测试
+  // ════════════════════════════════════════════════════════════
+
+  group('KoiCpclRenderer 新增元素渲染', () {
+    const renderer = KoiCpclRenderer();
+
+    test('BlockTextElement 降级为 TEXT 指令', () {
+      const doc = KoiLabelDocument(
+        elements: [
+          KoiLabelBlockTextElement(
+            x: 20,
+            y: 30,
+            width: 400,
+            height: 100,
+            text: 'Hello',
+            font: 'TSS24.BF2',
+          ),
+        ],
+      );
+      final output = _cpclOutput(renderer, doc);
+      expect(output, contains('TEXT TSS24.BF2 0 20 30 Hello'));
+    });
+
+    test('BlockTextElement 带缩放输出 SETMAG', () {
+      const doc = KoiLabelDocument(
+        elements: [
+          KoiLabelBlockTextElement(
+            x: 0,
+            y: 0,
+            width: 100,
+            height: 50,
+            text: 'Scale',
+            xScale: 2,
+            yScale: 3,
+          ),
+        ],
+      );
+      final output = _cpclOutput(renderer, doc);
+      expect(output, contains('SETMAG 2 3'));
+      expect(output, contains('SETMAG 1 1'));
+    });
+
+    test('BlockTextElement 带旋转使用 TEXT90', () {
+      const doc = KoiLabelDocument(
+        elements: [
+          KoiLabelBlockTextElement(
+            x: 0,
+            y: 0,
+            width: 100,
+            height: 50,
+            text: 'Rotate',
+            rotation: 90,
+          ),
+        ],
+      );
+      final output = _cpclOutput(renderer, doc);
+      expect(output, contains('TEXT90'));
+    });
+
+    test('DiagonalElement 转译为 LINE 指令', () {
+      const doc = KoiLabelDocument(
+        elements: [
+          KoiLabelDiagonalElement(
+            x: 10,
+            y: 20,
+            xEnd: 110,
+            yEnd: 120,
+            thickness: 3,
+          ),
+        ],
+      );
+      final output = _cpclOutput(renderer, doc);
+      expect(output, contains('LINE 10 20 110 120 3'));
+    });
+
+    test('BeepElement 转译为 BEEP', () {
+      const doc = KoiLabelDocument(
+        elements: [
+          KoiLabelBeepElement(level: 2, interval: 250),
+        ],
+      );
+      final output = _cpclOutput(renderer, doc);
+      // 250 / 125 = 2
+      expect(output, contains('BEEP 2'));
+    });
+
+    test('BeepElement interval 边界值 clamp', () {
+      const doc = KoiLabelDocument(
+        elements: [
+          KoiLabelBeepElement(
+            level: 0,
+            interval: 1,
+          ), // 1/125=0.008 → clamp(1,20) = 1
+        ],
+      );
+      final output = _cpclOutput(renderer, doc);
+      expect(output, contains('BEEP 1'));
+    });
+
+    test('FeedElement 转译为 POSTFEED', () {
+      const doc = KoiLabelDocument(
+        elements: [
+          KoiLabelFeedElement(dots: 150),
+        ],
+      );
+      final output = _cpclOutput(renderer, doc);
+      expect(output, contains('POSTFEED 150'));
+    });
+
+    test('CutElement 转译为 CUT', () {
+      const doc = KoiLabelDocument(
+        elements: [KoiLabelCutElement()],
+      );
+      final output = _cpclOutput(renderer, doc);
+      expect(output, contains('CUT'));
+    });
+
+    test('CircleElement 被静默忽略', () {
+      const doc = KoiLabelDocument(
+        elements: [
+          KoiLabelCircleElement(x: 10, y: 10, diameter: 50, thickness: 2),
+        ],
+      );
+      final chunks = renderer.render(doc);
+      // Circle 不支持，应该不产生任何输出
+      expect(chunks, isEmpty);
+    });
+
+    test('EllipseElement 被静默忽略', () {
+      const doc = KoiLabelDocument(
+        elements: [
+          KoiLabelEllipseElement(
+            x: 10,
+            y: 10,
+            width: 80,
+            height: 40,
+            thickness: 2,
+          ),
+        ],
+      );
+      final chunks = renderer.render(doc);
+      expect(chunks, isEmpty);
+    });
+
+    test('ForEachElement 被静默忽略', () {
+      const doc = KoiLabelDocument(
+        elements: [
+          KoiLabelForEachElement(listKey: 'items', templates: []),
+        ],
+      );
+      final chunks = renderer.render(doc);
+      expect(chunks, isEmpty);
+    });
+
+    test('完整标签: Setup + 新元素 + Print 端到端', () {
+      const doc = KoiLabelDocument(
+        elements: [
+          KoiLabelSetupElement(
+            widthMm: 60,
+            heightMm: 40,
+            density: 5,
+            codepage: 'GB18030',
+          ),
+          KoiLabelBlockTextElement(
+            x: 10,
+            y: 10,
+            width: 300,
+            height: 80,
+            text: 'Paragraph',
+          ),
+          KoiLabelDiagonalElement(
+            x: 0,
+            y: 0,
+            xEnd: 100,
+            yEnd: 100,
+            thickness: 2,
+          ),
+          KoiLabelCircleElement(x: 50, y: 50, diameter: 30),
+          KoiLabelEllipseElement(x: 50, y: 50, width: 60, height: 30),
+          KoiLabelBeepElement(level: 1, interval: 500),
+          KoiLabelFeedElement(dots: 80),
+          KoiLabelCutElement(),
+          KoiLabelPrintElement(copies: 2),
+        ],
+      );
+      final output = _cpclOutput(renderer, doc);
+
+      // Setup
+      expect(output, contains('! 0 200'));
+      expect(RegExp(r'! 0 200 \d+ 2').hasMatch(output), isTrue);
+      expect(output, contains('ENCODING GB18030'));
+      expect(output, contains('TONE 5'));
+
+      // 新增元素
+      expect(output, contains('TEXT TSS24.BF2 0 10 10 Paragraph'));
+      expect(output, contains('LINE 0 0 100 100 2'));
+      expect(output, contains('BEEP'));
+      expect(output, contains('POSTFEED 80'));
+      expect(output, contains('CUT'));
+
+      // Circle/Ellipse 不应出现对应指令
+      expect(output, isNot(contains('CIRCLE')));
+      expect(output, isNot(contains('ELLIPSE')));
+
+      // 结束
+      expect(output, contains('FORM'));
+      expect(output, contains('PRINT'));
+    });
+  });
+
+  // ════════════════════════════════════════════════════════════
+  //  PDF417 二维条码 — TSPL + CPCL
+  // ════════════════════════════════════════════════════════════
+
+  group('KoiTsplRenderer 渲染 PDF417', () {
+    const renderer = KoiTsplRenderer();
+
+    test('基础 PDF417 输出', () {
+      const doc = KoiLabelDocument(
+        elements: [
+          KoiLabelPdf417Element(x: 10, y: 20, data: 'HELLO'),
+        ],
+      );
+      final chunks = renderer.render(doc);
+      final output = String.fromCharCodes(chunks.expand((c) => c).toList());
+      expect(output, contains('PDF417 10,20,200,100,0,"HELLO"'));
+    });
+
+    test('带 option 参数', () {
+      const doc = KoiLabelDocument(
+        elements: [
+          KoiLabelPdf417Element(
+            x: 50,
+            y: 60,
+            width: 300,
+            height: 150,
+            rotation: 90,
+            option: 'E2,W4,H8',
+            data: 'DATA123',
+          ),
+        ],
+      );
+      final chunks = renderer.render(doc);
+      final output = String.fromCharCodes(chunks.expand((c) => c).toList());
+      expect(output, contains('PDF417 50,60,300,150,90,E2,W4,H8,"DATA123"'));
+    });
+
+    test('无 option 时不输出多余逗号', () {
+      const doc = KoiLabelDocument(
+        elements: [
+          KoiLabelPdf417Element(x: 0, y: 0, data: 'TEST'),
+        ],
+      );
+      final chunks = renderer.render(doc);
+      final output = String.fromCharCodes(chunks.expand((c) => c).toList());
+      // 应该是 0,"TEST" 而不是 0,,"TEST"
+      expect(output, isNot(contains(',,"TEST"')));
+    });
+  });
+
+  group('KoiCpclRenderer 渲染 PDF417', () {
+    const renderer = KoiCpclRenderer();
+
+    test('基础 PDF417 输出 — 多行格式', () {
+      const doc = KoiLabelDocument(
+        elements: [
+          KoiLabelPdf417Element(
+            x: 100,
+            y: 200,
+            data: 'CPCL-DATA',
+            columns: 5,
+            rows: 10,
+            errorLevel: 3,
+          ),
+        ],
+      );
+      final output = _cpclOutput(renderer, doc);
+      expect(output, contains('PDF417 H 100 200 2 6 5 10 3 0'));
+      expect(output, contains('CPCL-DATA'));
+      expect(output, contains('ENDPDF417'));
+    });
+
+    test('旋转 90° 使用 V 方向', () {
+      const doc = KoiLabelDocument(
+        elements: [
+          KoiLabelPdf417Element(x: 0, y: 0, data: 'V', rotation: 90),
+        ],
+      );
+      final output = _cpclOutput(renderer, doc);
+      expect(output, contains('PDF417 V 0 0'));
+    });
+
+    test('默认旋转 0° 使用 H 方向', () {
+      const doc = KoiLabelDocument(
+        elements: [
+          KoiLabelPdf417Element(x: 0, y: 0, data: 'H'),
+        ],
+      );
+      final output = _cpclOutput(renderer, doc);
+      expect(output, contains('PDF417 H 0 0'));
+    });
+  });
+
+  group('PDF417 JSON 序列化', () {
+    test('round-trip 序列化', () {
+      const element = KoiLabelPdf417Element(
+        x: 10,
+        y: 20,
+        width: 300,
+        height: 150,
+        rotation: 90,
+        errorLevel: 5,
+        columns: 8,
+        rows: 20,
+        option: 'E2',
+        data: 'SerTest',
+      );
+      final json = koiLabelElementToJson(element);
+      expect(json['type'], 'labelPdf417');
+
+      final restored = koiLabelElementFromJson(json);
+      expect(restored, isA<KoiLabelPdf417Element>());
+      final r = restored as KoiLabelPdf417Element;
+      expect(r.x, 10);
+      expect(r.y, 20);
+      expect(r.width, 300);
+      expect(r.height, 150);
+      expect(r.rotation, 90);
+      expect(r.errorLevel, 5);
+      expect(r.columns, 8);
+      expect(r.rows, 20);
+      expect(r.option, 'E2');
+      expect(r.data, 'SerTest');
+    });
+  });
+}
+
+/// CPCL 渲染器输出辅助方法：将所有 chunks 合并为字符串。
+String _cpclOutput(KoiCpclRenderer renderer, KoiLabelDocument doc) {
+  final chunks = renderer.render(doc);
+  final allBytes = chunks.expand((c) => c).toList();
+  return String.fromCharCodes(allBytes);
 }
 
 /// 检查 [haystack] 中是否包含 [needle] 子序列。

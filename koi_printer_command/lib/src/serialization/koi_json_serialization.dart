@@ -39,6 +39,14 @@ const _labelTypes = {
   'labelPrint',
   'rawCommand',
   'labelForEach',
+  'labelBlockText',
+  'labelCircle',
+  'labelEllipse',
+  'labelDiagonal',
+  'labelBeep',
+  'labelCut',
+  'labelFeed',
+  'labelPdf417',
 };
 
 /// 反序列化小票元素。
@@ -106,6 +114,14 @@ KoiLabelElement koiLabelElementFromJson(Map<String, dynamic> json) {
     'labelPrint' => _labelPrintFromJson(json),
     'rawCommand' => _rawCommandFromJson(json),
     'labelForEach' => _labelForEachFromJson(json),
+    'labelBlockText' => _labelBlockTextFromJson(json),
+    'labelCircle' => _labelCircleFromJson(json),
+    'labelEllipse' => _labelEllipseFromJson(json),
+    'labelDiagonal' => _labelDiagonalFromJson(json),
+    'labelBeep' => _labelBeepFromJson(json),
+    'labelCut' => _labelCutFromJson(json),
+    'labelFeed' => _labelFeedFromJson(json),
+    'labelPdf417' => _labelPdf417FromJson(json),
     _ => throw FormatException('未知标签元素类型: $type'),
   };
 }
@@ -124,6 +140,14 @@ Map<String, dynamic> koiLabelElementToJson(KoiLabelElement element) {
     KoiLabelPrintElement() => _labelPrintToJson(element),
     KoiRawCommandElement() => _rawCommandToJson(element),
     KoiLabelForEachElement() => _labelForEachToJson(element),
+    KoiLabelBlockTextElement() => _labelBlockTextToJson(element),
+    KoiLabelCircleElement() => _labelCircleToJson(element),
+    KoiLabelEllipseElement() => _labelEllipseToJson(element),
+    KoiLabelDiagonalElement() => _labelDiagonalToJson(element),
+    KoiLabelBeepElement() => _labelBeepToJson(element),
+    KoiLabelCutElement() => _labelCutToJson(element),
+    KoiLabelFeedElement() => _labelFeedToJson(element),
+    KoiLabelPdf417Element() => _labelPdf417ToJson(element),
   };
 }
 
@@ -487,6 +511,10 @@ Map<String, dynamic> _positionedBarcodeToJson(KoiPositionedBarcodeElement e) =>
       'data': e.data,
       if (e.height != 60) 'height': e.height,
       if (e.type != '128') 'barcodeType': e.type,
+      if (e.readable != 1) 'readable': e.readable,
+      if (e.rotation != 0) 'rotation': e.rotation,
+      if (e.narrow != 2) 'narrow': e.narrow,
+      if (e.wide != 2) 'wide': e.wide,
     };
 
 KoiPositionedBarcodeElement _positionedBarcodeFromJson(
@@ -497,6 +525,10 @@ KoiPositionedBarcodeElement _positionedBarcodeFromJson(
   data: j['data'] as String,
   height: j['height'] as int? ?? 60,
   type: j['barcodeType'] as String? ?? '128',
+  readable: j['readable'] as int? ?? 1,
+  rotation: j['rotation'] as int? ?? 0,
+  narrow: j['narrow'] as int? ?? 2,
+  wide: j['wide'] as int? ?? 2,
 );
 
 // ── Positioned QR Code ──
@@ -506,6 +538,8 @@ Map<String, dynamic> _positionedQrCodeToJson(KoiPositionedQrCodeElement e) => {
   'y': e.y,
   'data': e.data,
   if (e.cellSize != 6) 'cellSize': e.cellSize,
+  if (e.eccLevel != 'L') 'eccLevel': e.eccLevel,
+  if (e.rotation != 0) 'rotation': e.rotation,
 };
 
 KoiPositionedQrCodeElement _positionedQrCodeFromJson(Map<String, dynamic> j) =>
@@ -514,6 +548,8 @@ KoiPositionedQrCodeElement _positionedQrCodeFromJson(Map<String, dynamic> j) =>
       y: j['y'] as int,
       data: j['data'] as String,
       cellSize: j['cellSize'] as int? ?? 6,
+      eccLevel: j['eccLevel'] as String? ?? 'L',
+      rotation: j['rotation'] as int? ?? 0,
     );
 
 // ── Label Box ──
@@ -624,6 +660,126 @@ KoiLabelForEachElement _labelForEachFromJson(Map<String, dynamic> j) =>
               .toList(),
     );
 
+// ── Label Block Text ──
+Map<String, dynamic> _labelBlockTextToJson(KoiLabelBlockTextElement e) => {
+  'type': 'labelBlockText',
+  'x': e.x,
+  'y': e.y,
+  'width': e.width,
+  'height': e.height,
+  'text': e.text,
+  if (e.font != 'TSS24.BF2') 'font': e.font,
+  if (e.rotation != 0) 'rotation': e.rotation,
+  if (e.xScale != 1) 'xScale': e.xScale,
+  if (e.yScale != 1) 'yScale': e.yScale,
+  if (e.space != 0) 'space': e.space,
+  if (e.align != 0) 'align': e.align,
+  if (e.fit != 0) 'fit': e.fit,
+};
+
+KoiLabelBlockTextElement _labelBlockTextFromJson(Map<String, dynamic> j) =>
+    KoiLabelBlockTextElement(
+      x: j['x'] as int,
+      y: j['y'] as int,
+      width: j['width'] as int,
+      height: j['height'] as int,
+      text: j['text'] as String,
+      font: j['font'] as String? ?? 'TSS24.BF2',
+      rotation: j['rotation'] as int? ?? 0,
+      xScale: j['xScale'] as int? ?? 1,
+      yScale: j['yScale'] as int? ?? 1,
+      space: j['space'] as int? ?? 0,
+      align: j['align'] as int? ?? 0,
+      fit: j['fit'] as int? ?? 0,
+    );
+
+// ── Label Circle ──
+Map<String, dynamic> _labelCircleToJson(KoiLabelCircleElement e) => {
+  'type': 'labelCircle',
+  'x': e.x,
+  'y': e.y,
+  'diameter': e.diameter,
+  if (e.thickness != 2) 'thickness': e.thickness,
+};
+
+KoiLabelCircleElement _labelCircleFromJson(Map<String, dynamic> j) =>
+    KoiLabelCircleElement(
+      x: j['x'] as int,
+      y: j['y'] as int,
+      diameter: j['diameter'] as int,
+      thickness: j['thickness'] as int? ?? 2,
+    );
+
+// ── Label Ellipse ──
+Map<String, dynamic> _labelEllipseToJson(KoiLabelEllipseElement e) => {
+  'type': 'labelEllipse',
+  'x': e.x,
+  'y': e.y,
+  'width': e.width,
+  'height': e.height,
+  if (e.thickness != 2) 'thickness': e.thickness,
+};
+
+KoiLabelEllipseElement _labelEllipseFromJson(Map<String, dynamic> j) =>
+    KoiLabelEllipseElement(
+      x: j['x'] as int,
+      y: j['y'] as int,
+      width: j['width'] as int,
+      height: j['height'] as int,
+      thickness: j['thickness'] as int? ?? 2,
+    );
+
+// ── Label Diagonal ──
+Map<String, dynamic> _labelDiagonalToJson(KoiLabelDiagonalElement e) => {
+  'type': 'labelDiagonal',
+  'x': e.x,
+  'y': e.y,
+  'xEnd': e.xEnd,
+  'yEnd': e.yEnd,
+  if (e.thickness != 2) 'thickness': e.thickness,
+};
+
+KoiLabelDiagonalElement _labelDiagonalFromJson(Map<String, dynamic> j) =>
+    KoiLabelDiagonalElement(
+      x: j['x'] as int,
+      y: j['y'] as int,
+      xEnd: j['xEnd'] as int,
+      yEnd: j['yEnd'] as int,
+      thickness: j['thickness'] as int? ?? 2,
+    );
+
+// ── Label Beep ──
+Map<String, dynamic> _labelBeepToJson(KoiLabelBeepElement e) => {
+  'type': 'labelBeep',
+  if (e.level != 0) 'level': e.level,
+  if (e.interval != 100) 'interval': e.interval,
+};
+
+KoiLabelBeepElement _labelBeepFromJson(Map<String, dynamic> j) =>
+    KoiLabelBeepElement(
+      level: j['level'] as int? ?? 0,
+      interval: j['interval'] as int? ?? 100,
+    );
+
+// ── Label Cut ──
+Map<String, dynamic> _labelCutToJson(KoiLabelCutElement e) => {
+  'type': 'labelCut',
+};
+
+KoiLabelCutElement _labelCutFromJson(Map<String, dynamic> j) =>
+    const KoiLabelCutElement();
+
+// ── Label Feed ──
+Map<String, dynamic> _labelFeedToJson(KoiLabelFeedElement e) => {
+  'type': 'labelFeed',
+  if (e.dots != 100) 'dots': e.dots,
+};
+
+KoiLabelFeedElement _labelFeedFromJson(Map<String, dynamic> j) =>
+    KoiLabelFeedElement(
+      dots: j['dots'] as int? ?? 100,
+    );
+
 // ═══════════════════════════════════════════════════════════
 // 工具方法
 // ═══════════════════════════════════════════════════════════
@@ -655,4 +811,37 @@ KoiPaperSize _parsePaperSize(Object? value) {
     };
   }
   return KoiPaperSize.mm80;
+}
+
+// ─── PDF417 ────────────────────────────────────────────────
+
+KoiLabelPdf417Element _labelPdf417FromJson(Map<String, dynamic> json) {
+  return KoiLabelPdf417Element(
+    x: json['x'] as int? ?? 0,
+    y: json['y'] as int? ?? 0,
+    width: json['width'] as int? ?? 200,
+    height: json['height'] as int? ?? 100,
+    rotation: json['rotation'] as int? ?? 0,
+    errorLevel: json['errorLevel'] as int? ?? 1,
+    columns: json['columns'] as int? ?? 3,
+    rows: json['rows'] as int? ?? 0,
+    option: json['option'] as String? ?? '',
+    data: json['data'] as String? ?? '',
+  );
+}
+
+Map<String, dynamic> _labelPdf417ToJson(KoiLabelPdf417Element e) {
+  return {
+    'type': 'labelPdf417',
+    'x': e.x,
+    'y': e.y,
+    'width': e.width,
+    'height': e.height,
+    'rotation': e.rotation,
+    'errorLevel': e.errorLevel,
+    'columns': e.columns,
+    'rows': e.rows,
+    'option': e.option,
+    'data': e.data,
+  };
 }

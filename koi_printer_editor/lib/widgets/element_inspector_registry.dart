@@ -42,7 +42,11 @@ class InspectorRegistry {
     registerFn(this);
   }
 
-  Widget buildInspector(BuildContext context, String elementId, KoiPrintElement element) {
+  Widget buildInspector(
+    BuildContext context,
+    String elementId,
+    KoiPrintElement element,
+  ) {
     final builder = _builders[element.runtimeType];
     if (builder != null) {
       // 这里的 dynamic 强转是因为 Map<Type, ...> 擦除了泛型，但我们在 register 时保证了类型对应
