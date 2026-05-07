@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+# ANSI colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+NC='\033[0m' # No Color
+
+echo -e "${YELLOW}Running pre-commit hooks...${NC}"
+
+# Check formatting
+echo -e "${YELLOW}Checking Dart formatting...${NC}"
+dart format --output=none --set-exit-if-changed .
+if [ $? -ne 0 ]; then
+  echo -e "${RED}Error: Code formatting failed.${NC}"
+  echo -e "Please run '${GREEN}dart format .${NC}' to format your code before committing."
+  exit 1
+fi
+
+# Run flutter analyze
+echo -e "${YELLOW}Running flutter analyze...${NC}"
+flutter analyze
+if [ $? -ne 0 ]; then
+  echo -e "${RED}Error: flutter analyze failed.${NC}"
+  echo -e "Please fix the linting issues before committing."
+  exit 1
+fi
+
+echo -e "${GREEN}Pre-commit checks passed!${NC}"
+exit 0
