@@ -90,6 +90,10 @@ class _ComponentsTab extends StatelessWidget {
           _PaletteItem(
             icon: Icons.list_alt_rounded,
             label: '循环列表容器 (ForEach)',
+            dragElement: const KoiTicketForEachElement(
+              listKey: 'items',
+              templates: [],
+            ),
             onAdd: () => _addNode(
               context,
               const KoiTicketForEachElement(listKey: 'items', templates: []),
@@ -98,6 +102,10 @@ class _ComponentsTab extends StatelessWidget {
           _PaletteItem(
             icon: Icons.text_fields,
             label: '文本 (Text)',
+            dragElement: const KoiTextElement(
+              text: '默认文本',
+              size: KoiTextSize.size1,
+            ),
             onAdd: () => _addNode(
               context,
               const KoiTextElement(text: '默认文本', size: KoiTextSize.size1),
@@ -106,11 +114,13 @@ class _ComponentsTab extends StatelessWidget {
           _PaletteItem(
             icon: Icons.horizontal_rule,
             label: '分割线 (Divider)',
+            dragElement: const KoiDividerElement(),
             onAdd: () => _addNode(context, const KoiDividerElement()),
           ),
           _PaletteItem(
             icon: Icons.qr_code,
             label: '二维码 (QR Code)',
+            dragElement: const KoiQrCodeElement(data: 'https://mrkoi.io'),
             onAdd: () => _addNode(
               context,
               const KoiQrCodeElement(data: 'https://mrkoi.io'),
@@ -119,6 +129,7 @@ class _ComponentsTab extends StatelessWidget {
           _PaletteItem(
             icon: Icons.barcode_reader,
             label: '条形码 (Barcode)',
+            dragElement: const KoiBarcodeElement(data: '1234567890'),
             onAdd: () =>
                 _addNode(context, const KoiBarcodeElement(data: '1234567890')),
           ),
@@ -144,11 +155,15 @@ class _ComponentsTab extends StatelessWidget {
           _PaletteItem(
             icon: Icons.space_bar,
             label: '空白行 (Spacer)',
+            dragElement: const KoiSpacerElement(lines: 1),
             onAdd: () => _addNode(context, const KoiSpacerElement(lines: 1)),
           ),
           _PaletteItem(
             icon: Icons.code,
             label: '原始指令 (Raw)',
+            dragElement: const KoiRawCommandElement(
+              'SIZE 40 mm,30 mm\nGAP 2 mm,0 mm',
+            ),
             onAdd: () => _addNode(
               context,
               const KoiRawCommandElement('SIZE 40 mm,30 mm\nGAP 2 mm,0 mm'),
