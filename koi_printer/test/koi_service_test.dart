@@ -616,7 +616,7 @@ void main() {
       const device = KoiDeviceInfo(
         name: 'Printer-1',
         address: 'AA:BB',
-        connectionType: KoiConnectionType.ble,
+        connectionType: KoiConnectionType.network,
       );
       await storage.saveTicketPrinter(device);
       await storage.saveLabelPrinter(device);

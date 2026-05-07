@@ -18,9 +18,16 @@
 - [x] **所见即所得的预览 `KoiPreviewRenderer`**: 流式结构 (`ESC`) 和绝对坐标空间结构 (`TSPL/CPCL`) 可以在屏幕上以 Flutter Widget 1:1 展示。
 - [x] **~97% 测试覆盖**: 全生态 4 包逾 445 项核心边缘覆盖单元组件与逻辑测试 (全部高于 90%)，保障金融与仓储等级稳定性。
 
-## 如何使用 (Quick Start)
+## 开发与贡献 (Development & Contribution)
 
-通过全新的 JSON 动态解析方案，您无需编写任何 Flutter UI 代码即可下发和更新小票排版。
+为保证代码质量和 CI 稳定性，我们在项目中加入了 Git Pre-commit Hook (会自动执行 `dart format` 和 `flutter analyze`)。
+如果您要在本地参与开发，请先执行以下命令配置 Git Hooks 路径：
+
+```bash
+git config core.hooksPath .githooks
+```
+
+## 如何使用 (Quick Start)
 
 ### 1. 动态模板解析与打印
 
