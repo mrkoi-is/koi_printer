@@ -13,3 +13,11 @@ dependencies:
   koi_printer_editor:
     path: ../
   provider: ^6.1.5+1
+
+dependency_overrides:
+  koi_printer:
+    path: ../../koi_printer
+  koi_printer_command:
+    path: ../../koi_printer_command
+  koi_printer_connection:
+    path: ../../koi_printer_connection

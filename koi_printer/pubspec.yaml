@@ -18,6 +18,8 @@ dependencies:
     sdk: flutter
   koi_printer_command: ^0.1.0
   koi_printer_connection: ^0.1.0
+  qr_flutter: ^4.1.0
+  shared_preferences: ^2.5.4
 
 dependency_overrides:
   koi_printer_command:
