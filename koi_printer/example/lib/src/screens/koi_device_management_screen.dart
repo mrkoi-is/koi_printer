@@ -205,7 +205,7 @@ class _DeviceTile extends StatelessWidget {
                     renderer: KoiRendererConfig(
                       protocol: isLabel
                           ? KoiCommandProtocol.tspl
-                          : KoiCommandProtocol.escPos,
+                          : KoiCommandProtocol.cpcl,
                     ),
                   );
                   final docs = isLabel
