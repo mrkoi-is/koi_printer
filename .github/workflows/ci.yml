@@ -78,7 +78,7 @@ jobs:
 
       - name: Run Tests (koi_printer_command)
         working-directory: koi_printer_command
-        run: flutter test --coverage
+        run: flutter test --coverage --concurrency=1
 
       - name: Check coverage (koi_printer_command)
         working-directory: koi_printer_command
@@ -87,7 +87,7 @@ jobs:
 
       - name: Run Tests (koi_printer_connection)
         working-directory: koi_printer_connection
-        run: flutter test --coverage
+        run: flutter test --coverage --concurrency=1
 
       - name: Check coverage (koi_printer_connection)
         working-directory: koi_printer_connection
@@ -96,7 +96,7 @@ jobs:
 
       - name: Run Tests (koi_printer)
         working-directory: koi_printer
-        run: flutter test --coverage
+        run: flutter test --coverage --concurrency=1
 
       - name: Check coverage (koi_printer)
         working-directory: koi_printer
@@ -105,7 +105,7 @@ jobs:
 
       - name: Run Tests (koi_printer_editor)
         working-directory: koi_printer_editor
-        run: flutter test --coverage
+        run: flutter test --coverage --concurrency=1
 
       - name: Check coverage (koi_printer_editor)
         working-directory: koi_printer_editor
