@@ -1,33 +1,35 @@
+// ignore_for_file: avoid_print
+
 import 'package:koi_printer_command/koi_printer_command.dart';
 
 void main() async {
   // 1. Create a print document with abstract elements
-  final document = KoiPrintDocument.ticket(
+  final document = KoiTicketDocument(
     elements: [
-      KoiTextElement(
+      const KoiTextElement(
         text: 'Koi Printer Studio',
         bold: true,
         size: KoiTextSize.size2,
-        alignment: KoiPrintAlignment.center,
+        align: KoiTextAlign.center,
       ),
-      KoiTextElement(text: '--------------------------------'),
-      KoiBarcodeElement(
+      const KoiTextElement(text: '--------------------------------'),
+      const KoiBarcodeElement(
         data: '20260507',
         type: KoiBarcodeType.code128,
-        alignment: KoiPrintAlignment.center,
+        align: KoiTextAlign.center,
       ),
-      KoiTextElement(text: '--------------------------------'),
-      KoiCutElement(),
+      const KoiTextElement(text: '--------------------------------'),
+      const KoiCutElement(),
     ],
   );
 
   // 2. Render to ESC/POS bytes
   final escPosRenderer = KoiEscPosRenderer();
-  final escPosBytes = await escPosRenderer.render(document);
-  print('Generated ${escPosBytes.length} bytes for ESC/POS.');
+  final escPosBytes = escPosRenderer.render(document);
+  print('Generated ${escPosBytes.length} chunks for ESC/POS.');
 
   // 3. Render to TSPL bytes
   final tsplRenderer = KoiTsplRenderer();
-  final tsplBytes = await tsplRenderer.render(document);
-  print('Generated ${tsplBytes.length} bytes for TSPL.');
+  final tsplBytes = tsplRenderer.render(document);
+  print('Generated ${tsplBytes.length} chunks for TSPL.');
 }

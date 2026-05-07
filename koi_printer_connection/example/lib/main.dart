@@ -1,10 +1,13 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:koi_printer_connection/koi_printer_connection.dart';
 
+/// Application entry point.
 void main() {
   runApp(const MaterialApp(home: KoiConnectionExample()));
 }
 
+/// A simple connection example widget.
 class KoiConnectionExample extends StatefulWidget {
   const KoiConnectionExample({super.key});
 
@@ -14,30 +17,58 @@ class KoiConnectionExample extends StatefulWidget {
 
 class _KoiConnectionExampleState extends State<KoiConnectionExample> {
   final KoiBleScanner _scanner = KoiBleScanner();
-  List<KoiDiscoveredDevice> _devices = [];
+  final List<KoiDiscoveredDevice> _devices = [];
   KoiPrinterAdapter? _connection;
   bool _isScanning = false;
+  StreamSubscription<KoiDiscoveredDevice>? _scanSub;
 
-  @override
-  void initState() {
-    super.initState();
-    _scanner.devices.listen((devices) {
-      if (mounted) setState(() => _devices = devices);
+  void _startScan() {
+    setState(() {
+      _devices.clear();
+      _isScanning = true;
     });
-    _scanner.isScanning.listen((scanning) {
-      if (mounted) setState(() => _isScanning = scanning);
-    });
+
+    _scanSub?.cancel();
+    _scanSub = _scanner
+        .scan(timeout: const Duration(seconds: 10))
+        .listen(
+          (device) {
+            setState(() {
+              if (!_devices.any((d) => d.deviceId == device.deviceId)) {
+                _devices.add(device);
+              }
+            });
+          },
+          onDone: () {
+            if (mounted) setState(() => _isScanning = false);
+          },
+        );
+  }
+
+  void _stopScan() {
+    _scanSub?.cancel();
+    _scanner.stopScan();
+    setState(() => _isScanning = false);
   }
 
   Future<void> _connect(KoiDiscoveredDevice device) async {
     await _connection?.disconnect();
-    _connection = KoiBleAdapter(deviceId: device.id);
-    final success = await _connection!.connect();
+    _connection = KoiBleAdapter();
+    final success = await _connection!.connect(
+      KoiConnectionConfig(deviceId: device.deviceId, deviceName: device.name),
+    );
     if (success && mounted) {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Connected to ${device.name}')));
     }
+  }
+
+  @override
+  void dispose() {
+    _scanSub?.cancel();
+    _connection?.disconnect();
+    super.dispose();
   }
 
   @override
@@ -50,7 +81,7 @@ class _KoiConnectionExampleState extends State<KoiConnectionExample> {
           final device = _devices[index];
           return ListTile(
             title: Text(device.name),
-            subtitle: Text(device.id),
+            subtitle: Text(device.deviceId),
             trailing: ElevatedButton(
               onPressed: () => _connect(device),
               child: const Text('Connect'),
@@ -59,7 +90,7 @@ class _KoiConnectionExampleState extends State<KoiConnectionExample> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _isScanning ? _scanner.stopScan : () => _scanner.startScan(),
+        onPressed: _isScanning ? _stopScan : _startScan,
         child: Icon(_isScanning ? Icons.stop : Icons.search),
       ),
     );
