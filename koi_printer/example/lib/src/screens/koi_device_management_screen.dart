@@ -235,6 +235,7 @@ class _DeviceTile extends StatelessWidget {
       KoiConnectionType.ble => Icons.bluetooth,
       KoiConnectionType.classicBluetooth => Icons.bluetooth_audio,
       KoiConnectionType.network => Icons.wifi,
+      KoiConnectionType.usb => Icons.usb,
     };
   }
 }

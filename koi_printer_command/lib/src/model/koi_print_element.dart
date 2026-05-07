@@ -175,6 +175,8 @@ class KoiTicketImageElement extends KoiTicketElement {
     this.width,
     this.align = KoiTextAlign.center,
     this.renderMode = KoiImageRenderMode.raster,
+    this.ditherMode = KoiImageDitherMode.threshold,
+    this.threshold = KoiDitherThreshold.defaultValue,
   });
 
   /// 图像的字节数据 (通常为 PNG/JPEG 等标准格式的二进制)。
@@ -188,6 +190,15 @@ class KoiTicketImageElement extends KoiTicketElement {
 
   /// 打印渲染模式（如光栅模式等）。
   final KoiImageRenderMode renderMode;
+
+  /// 图像二值化模式。
+  /// 默认为简单阈值; 照片建议用 floydSteinberg。
+  final KoiImageDitherMode ditherMode;
+
+  /// 阈值二值化的临界值 (0-255)。
+  /// 仅在 [ditherMode] 为 [KoiImageDitherMode.threshold] 时生效。
+  /// 默认 128。值越低打印越深，值越高打印越浅。
+  final int threshold;
 }
 
 /// 分隔线元素。
@@ -545,6 +556,7 @@ class KoiLabelImageElement extends KoiLabelElement {
     required this.imageBytes,
     this.width,
     this.ditherMode = KoiImageDitherMode.threshold,
+    this.threshold = KoiDitherThreshold.defaultValue,
   });
 
   /// 起始 X 坐标。
@@ -562,6 +574,11 @@ class KoiLabelImageElement extends KoiLabelElement {
   /// 图像二值化模式。
   /// 默认为简单阈值; 照片建议用 floydSteinberg。
   final KoiImageDitherMode ditherMode;
+
+  /// 阈值二值化的临界值 (0-255)。
+  /// 仅在 [ditherMode] 为 [KoiImageDitherMode.threshold] 时生效。
+  /// 默认 128。值越低打印越深，值越高打印越浅。
+  final int threshold;
 }
 
 /// 标签打印元素 — 触发打印。

@@ -51,6 +51,8 @@ class _KoiScannerScreenState extends State<KoiScannerScreen> {
         stream = KoiClassicBtScanner().scan();
       case KoiConnectionType.network:
         stream = KoiNetworkScanner().scan(subnet: '192.168.1');
+      case KoiConnectionType.usb:
+        throw UnimplementedError('USB scanner is not implemented yet.');
     }
 
     _scanSub = stream.listen(
@@ -71,6 +73,7 @@ class _KoiScannerScreenState extends State<KoiScannerScreen> {
       KoiConnectionType.ble => '扫描 BLE 设备',
       KoiConnectionType.classicBluetooth => '扫描经典蓝牙',
       KoiConnectionType.network => '扫描网络打印机',
+      KoiConnectionType.usb => '扫描 USB 打印机',
     };
 
     return Scaffold(
@@ -119,6 +122,7 @@ class _KoiScannerScreenState extends State<KoiScannerScreen> {
       KoiConnectionType.ble => Icons.bluetooth,
       KoiConnectionType.classicBluetooth => Icons.bluetooth_audio,
       KoiConnectionType.network => Icons.wifi,
+      KoiConnectionType.usb => Icons.usb,
     };
   }
 }

@@ -197,8 +197,8 @@ class KoiCpclRenderer implements KoiCommandRenderer {
       // 根据 ditherMode 选择二值化算法
       final binaryPixels =
           element.ditherMode == KoiImageDitherMode.floydSteinberg
-              ? _floydSteinbergDither(image)
-              : _thresholdDither(image);
+              ? _floydSteinbergDither(image, element.threshold)
+              : _thresholdDither(image, element.threshold);
 
       final widthBytes = (image.width + 7) ~/ 8;
       final heightPx = image.height;
@@ -231,19 +231,19 @@ class KoiCpclRenderer implements KoiCommandRenderer {
   }
 
   /// 简单阈值二值化。
-  List<bool> _thresholdDither(img.Image image) {
+  List<bool> _thresholdDither(img.Image image, [int threshold = 128]) {
     final result = List<bool>.filled(image.width * image.height, false);
     for (var y = 0; y < image.height; y++) {
       for (var x = 0; x < image.width; x++) {
         final pixel = image.getPixel(x, y);
-        result[y * image.width + x] = pixel.luminance < 128;
+        result[y * image.width + x] = pixel.luminance < threshold;
       }
     }
     return result;
   }
 
   /// Floyd-Steinberg 误差扩散二值化。
-  List<bool> _floydSteinbergDither(img.Image image) {
+  List<bool> _floydSteinbergDither(img.Image image, [int threshold = 128]) {
     final w = image.width;
     final h = image.height;
     final buffer = List<double>.generate(
@@ -257,7 +257,7 @@ class KoiCpclRenderer implements KoiCommandRenderer {
       for (var x = 0; x < w; x++) {
         final idx = y * w + x;
         final oldVal = buffer[idx];
-        final newVal = oldVal < 128.0 ? 0.0 : 255.0;
+        final newVal = oldVal < threshold.toDouble() ? 0.0 : 255.0;
         result[idx] = newVal == 0.0;
         final error = oldVal - newVal;
 

@@ -586,8 +586,13 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
         image = img.copyResize(image, width: maxWidth);
       }
 
-      // 光栅化
-      final rasterData = _toRasterFormat(image);
+      // 将位图数据转为字节
+      List<int> rasterData;
+      if (element.ditherMode == KoiImageDitherMode.floydSteinberg) {
+        rasterData = _toRasterFormatFloydSteinberg(image, element.threshold);
+      } else {
+        rasterData = _toRasterFormat(image, element.threshold);
+      }
       final widthBytes = (image.width + 7) ~/ 8;
 
       bytes.addAll(_alignCmd(element.align));
@@ -646,9 +651,9 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
     return bytes;
   }
 
-  /// 图片光栅化 — 单次遍历 O(N) 高效实现。
+  /// 图片光栅化 — 单次遍历 O(N) 高效实现 (阈值二值化)。
   /// 支持任意格式的 img.Image (含调色板、单色、透明背景等)。
-  List<int> _toRasterFormat(img.Image imgSrc) {
+  List<int> _toRasterFormat(img.Image imgSrc, [int threshold = 128]) {
     // 强制归一化为 8-bit RGBA 格式。
     // 如果不进行转换，对于 1-bit 单色位图，getPixel() 会返回未归一化的值（如 p.a 永远为 0，最大通道值为 1），
     // 导致后续 p.a >= 128 的判断永远为 false，最终打印出一张完全空白的图片。
@@ -674,9 +679,68 @@ class KoiEscPosRenderer implements KoiCommandRenderer {
 
             // 热敏打印逻辑:
             // 1. 忽略透明像素 (alpha < 128 当作白纸)
-            // 2. 较暗的像素打印黑点 (luminance < 128 打点)
-            if (p.a >= 128 && lum < 128) {
+            // 2. 较暗的像素打印黑点 (luminance < threshold 打点)
+            if (p.a >= 128 && lum < threshold) {
               byteVal |= 1 << (7 - bit);
+            }
+          }
+        }
+        rasterBytes.add(byteVal);
+      }
+    }
+
+    return rasterBytes;
+  }
+
+  /// 图片光栅化 — Floyd-Steinberg 误差扩散二值化。
+  List<int> _toRasterFormatFloydSteinberg(
+    img.Image imgSrc, [
+    int threshold = 128,
+  ]) {
+    final image = imgSrc.convert(format: img.Format.uint8, numChannels: 4);
+    final w = image.width;
+    final h = image.height;
+
+    // 使用 double 精度缓冲区存储误差传播后的灰度值
+    final buffer = List<double>.generate(w * h, (i) {
+      final p = image.getPixel(i % w, i ~/ w);
+      // 处理透明度: 透明像素视作白纸 (255)
+      if (p.a < 128) return 255.0;
+      return (p.r * 299 + p.g * 587 + p.b * 114) / 1000.0;
+    });
+
+    final targetWidth = (w + 7) ~/ 8 * 8;
+    final rasterBytes = <int>[];
+
+    for (var y = 0; y < h; y++) {
+      for (var x = 0; x < targetWidth; x += 8) {
+        var byteVal = 0;
+        for (var bit = 0; bit < 8; bit++) {
+          final realX = x + bit;
+          if (realX < w) {
+            final idx = y * w + realX;
+            final oldVal = buffer[idx];
+            final newVal = oldVal < threshold.toDouble() ? 0.0 : 255.0;
+
+            // newVal == 0.0 表示黑点，需要设置对应位
+            if (newVal == 0.0) {
+              byteVal |= 1 << (7 - bit);
+            }
+
+            final error = oldVal - newVal;
+
+            // Floyd-Steinberg 误差传播
+            if (realX + 1 < w) {
+              buffer[idx + 1] += error * 7.0 / 16.0;
+            }
+            if (realX - 1 >= 0 && y + 1 < h) {
+              buffer[(y + 1) * w + (realX - 1)] += error * 3.0 / 16.0;
+            }
+            if (y + 1 < h) {
+              buffer[(y + 1) * w + realX] += error * 5.0 / 16.0;
+            }
+            if (realX + 1 < w && y + 1 < h) {
+              buffer[(y + 1) * w + (realX + 1)] += error * 1.0 / 16.0;
             }
           }
         }

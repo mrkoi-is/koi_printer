@@ -27,6 +27,8 @@ class KoiPrinterFactory {
       KoiConnectionType.ble => KoiBleAdapter(),
       KoiConnectionType.classicBluetooth => KoiClassicBtAdapter(),
       KoiConnectionType.network => KoiNetworkAdapter(),
+      KoiConnectionType.usb =>
+        throw UnimplementedError('USB adapter is not implemented yet.'),
     };
   }
 }

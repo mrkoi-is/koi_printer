@@ -395,6 +395,23 @@ enum KoiImageDitherMode {
   floydSteinberg,
 }
 
+/// 图像二值化阈值常量。
+/// 用于 [KoiLabelImageElement] 和 [KoiTicketImageElement] 的 threshold 属性。
+/// 0-255 范围: 值越低，打印越深 (更多黑色); 值越高，打印越浅。
+/// Industry standard default: 128.
+class KoiDitherThreshold {
+  const KoiDitherThreshold._();
+
+  /// 行业默认阈值。
+  static const int defaultValue = 128;
+
+  /// 深色打印 (适合浅色原图)。
+  static const int dark = 96;
+
+  /// 浅色打印 (适合深色原图)。
+  static const int light = 160;
+}
+
 /// 钱箱引脚。
 /// Cash drawer pin selection.
 enum KoiCashDrawerPin {

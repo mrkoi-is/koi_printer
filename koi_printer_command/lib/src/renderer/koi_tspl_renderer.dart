@@ -206,8 +206,8 @@ class KoiTsplRenderer implements KoiCommandRenderer {
       // 根据 ditherMode 选择二值化算法
       final binaryPixels =
           element.ditherMode == KoiImageDitherMode.floydSteinberg
-              ? _floydSteinbergDither(image)
-              : _thresholdDither(image);
+              ? _floydSteinbergDither(image, element.threshold)
+              : _thresholdDither(image, element.threshold);
 
       final widthBytes = (image.width + 7) ~/ 8;
       final heightPx = image.height;
@@ -240,12 +240,12 @@ class KoiTsplRenderer implements KoiCommandRenderer {
   }
 
   /// 简单阈值二值化 — 适合文字、条码、Logo。
-  List<bool> _thresholdDither(img.Image image) {
+  List<bool> _thresholdDither(img.Image image, [int threshold = 128]) {
     final result = List<bool>.filled(image.width * image.height, false);
     for (var y = 0; y < image.height; y++) {
       for (var x = 0; x < image.width; x++) {
         final pixel = image.getPixel(x, y);
-        result[y * image.width + x] = pixel.luminance < 128;
+        result[y * image.width + x] = pixel.luminance < threshold;
       }
     }
     return result;
@@ -253,7 +253,7 @@ class KoiTsplRenderer implements KoiCommandRenderer {
 
   /// Floyd-Steinberg 误差扩散二值化 — 适合照片、渐变图像。
   /// 行业标准算法: 将量化误差按 7/16, 3/16, 5/16, 1/16 分配到相邻像素。
-  List<bool> _floydSteinbergDither(img.Image image) {
+  List<bool> _floydSteinbergDither(img.Image image, [int threshold = 128]) {
     final w = image.width;
     final h = image.height;
     // 使用 double 精度缓冲区存储误差传播后的灰度值
@@ -268,7 +268,7 @@ class KoiTsplRenderer implements KoiCommandRenderer {
       for (var x = 0; x < w; x++) {
         final idx = y * w + x;
         final oldVal = buffer[idx];
-        final newVal = oldVal < 128.0 ? 0.0 : 255.0;
+        final newVal = oldVal < threshold.toDouble() ? 0.0 : 255.0;
         result[idx] = newVal == 0.0; // 黑点 = true
         final error = oldVal - newVal;
 

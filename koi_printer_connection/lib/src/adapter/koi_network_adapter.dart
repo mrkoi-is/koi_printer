@@ -50,7 +50,36 @@ class KoiNetworkAdapter implements KoiPrinterAdapter {
 
   @override
   Future<KoiPrinterHardwareState> queryHardwareState() async {
-    return KoiPrinterHardwareState.unknown;
+    if (_socket == null) {
+      return KoiPrinterHardwareState.unknown;
+    }
+
+    try {
+      // 发送 DLE EOT n=2 (离线原因查询: 开盖/缺纸)
+      _socket!.add([0x10, 0x04, 0x02]);
+      await _socket!.flush();
+
+      // 等待响应 (最多 2 秒)
+      final response = await _socket!.first.timeout(
+        const Duration(seconds: 2),
+      );
+
+      if (response.isEmpty) return KoiPrinterHardwareState.unknown;
+
+      final status = response.first;
+      // bit 2: 开盖
+      if ((status & 0x04) != 0) return KoiPrinterHardwareState.coverOpen;
+      // bit 5: 缺纸
+      if ((status & 0x20) != 0) return KoiPrinterHardwareState.outOfPaper;
+
+      return KoiPrinterHardwareState.ready;
+    } on TimeoutException {
+      debugPrint('KoiNetworkAdapter: status query timeout');
+      return KoiPrinterHardwareState.unknown;
+    } on Object catch (e) {
+      debugPrint('KoiNetworkAdapter: status query error: $e');
+      return KoiPrinterHardwareState.unknown;
+    }
   }
 
   @override

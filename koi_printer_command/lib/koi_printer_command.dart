@@ -24,3 +24,6 @@ export 'src/renderer/koi_cpcl_renderer.dart';
 export 'src/renderer/koi_esc_pos_renderer.dart';
 export 'src/renderer/koi_tspl_renderer.dart';
 export 'src/serialization/koi_json_serialization.dart';
+
+// 状态查询
+export 'src/status/koi_escpos_status_query.dart';
