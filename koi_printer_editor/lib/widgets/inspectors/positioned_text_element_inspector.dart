@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:koi_printer/koi_printer.dart';
 import 'package:koi_printer_editor/widgets/element_inspector_registry.dart';
+import 'package:koi_printer_editor/widgets/utils/data_binding_field.dart';
 
 class PositionedTextElementInspector
     extends ElementInspectorBuilder<KoiPositionedTextElement> {
@@ -22,14 +23,9 @@ class PositionedTextElementInspector
           ),
           const SizedBox(height: 16),
 
-          TextFormField(
-            initialValue: element.text,
-            decoration: const InputDecoration(
-              labelText: '文本内容 (支持 {{变量}})',
-              border: OutlineInputBorder(),
-              isDense: true,
-            ),
-            onChanged: (val) {
+          DataBindingField(
+            text: element.text,
+            onUpdate: (val) {
               update(
                 context,
                 elementId,

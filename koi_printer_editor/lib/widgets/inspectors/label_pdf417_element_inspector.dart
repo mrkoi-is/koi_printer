@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:koi_printer/koi_printer.dart';
 import 'package:koi_printer_editor/state/koi_print_element_ext.dart';
 import 'package:koi_printer_editor/widgets/element_inspector_registry.dart';
+import 'package:koi_printer_editor/widgets/utils/data_binding_field.dart';
 
 /// PDF417 条码属性编辑面板。
 class LabelPdf417ElementInspector
@@ -56,14 +57,10 @@ class LabelPdf417ElementInspector
               update(context, elementId, element.copyWith(columns: v)),
         ),
         const SizedBox(height: 8),
-        TextFormField(
-          initialValue: element.data,
-          decoration: const InputDecoration(
-            labelText: '条码数据',
-            border: OutlineInputBorder(),
-          ),
-          maxLines: 3,
-          onChanged: (v) =>
+        DataBindingField(
+          text: element.data,
+          allowExpression: false,
+          onUpdate: (v) =>
               update(context, elementId, element.copyWith(data: v)),
         ),
       ],

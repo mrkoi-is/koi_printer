@@ -125,6 +125,12 @@ class _ComponentsTab extends StatelessWidget {
           _PaletteItem(
             icon: Icons.view_column,
             label: '多列排版 (Row)',
+            dragElement: const KoiTextRowElement(
+              columns: [
+                KoiTextColumn(text: '左侧'),
+                KoiTextColumn(text: '右侧', align: KoiTextAlign.right),
+              ],
+            ),
             onAdd: () => _addNode(
               context,
               const KoiTextRowElement(
@@ -323,15 +329,17 @@ class _PaletteItem extends StatelessWidget {
     required this.icon,
     required this.label,
     required this.onAdd,
+    this.dragElement,
   });
 
   final IconData icon;
   final String label;
   final VoidCallback onAdd;
+  final KoiPrintElement? dragElement;
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    final card = Card(
       margin: const EdgeInsets.only(bottom: 8),
       child: InkWell(
         onTap: onAdd,
@@ -352,6 +360,18 @@ class _PaletteItem extends StatelessWidget {
           ),
         ),
       ),
+    );
+
+    if (dragElement == null) return card;
+
+    return Draggable<KoiPrintElement>(
+      data: dragElement,
+      feedback: Material(
+        color: Colors.transparent,
+        child: Opacity(opacity: 0.8, child: SizedBox(width: 240, child: card)),
+      ),
+      childWhenDragging: Opacity(opacity: 0.5, child: card),
+      child: card,
     );
   }
 }

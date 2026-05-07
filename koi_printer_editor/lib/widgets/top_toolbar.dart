@@ -240,35 +240,58 @@ class TopToolbar extends StatelessWidget {
                           end: Alignment.bottomRight,
                         ),
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      child: Stack(
                         children: [
-                          Text(
-                            m.name,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 4),
-                          if (m.description.isNotEmpty)
-                            Text(
-                              m.description,
-                              style: TextStyle(
-                                fontSize: 11,
-                                color: Colors.grey.shade600,
+                          Positioned.fill(
+                            child: Opacity(
+                              opacity: 0.15,
+                              child: IgnorePointer(
+                                child: FittedBox(
+                                  fit: BoxFit.contain,
+                                  alignment: Alignment.topCenter,
+                                  child: KoiPreviewRenderer.build(
+                                    document: m.document,
+                                    paperWidthPx: 380,
+                                    fontFamily: 'SarasaMono',
+                                  ),
+                                ),
                               ),
-                              textAlign: TextAlign.center,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
                             ),
-                          const SizedBox(height: 4),
-                          Text(
-                            '${m.schema.length} 个字段',
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: Colors.blue.shade400,
+                          ),
+                          Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  m.name,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                const SizedBox(height: 4),
+                                if (m.description.isNotEmpty)
+                                  Text(
+                                    m.description,
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      color: Colors.grey.shade700,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  '${m.schema.length} 个变量',
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: Colors.blue.shade700,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:koi_printer/koi_printer.dart';
 import 'package:koi_printer_editor/state/koi_print_element_ext.dart';
 import 'package:koi_printer_editor/widgets/element_inspector_registry.dart';
+import 'package:koi_printer_editor/widgets/utils/data_binding_field.dart';
 
 class PositionedQrCodeElementInspector
     extends ElementInspectorBuilder<KoiPositionedQrCodeElement> {
@@ -22,14 +23,10 @@ class PositionedQrCodeElementInspector
           ),
           const SizedBox(height: 16),
 
-          TextFormField(
-            initialValue: element.data,
-            decoration: const InputDecoration(
-              labelText: '二维码内容 (支持 {{变量}})',
-              border: OutlineInputBorder(),
-              isDense: true,
-            ),
-            onChanged: (val) {
+          DataBindingField(
+            text: element.data,
+            allowExpression: false,
+            onUpdate: (val) {
               update(context, elementId, element.copyWith(data: val));
             },
           ),

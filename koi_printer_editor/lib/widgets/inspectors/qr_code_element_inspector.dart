@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:koi_printer/koi_printer.dart';
 import 'package:koi_printer_editor/state/koi_print_element_ext.dart';
 import 'package:koi_printer_editor/widgets/element_inspector_registry.dart';
+import 'package:koi_printer_editor/widgets/utils/data_binding_field.dart';
 
 class QrCodeElementInspector extends ElementInspectorBuilder<KoiQrCodeElement> {
   @override
@@ -27,14 +28,10 @@ class QrCodeElementInspector extends ElementInspectorBuilder<KoiQrCodeElement> {
                 ),
               ),
               const SizedBox(height: 12),
-              TextFormField(
-                key: ValueKey(element.data),
-                initialValue: element.data,
-                decoration: const InputDecoration(
-                  labelText: '二维码内容',
-                  border: OutlineInputBorder(),
-                ),
-                onChanged: (val) =>
+              DataBindingField(
+                text: element.data,
+                allowExpression: false,
+                onUpdate: (val) =>
                     update(context, elementId, element.copyWith(data: val)),
               ),
             ],

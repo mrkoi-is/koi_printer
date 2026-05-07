@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:koi_printer/koi_printer.dart';
 import 'package:koi_printer_editor/state/koi_print_element_ext.dart';
 import 'package:koi_printer_editor/widgets/element_inspector_registry.dart';
+import 'package:koi_printer_editor/widgets/utils/data_binding_field.dart';
 
 class TextRowElementInspector
     extends ElementInspectorBuilder<KoiTextRowElement> {
@@ -73,16 +74,12 @@ class TextRowElementInspector
                         ],
                       ),
                       const SizedBox(height: 8),
-                      TextFormField(
+                      DataBindingField(
                         key: ValueKey(
                           'row_${elementId}_col_${idx}_text_${col.text}',
                         ),
-                        initialValue: col.text,
-                        decoration: const InputDecoration(
-                          labelText: '内容',
-                          border: OutlineInputBorder(),
-                        ),
-                        onChanged: (val) {
+                        text: col.text,
+                        onUpdate: (val) {
                           final newCols = List<KoiTextColumn>.from(
                             element.columns,
                           );

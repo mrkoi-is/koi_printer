@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:koi_printer/koi_printer.dart';
 import 'package:koi_printer_editor/state/koi_print_element_ext.dart';
 import 'package:koi_printer_editor/widgets/element_inspector_registry.dart';
+import 'package:koi_printer_editor/widgets/utils/data_binding_field.dart';
 
 class LabelBlockTextElementInspector
     extends ElementInspectorBuilder<KoiLabelBlockTextElement> {
@@ -15,14 +16,9 @@ class LabelBlockTextElementInspector
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TextFormField(
-          initialValue: element.text,
-          decoration: const InputDecoration(
-            labelText: '文本内容',
-            border: OutlineInputBorder(),
-          ),
-          maxLines: 3,
-          onChanged: (v) =>
+        DataBindingField(
+          text: element.text,
+          onUpdate: (v) =>
               update(context, elementId, element.copyWith(text: v)),
         ),
         const SizedBox(height: 16),

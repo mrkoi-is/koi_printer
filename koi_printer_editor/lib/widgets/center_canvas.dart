@@ -292,8 +292,9 @@ class _EditableElementWrap extends StatelessWidget {
           state.mockData,
         );
       } else {
-        mockDoc = KoiLabelDocument(
-          elements: [element.element as KoiLabelElement],
+        mockDoc = const KoiTemplateEngine().expandLabel(
+          KoiLabelDocument(elements: [element.element as KoiLabelElement]),
+          state.mockData,
         );
       }
     } else {
@@ -323,53 +324,81 @@ class _EditableElementWrap extends StatelessWidget {
 
     if (!state.isPreviewMode && element.element is KoiTicketForEachElement) {
       final forEachElement = element.element as KoiTicketForEachElement;
-      child = Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.orange, style: BorderStyle.solid),
-          color: Colors.orange.withValues(alpha: 0.05),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              '🔄 列表循环区域 (数组: ${forEachElement.listKey})',
-              style: const TextStyle(
-                color: Colors.orange,
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
+      child = DragTarget<KoiPrintElement>(
+        onAcceptWithDetails: (details) {
+          if (details.data is! KoiTicketElement) return;
+          final ticketEl = details.data as KoiTicketElement;
+          context.read<EditorState>().execute(
+            AddElementCommand(
+              EditorElement(
+                id: DateTime.now().microsecondsSinceEpoch.toString(),
+                element: ticketEl,
+              ),
+              parentId: element.id,
+            ),
+          );
+        },
+        builder: (context, candidateData, rejectedData) {
+          final isHovering = candidateData.isNotEmpty;
+          return Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: isHovering ? Colors.blue : Colors.orange,
+                style: BorderStyle.solid,
+                width: isHovering ? 2 : 1,
+              ),
+              color: (isHovering ? Colors.blue : Colors.orange).withValues(
+                alpha: 0.05,
               ),
             ),
-            const Divider(color: Colors.orange),
-            ...forEachElement.templates.map((t) {
-              final mockInnerDoc = KoiTicketDocument(
-                elements: [
-                  _processEditMode(t, state.schema) as KoiTicketElement,
-                ],
-              );
-              final innerRender = KoiPreviewRenderer.build(
-                document: mockInnerDoc,
-                paperWidthPx: state.paperWidthPx,
-                fontFamily: 'SarasaMono',
-              );
-              if (innerRender is Container && innerRender.child is Column) {
-                final col = innerRender.child as Column;
-                if (col.children.isNotEmpty) return col.children.first;
-              }
-              return innerRender;
-            }),
-            if (forEachElement.templates.isEmpty)
-              const Padding(
-                padding: EdgeInsets.all(16),
-                child: Center(
-                  child: Text(
-                    '选中此区域，从左侧组件库添加子组件',
-                    style: TextStyle(color: Colors.grey, fontSize: 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  '🔄 列表循环区域 (数组: ${forEachElement.listKey})',
+                  style: TextStyle(
+                    color: isHovering ? Colors.blue : Colors.orange,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-              ),
-          ],
-        ),
+                Divider(color: isHovering ? Colors.blue : Colors.orange),
+                ...forEachElement.templates.map((t) {
+                  final mockInnerDoc = KoiTicketDocument(
+                    elements: [
+                      _processEditMode(t, state.schema) as KoiTicketElement,
+                    ],
+                  );
+                  final innerRender = KoiPreviewRenderer.build(
+                    document: mockInnerDoc,
+                    paperWidthPx: state.paperWidthPx,
+                    fontFamily: 'SarasaMono',
+                  );
+                  if (innerRender is Container && innerRender.child is Column) {
+                    final col = innerRender.child as Column;
+                    if (col.children.isNotEmpty) return col.children.first;
+                  }
+                  return innerRender;
+                }),
+                if (forEachElement.templates.isEmpty || isHovering)
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Center(
+                      child: Text(
+                        isHovering ? '松开以添加到循环区域' : '选中此区域，从左侧组件库添加或拖拽组件到这里',
+                        style: TextStyle(
+                          color: isHovering ? Colors.blue : Colors.grey,
+                          fontSize: 12,
+                          fontWeight: isHovering ? FontWeight.bold : null,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          );
+        },
       );
     }
 
@@ -520,9 +549,12 @@ class _EditableLabelElementWrapState extends State<_EditableLabelElementWrap> {
     final state = context.watch<EditorState>();
     final el = widget.element.element as KoiLabelElement;
 
-    // Replace text placeholders with schema labels
+    // Replace text placeholders with schema labels or mock data
     final processed = state.isPreviewMode
-        ? el
+        ? const KoiTemplateEngine()
+              .expandLabel(KoiLabelDocument(elements: [el]), state.mockData)
+              .elements
+              .first
         : _processEditMode(el, state.schema) as KoiLabelElement;
 
     // Use the public render method from KoiPreviewRenderer

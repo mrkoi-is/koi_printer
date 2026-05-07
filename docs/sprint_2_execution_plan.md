@@ -21,7 +21,7 @@
 
 ---
 
-## CHECKPOINT 2: 右侧检查器 — 数据绑定优化 (Data Binding UX) [PENDING]
+## CHECKPOINT 2: 右侧检查器 — 数据绑定优化 (Data Binding UX) [DONE]
 
 **目标:** 让用户从下拉列表中选择变量，而不是手动输入 `{{xxx}}`。
 
@@ -33,12 +33,12 @@
 3. 改造 `BarcodeElementInspector` 和 `QrCodeElementInspector`，支持类似的数据绑定。
 
 **验收:**
-- [ ] 文本、条码、二维码可以在 UI 上下拉选择字段。
-- [ ] 选中字段后，底层的 JSON 会正确反映为 `{{fieldKey}}` 格式。
+- [x] 文本、条码、二维码可以在 UI 上下拉选择字段。
+- [x] 选中字段后，底层的 JSON 会正确反映为 `{{fieldKey}}` 格式。
 
 ---
 
-## CHECKPOINT 3: 双模式预览 (Dual-Mode Preview) [PENDING]
+## CHECKPOINT 3: 双模式预览 (Dual-Mode Preview) [DONE]
 
 **目标:** 实现【编辑模式】与【真实数据预览】的切换。
 
@@ -50,12 +50,12 @@
    - 如果 `isPreviewMode`: 使用 `KoiTemplateEngine.compile` 与 `mockData` 预渲染，展示真实的文本换行和数据填充效果。
 
 **验收:**
-- [ ] 切换开关可以正常工作。
-- [ ] 预览模式下可以看到模拟的数据填充。
+- [x] 切换开关可以正常工作。
+- [x] 预览模式下可以看到模拟的数据填充。
 
 ---
 
-## CHECKPOINT 4: ForEach 循环容器可视化 [PENDING]
+## CHECKPOINT 4: ForEach 循环容器可视化 [DONE]
 
 **目标:** 在画布中直观展现循环列表，并支持子元素拖拽。
 
@@ -65,12 +65,12 @@
 3. 修改拖拽/排序逻辑，允许用户将 `TextRowElement` 拖拽到 ForEach 容器的 `itemTemplate` 位置内。
 
 **验收:**
-- [ ] 画布中可以正确显示循环容器。
-- [ ] 可将其他元素拖入容器中。
+- [x] 画布中可以正确显示循环容器。
+- [x] 可将其他元素拖入容器中。
 
 ---
 
-## CHECKPOINT 5: 模板大厅 (Template Gallery) [PENDING]
+## CHECKPOINT 5: 模板大厅 (Template Gallery) [DONE]
 
 **目标:** 提供内置模板库的图形化加载。
 
@@ -80,5 +80,5 @@
 3. 用户点击卡片后，触发 `EditorCommand` 清空当前画布并加载新模板。
 
 **验收:**
-- [ ] 能够通过 UI 弹窗选择并加载不同的模板。
+- [x] 能够通过 UI 弹窗选择并加载不同的模板。
 
