@@ -54,8 +54,9 @@ class BarcodeElementInspector
                     )
                     .toList(),
                 onChanged: (val) {
-                  if (val != null)
+                  if (val != null) {
                     update(context, elementId, element.copyWith(type: val));
+                  }
                 },
               ),
             ],
@@ -159,12 +160,13 @@ class BarcodeElementInspector
                     .map((p) => DropdownMenuItem(value: p, child: Text(p.name)))
                     .toList(),
                 onChanged: (val) {
-                  if (val != null)
+                  if (val != null) {
                     update(
                       context,
                       elementId,
                       element.copyWith(textPosition: val),
                     );
+                  }
                 },
               ),
             ],

@@ -51,8 +51,9 @@ class TopToolbar extends StatelessWidget {
               DropdownMenuItem(value: 500.0, child: Text('100x150 面单')),
             ],
             onChanged: (val) {
-              if (val != null)
+              if (val != null) {
                 context.read<EditorState>().updatePaperWidthPx(val);
+              }
             },
           ),
 

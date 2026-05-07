@@ -123,12 +123,13 @@ class QrCodeElementInspector extends ElementInspectorBuilder<KoiQrCodeElement> {
                     )
                     .toList(),
                 onChanged: (val) {
-                  if (val != null)
+                  if (val != null) {
                     update(
                       context,
                       elementId,
                       element.copyWith(correction: val),
                     );
+                  }
                 },
               ),
             ],

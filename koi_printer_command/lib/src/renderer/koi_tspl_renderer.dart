@@ -117,19 +117,24 @@ class KoiTsplRenderer implements KoiCommandRenderer {
         case KoiLabelCircleElement():
           commands.add(
             _cmd(
-              'CIRCLE ${element.x},${element.y},${element.diameter},${element.thickness}',
+              'CIRCLE ${element.x},${element.y},'
+              '${element.diameter},${element.thickness}',
             ),
           );
         case KoiLabelEllipseElement():
           commands.add(
             _cmd(
-              'ELLIPSE ${element.x},${element.y},${element.width},${element.height},${element.thickness}',
+              'ELLIPSE ${element.x},${element.y},'
+              '${element.width},${element.height},'
+              '${element.thickness}',
             ),
           );
         case KoiLabelDiagonalElement():
           commands.add(
             _cmd(
-              'DIAGONAL ${element.x},${element.y},${element.xEnd},${element.yEnd},${element.thickness}',
+              'DIAGONAL ${element.x},${element.y},'
+              '${element.xEnd},${element.yEnd},'
+              '${element.thickness}',
             ),
           );
         case KoiLabelBlockTextElement():

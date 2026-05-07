@@ -435,7 +435,6 @@ void main() {
             y: 10,
             width: 20,
             height: 30,
-            thickness: 2,
           ),
           KoiLabelDiagonalElement(
             x: 10,
@@ -928,7 +927,6 @@ void main() {
             width: 400,
             height: 100,
             text: 'Hello',
-            font: 'TSS24.BF2',
           ),
         ],
       );
@@ -1003,7 +1001,6 @@ void main() {
       const doc = KoiLabelDocument(
         elements: [
           KoiLabelBeepElement(
-            level: 0,
             interval: 1,
           ), // 1/125=0.008 → clamp(1,20) = 1
         ],
@@ -1033,7 +1030,7 @@ void main() {
     test('CircleElement 被静默忽略', () {
       const doc = KoiLabelDocument(
         elements: [
-          KoiLabelCircleElement(x: 10, y: 10, diameter: 50, thickness: 2),
+          KoiLabelCircleElement(x: 10, y: 10, diameter: 50),
         ],
       );
       final chunks = renderer.render(doc);
@@ -1049,7 +1046,6 @@ void main() {
             y: 10,
             width: 80,
             height: 40,
-            thickness: 2,
           ),
         ],
       );
@@ -1088,7 +1084,6 @@ void main() {
             y: 0,
             xEnd: 100,
             yEnd: 100,
-            thickness: 2,
           ),
           KoiLabelCircleElement(x: 50, y: 50, diameter: 30),
           KoiLabelEllipseElement(x: 50, y: 50, width: 60, height: 30),
