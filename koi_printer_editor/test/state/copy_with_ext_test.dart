@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:koi_printer/koi_printer.dart';
 import 'package:koi_printer_editor/state/koi_print_element_ext.dart';
@@ -157,6 +158,147 @@ void main() {
       final copy = original.copyWith(ratio: 2);
       expect(copy.ratio, 2);
       expect(copy.text, original.text);
+    });
+  });
+
+  group('KoiLabelBoxElement.copyWith', () {
+    const original = KoiLabelBoxElement(x: 10, y: 10, width: 100, height: 100, thickness: 2);
+    test('copyWith', () {
+      final copy = original.copyWith(thickness: 5);
+      expect(copy.thickness, 5);
+      expect(copy.x, 10);
+    });
+  });
+
+  group('KoiPositionedTextElement.copyWith', () {
+    const original = KoiPositionedTextElement(text: 'A', x: 0, y: 0);
+    test('copyWith', () {
+      final copy = original.copyWith(text: 'B');
+      expect(copy.text, 'B');
+      expect(copy.x, 0);
+    });
+  });
+
+  group('KoiPositionedBarcodeElement.copyWith', () {
+    const original = KoiPositionedBarcodeElement(data: '123', x: 0, y: 0);
+    test('copyWith', () {
+      final copy = original.copyWith(data: '456');
+      expect(copy.data, '456');
+      expect(copy.x, 0);
+    });
+  });
+
+  group('KoiPositionedQrCodeElement.copyWith', () {
+    const original = KoiPositionedQrCodeElement(data: '123', x: 0, y: 0);
+    test('copyWith', () {
+      final copy = original.copyWith(data: '456');
+      expect(copy.data, '456');
+      expect(copy.x, 0);
+    });
+  });
+
+  group('KoiLabelReverseElement.copyWith', () {
+    const original = KoiLabelReverseElement(x: 0, y: 0, width: 10, height: 10);
+    test('copyWith', () {
+      final copy = original.copyWith(x: 5);
+      expect(copy.x, 5);
+      expect(copy.width, 10);
+    });
+  });
+
+  group('KoiLabelImageElement.copyWith', () {
+    final original = KoiLabelImageElement(imageBytes: Uint8List.fromList([1]), x: 0, y: 0, width: 10);
+    test('copyWith', () {
+      final copy = original.copyWith(imageBytes: Uint8List.fromList([2]));
+      expect(copy.imageBytes, Uint8List.fromList([2]));
+      expect(copy.x, 0);
+    });
+  });
+
+  group('KoiLabelForEachElement.copyWith', () {
+    const original = KoiLabelForEachElement(listKey: 'a', templates: []);
+    test('copyWith', () {
+      final copy = original.copyWith(listKey: 'b');
+      expect(copy.listKey, 'b');
+    });
+  });
+
+  group('KoiLabelBlockTextElement.copyWith', () {
+    const original = KoiLabelBlockTextElement(text: 'A', x: 0, y: 0, width: 10, height: 10);
+    test('copyWith', () {
+      final copy = original.copyWith(text: 'B');
+      expect(copy.text, 'B');
+      expect(copy.x, 0);
+    });
+  });
+
+  group('KoiLabelCircleElement.copyWith', () {
+    const original = KoiLabelCircleElement(x: 0, y: 0, diameter: 10);
+    test('copyWith', () {
+      final copy = original.copyWith(diameter: 20);
+      expect(copy.diameter, 20);
+      expect(copy.x, 0);
+    });
+  });
+
+  group('KoiLabelEllipseElement.copyWith', () {
+    const original = KoiLabelEllipseElement(x: 0, y: 0, width: 10, height: 10);
+    test('copyWith', () {
+      final copy = original.copyWith(width: 20);
+      expect(copy.width, 20);
+      expect(copy.x, 0);
+    });
+  });
+
+  group('KoiLabelDiagonalElement.copyWith', () {
+    const original = KoiLabelDiagonalElement(x: 0, y: 0, xEnd: 10, yEnd: 10);
+    test('copyWith', () {
+      final copy = original.copyWith(xEnd: 20);
+      expect(copy.xEnd, 20);
+      expect(copy.x, 0);
+    });
+  });
+
+  group('KoiLabelBeepElement.copyWith', () {
+    const original = KoiLabelBeepElement();
+    test('copyWith', () {
+      final copy = original.copyWith();
+      expect(copy, isA<KoiLabelBeepElement>());
+    });
+  });
+
+  group('KoiLabelFeedElement.copyWith', () {
+    const original = KoiLabelFeedElement();
+    test('copyWith', () {
+      final copy = original.copyWith();
+      expect(copy, isA<KoiLabelFeedElement>());
+    });
+  });
+
+  group('KoiLabelLineElement.copyWith', () {
+    const original = KoiLabelLineElement(x: 0, y: 0, width: 10, height: 10);
+    test('copyWith', () {
+      final copy = original.copyWith(width: 20);
+      expect(copy.width, 20);
+      expect(copy.x, 0);
+    });
+  });
+
+  group('KoiLabelSetupElement.copyWith', () {
+    const original = KoiLabelSetupElement(widthMm: 10, heightMm: 10);
+    test('copyWith', () {
+      final copy = original.copyWith(widthMm: 20);
+      expect(copy.widthMm, 20);
+      expect(copy.heightMm, 10);
+    });
+  });
+
+  group('KoiLabelPdf417Element.copyWith', () {
+    const original = KoiLabelPdf417Element(data: 'A', x: 0, y: 0);
+    test('copyWith', () {
+      final copy = original.copyWith(data: 'B');
+      expect(copy.data, 'B');
+      expect(copy.x, 0);
     });
   });
 }
