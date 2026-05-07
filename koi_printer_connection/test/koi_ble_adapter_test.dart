@@ -1,4 +1,3 @@
-// ignore_for_file: lines_longer_than_80_chars // rationale: long strings in tests
 import 'dart:async';
 
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';

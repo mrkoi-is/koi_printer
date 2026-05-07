@@ -1,4 +1,3 @@
-// ignore_for_file: lines_longer_than_80_chars // rationale: long strings in tests
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:koi_printer_connection/src/scanner/koi_keyboard_scanner.dart';

@@ -1,4 +1,4 @@
-// ignore_for_file: lines_longer_than_80_chars // rationale: long strings in tests
+import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:koi_printer_connection/src/model/koi_discovered_device.dart';
