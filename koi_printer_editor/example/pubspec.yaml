@@ -1,0 +1,15 @@
+name: koi_printer_editor_example
+description: Example for koi_printer_editor
+publish_to: 'none'
+
+environment:
+  sdk: ^3.11.0
+  flutter: ">=3.27.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  google_fonts: ^8.1.0
+  koi_printer_editor:
+    path: ../
+  provider: ^6.1.5+1

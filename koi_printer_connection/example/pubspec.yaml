@@ -1,0 +1,13 @@
+name: koi_printer_connection_example
+description: Example for koi_printer_connection
+publish_to: 'none'
+
+environment:
+  sdk: ^3.7.0
+  flutter: ">=3.27.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  koi_printer_connection:
+    path: ../

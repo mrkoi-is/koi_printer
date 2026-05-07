@@ -1,8 +1,11 @@
 name: koi_printer_editor
-description: "A new Flutter project."
-publish_to: 'none'
-version: 0.1.0+1
-
+description: >
+  WYSIWYG visual editor for Koi Printer ecosystem. 
+  Supports drag-and-drop ticket/label design, data binding, and remote proofing.
+repository: https://github.com/mrkoi-is/koi_printer/tree/main/koi_printer_editor
+homepage: https://github.com/mrkoi-is/koi_printer
+issue_tracker: https://github.com/mrkoi-is/koi_printer/issues
+version: 0.1.0
 environment:
   sdk: ^3.11.0
 

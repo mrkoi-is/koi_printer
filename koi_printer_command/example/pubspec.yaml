@@ -1,0 +1,10 @@
+name: koi_printer_command_example
+description: Example for koi_printer_command
+publish_to: 'none'
+
+environment:
+  sdk: ^3.7.0
+
+dependencies:
+  koi_printer_command:
+    path: ../

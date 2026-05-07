@@ -4,7 +4,6 @@ description: >-
   Supports BLE, Classic Bluetooth, and TCP/IP connections
   with template engine and WYSIWYG preview.
 version: 0.1.0
-publish_to: none
 repository: https://github.com/mrkoi-is/koi_printer/tree/main/koi_printer
 homepage: https://github.com/mrkoi-is/koi_printer
 issue_tracker: https://github.com/mrkoi-is/koi_printer/issues
