@@ -201,7 +201,11 @@ class KoiPrinterManager extends ChangeNotifier {
       notifyListeners();
     }
 
-    if (_ticketAdapter!.isReady) return;
+    if (_ticketAdapter!.isReady ||
+        _ticketAdapter!.state == KoiConnectionState.connecting ||
+        _ticketAdapter!.state == KoiConnectionState.discovering) {
+      return;
+    }
 
     try {
       await _ticketAdapter!.connect(
@@ -222,7 +226,11 @@ class KoiPrinterManager extends ChangeNotifier {
       notifyListeners();
     }
 
-    if (_labelAdapter!.isReady) return;
+    if (_labelAdapter!.isReady ||
+        _labelAdapter!.state == KoiConnectionState.connecting ||
+        _labelAdapter!.state == KoiConnectionState.discovering) {
+      return;
+    }
 
     try {
       await _labelAdapter!.connect(
