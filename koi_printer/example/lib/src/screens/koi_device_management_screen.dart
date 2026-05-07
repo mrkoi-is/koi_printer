@@ -201,7 +201,13 @@ class _DeviceTile extends StatelessWidget {
                 case 'delete':
                   onDelete();
                 case 'test':
-                  final testConfig = const KoiPrintConfig();
+                  final testConfig = KoiPrintConfig(
+                    renderer: KoiRendererConfig(
+                      protocol: isLabel
+                          ? KoiCommandProtocol.tspl
+                          : KoiCommandProtocol.escPos,
+                    ),
+                  );
                   final docs = isLabel
                       ? const KoiSenderLabelTemplate().build({}, testConfig)
                       : const KoiTestTicketTemplate().build(null, testConfig);
