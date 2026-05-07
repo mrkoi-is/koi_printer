@@ -46,6 +46,7 @@ class MockPrinterAdapter implements KoiPrinterAdapter {
 
   @override
   Future<bool> connect(KoiConnectionConfig config) async {
+    await Future<void>.delayed(Duration.zero);
     if (shouldThrowOnConnect) {
       throw Exception('模拟连接失败');
     }
@@ -60,12 +61,14 @@ class MockPrinterAdapter implements KoiPrinterAdapter {
 
   @override
   Future<void> disconnect() async {
+    await Future<void>.delayed(Duration.zero);
     _state = KoiConnectionState.disconnected;
     _stateCtrl.add(_state);
   }
 
   @override
   Future<void> sendChunks(List<List<int>> chunks) async {
+    await Future<void>.delayed(Duration.zero);
     if (shouldThrowOnSend) {
       throw Exception('模拟发送失败');
     }
