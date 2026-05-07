@@ -162,7 +162,13 @@ void main() {
   });
 
   group('KoiLabelBoxElement.copyWith', () {
-    const original = KoiLabelBoxElement(x: 10, y: 10, width: 100, height: 100, thickness: 2);
+    const original = KoiLabelBoxElement(
+      x: 10,
+      y: 10,
+      width: 100,
+      height: 100,
+      thickness: 2,
+    );
     test('copyWith', () {
       final copy = original.copyWith(thickness: 5);
       expect(copy.thickness, 5);
@@ -207,7 +213,12 @@ void main() {
   });
 
   group('KoiLabelImageElement.copyWith', () {
-    final original = KoiLabelImageElement(imageBytes: Uint8List.fromList([1]), x: 0, y: 0, width: 10);
+    final original = KoiLabelImageElement(
+      imageBytes: Uint8List.fromList([1]),
+      x: 0,
+      y: 0,
+      width: 10,
+    );
     test('copyWith', () {
       final copy = original.copyWith(imageBytes: Uint8List.fromList([2]));
       expect(copy.imageBytes, Uint8List.fromList([2]));
@@ -224,7 +235,13 @@ void main() {
   });
 
   group('KoiLabelBlockTextElement.copyWith', () {
-    const original = KoiLabelBlockTextElement(text: 'A', x: 0, y: 0, width: 10, height: 10);
+    const original = KoiLabelBlockTextElement(
+      text: 'A',
+      x: 0,
+      y: 0,
+      width: 10,
+      height: 10,
+    );
     test('copyWith', () {
       final copy = original.copyWith(text: 'B');
       expect(copy.text, 'B');
