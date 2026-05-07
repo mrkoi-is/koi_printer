@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:koi_printer/koi_printer.dart';
 import 'package:koi_printer_editor/services/cloud_sync_service.dart';
 import 'package:koi_printer_editor/state/editor_state.dart';
+import 'package:koi_printer_editor/widgets/remote_print_dialog.dart';
 import 'package:koi_printer_editor/widgets/template_gallery_dialog.dart';
 import 'package:provider/provider.dart';
 
@@ -127,6 +128,16 @@ class TopToolbar extends StatelessWidget {
             icon: const Icon(Icons.cloud_upload),
             label: const Text('保存到云端'),
             onPressed: () => _showSaveToCloudDialog(context, state),
+          ),
+          TextButton.icon(
+            icon: const Icon(Icons.send_to_mobile),
+            label: const Text('真机打样'),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (_) => const RemotePrintDialog(),
+              );
+            },
           ),
           const SizedBox(width: 8),
           FilledButton.icon(
