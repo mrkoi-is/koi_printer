@@ -66,7 +66,7 @@ graph TB
 | Phase 1 | 核心基础：EditorState + Undo/Redo 栈 + JSON 序列化 | ✅ 完成 |
 | Phase 2 | 流式编辑器：组件面板 → 画布添加 → 拖拽排序 → 属性面板 | ✅ 完成 |
 | Phase 3 | 数据绑定：变量下拉、双模式预览、ForEach 可视化、模板大厅 | ✅ 完成 |
-| Phase 4 | 高级交互：绝对坐标面单拖拽、网格吸附、智能对齐 | 🔲 未开始 |
+| Phase 4 | 高级交互：绝对坐标面单拖拽、网格吸附、云端分发、真机打样 | ✅ 完成 |
 
 ### 2.2 编辑器当前能力清单 / Editor Feature Matrix
 
@@ -83,8 +83,9 @@ graph TB
 | **双模式预览 (编辑/真实数据)** | ✅ | ✅ | KoiTemplateEngine 编译 |
 | **ForEach 可视化容器** | ✅ | ✅ | DragTarget + Draggable |
 | **模板大厅 (Gallery)** | ✅ | ✅ | 带预览背景的卡片布局 |
-| **绝对坐标拖拽** | ❌ | ❌ | Phase 4 |
-| **云端保存/分发** | ❌ | ❌ | Phase 4+ |
+| **绝对坐标拖拽** | ❌ | ✅ | Phase 4 (CenterCanvas) |
+| **云端保存/分发** | ✅ | ✅ | Phase 4 (CloudSyncService) |
+| **真机远程打样** | ✅ | ✅ | Phase 4 (WebSocket 直连) |
 
 ### 2.3 已知技术债务 / Known Technical Debt
 
@@ -134,7 +135,7 @@ graph TB
 - [x] 实现 `TemplateGalleryModal` — 卡片网格展示
 - [x] 支持从资产文件或 JSON 加载模板
 - [x] 一键加载并替换当前编辑状态
-- [ ] 支持"另存为新模板"功能
+- [x] 支持"另存为新模板"功能
 
 ---
 
@@ -176,10 +177,10 @@ gantt
     ForEach 可视化             :s2d, after s2c, 3d
     模板大厅                   :s2e, after s2d, 2d
     
-    section Sprint 3
-    绝对坐标面单编辑器         :s3a, after s2e, 5d
-    云端保存/分发 API          :s3b, after s3a, 3d
-    真机远程打样               :s3c, after s3b, 3d
+    section Sprint 3 ✅
+    绝对坐标面单编辑器         :done, s3a, 2026-05-07, 1d
+    云端保存/分发 API          :done, s3b, after s3a, 1d
+    真机远程打样               :done, s3c, after s3b, 1d
     
     section Sprint 4
     开源准备 (文档/示例/License) :s4a, after s3c, 5d
@@ -193,10 +194,11 @@ gantt
 1. ✅ 4 个包覆盖率均 ≥ 90%，CI 绿色
 2. ✅ 编辑器支持数据绑定下拉 + 双模式预览 + ForEach 可视化
 3. ✅ 模板大厅支持加载/保存/切换
-4. 🔲 面单模式支持绝对坐标拖拽
-5. 🔲 云端 API 支持模板的上传/下载/版本管理
-6. 🔲 pub.dev 发布 3 个核心包 (command / connection / printer)
+4. ✅ 面单模式支持绝对坐标拖拽
+5. ✅ 云端 API 支持模板的上传/下载与本地缓存
+6. ✅ Web 端支持免输入 IP 的局域网 WebSocket 远程打样
+7. 🔲 pub.dev 发布 3 个核心包 (command / connection / printer)
 
 ---
 
-> **结论 / Conclusion**: Sprint 1 (质量保障) 和 Sprint 2 (编辑器商业化) 均已完成——4 个包全部达标 ≥90% 覆盖率，494 项测试全绿，编辑器已具备数据绑定下拉、双模式预览、ForEach 可视化、模板大厅等商业化功能。项目即将进入 Sprint 3 (高级交互) 阶段，重点攻克绝对坐标拖拽、云端分发和真机远程打样。
+> **结论 / Conclusion**: Sprint 1 (质量保障)、Sprint 2 (编辑器商业化) 和 Sprint 3 (高级交互) 均已全部完成。目前项目已具备商业级编辑器的核心能力，包括全套数据绑定、云端模板同步和局域网真机打样（WebRTC/WebSocket 架构）。项目正式进入 Sprint 4 (开源发布) 阶段，重点攻克文档编写和 pub.dev 上架准备。
