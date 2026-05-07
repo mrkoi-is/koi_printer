@@ -2,8 +2,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:koi_printer/koi_printer.dart';
-import 'package:koi_printer_editor/mock_templates.dart';
+import 'package:koi_printer_editor/services/cloud_sync_service.dart';
 import 'package:koi_printer_editor/state/editor_state.dart';
+import 'package:koi_printer_editor/widgets/template_gallery_dialog.dart';
 import 'package:provider/provider.dart';
 
 class TopToolbar extends StatelessWidget {
@@ -35,7 +36,12 @@ class TopToolbar extends StatelessWidget {
           TextButton.icon(
             icon: const Icon(Icons.grid_view, size: 18),
             label: const Text('模板大厅'),
-            onPressed: () => _showTemplateGallery(context),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (_) => const TemplateGalleryDialog(),
+              );
+            },
           ),
           const SizedBox(width: 8),
           const VerticalDivider(width: 1, indent: 12, endIndent: 12),
@@ -117,6 +123,12 @@ class TopToolbar extends StatelessWidget {
             tooltip: '模板基础设置',
             onPressed: () => _showMetadataEditor(context, state),
           ),
+          TextButton.icon(
+            icon: const Icon(Icons.cloud_upload),
+            label: const Text('保存到云端'),
+            onPressed: () => _showSaveToCloudDialog(context, state),
+          ),
+          const SizedBox(width: 8),
           FilledButton.icon(
             onPressed: () {
               // 构建完整的模板清单信封 (复用当前加载的 manifest 身份)
@@ -204,110 +216,105 @@ class TopToolbar extends StatelessWidget {
     );
   }
 
-  void _showTemplateGallery(BuildContext context) {
+  void _showSaveToCloudDialog(BuildContext context, EditorState state) {
+    final idCtrl = TextEditingController(text: state.currentManifestId);
+    final nameCtrl = TextEditingController(text: state.currentManifestName);
+    final descCtrl = TextEditingController(
+      text: state.currentManifestDescription,
+    );
+    bool isSaving = false;
+
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (ctx) {
-        return AlertDialog(
-          title: const Text('模板大厅'),
-          content: SizedBox(
-            width: 560,
-            height: 420,
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 12,
-                crossAxisSpacing: 12,
-                childAspectRatio: 1.6,
-              ),
-              itemCount: templateManifests.length,
-              itemBuilder: (_, i) {
-                final m = templateManifests[i];
-                return Card(
-                  clipBehavior: Clip.antiAlias,
-                  child: InkWell(
-                    onTap: () {
-                      final elements = manifestToEditorElements(m);
-                      context.read<EditorState>().loadManifest(m, elements);
-                      Navigator.pop(ctx);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(14),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [Colors.blue.shade50, Colors.white],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: const Text('保存到云端 (Save to Cloud)'),
+              content: SizedBox(
+                width: 400,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(
+                      controller: idCtrl,
+                      decoration: const InputDecoration(
+                        labelText: '模板 ID (唯一标识)',
                       ),
-                      child: Stack(
-                        children: [
-                          Positioned.fill(
-                            child: Opacity(
-                              opacity: 0.15,
-                              child: IgnorePointer(
-                                child: FittedBox(
-                                  fit: BoxFit.contain,
-                                  alignment: Alignment.topCenter,
-                                  child: KoiPreviewRenderer.build(
-                                    document: m.document,
-                                    paperWidthPx: 380,
-                                    fontFamily: 'SarasaMono',
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  m.name,
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                                const SizedBox(height: 4),
-                                if (m.description.isNotEmpty)
-                                  Text(
-                                    m.description,
-                                    style: TextStyle(
-                                      fontSize: 11,
-                                      color: Colors.grey.shade700,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  '${m.schema.length} 个变量',
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    color: Colors.blue.shade700,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+                      enabled: !isSaving,
                     ),
-                  ),
-                );
-              },
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(ctx),
-              child: const Text('取消'),
-            ),
-          ],
+                    const SizedBox(height: 8),
+                    TextField(
+                      controller: nameCtrl,
+                      decoration: const InputDecoration(labelText: '模板名称'),
+                      enabled: !isSaving,
+                    ),
+                    const SizedBox(height: 8),
+                    TextField(
+                      controller: descCtrl,
+                      decoration: const InputDecoration(labelText: '模板描述'),
+                      maxLines: 2,
+                      enabled: !isSaving,
+                    ),
+                    if (isSaving) ...[
+                      const SizedBox(height: 24),
+                      const Center(child: CircularProgressIndicator()),
+                    ],
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: isSaving ? null : () => Navigator.pop(ctx),
+                  child: const Text('取消'),
+                ),
+                FilledButton(
+                  onPressed: isSaving
+                      ? null
+                      : () async {
+                          final id = idCtrl.text.trim();
+                          final name = nameCtrl.text.trim();
+                          if (id.isEmpty || name.isEmpty) {
+                            ScaffoldMessenger.of(ctx).showSnackBar(
+                              const SnackBar(content: Text('ID 和名称不能为空')),
+                            );
+                            return;
+                          }
+
+                          setState(() => isSaving = true);
+
+                          final manifest = KoiTemplateManifest(
+                            id: id,
+                            name: name,
+                            description: descCtrl.text.trim(),
+                            category: state.currentManifestCategory,
+                            schema: state.schema,
+                            document: state.document,
+                          );
+
+                          try {
+                            await CloudSyncService().uploadTemplate(manifest);
+                            if (ctx.mounted) {
+                              Navigator.pop(ctx);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('已成功保存到云端！')),
+                              );
+                            }
+                          } catch (e) {
+                            if (ctx.mounted) {
+                              setState(() => isSaving = false);
+                              ScaffoldMessenger.of(ctx).showSnackBar(
+                                SnackBar(content: Text('上传失败: $e')),
+                              );
+                            }
+                          }
+                        },
+                  child: const Text('确认保存'),
+                ),
+              ],
+            );
+          },
         );
       },
     );

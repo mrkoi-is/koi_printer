@@ -15,6 +15,7 @@ dependencies:
   koi_printer_command:
     path: ../koi_printer_command
   provider: ^6.1.5+1
+  shared_preferences: ^2.5.5
 
 dev_dependencies:
   flutter_test:
