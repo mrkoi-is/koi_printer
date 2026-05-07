@@ -303,6 +303,9 @@ class KoiLabelSetupElement extends KoiLabelElement {
     this.referenceX = 0,
     this.referenceY = 0,
     this.codepage,
+    this.direction = KoiLabelDirection.backward,
+    this.paperType = KoiLabelPaperType.gap,
+    this.blackMarkMm = 0,
   });
 
   /// 标签纸宽度（毫米）。
@@ -311,7 +314,7 @@ class KoiLabelSetupElement extends KoiLabelElement {
   /// 标签纸高度（毫米）。
   final int heightMm;
 
-  /// 标签纸间距（毫米）。
+  /// 标签纸间距（毫米）。仅在 paperType == gap 时生效。
   final int gapMm;
 
   /// 打印机分辨率 (默认203)。
@@ -331,6 +334,15 @@ class KoiLabelSetupElement extends KoiLabelElement {
 
   /// 字符集代码页。
   final String? codepage;
+
+  /// 打印方向 (TSPL DIRECTION 标准指令)。
+  final KoiLabelDirection direction;
+
+  /// 纸张类型 (TSPL 标准: GAP / BLINE / 连续纸)。
+  final KoiLabelPaperType paperType;
+
+  /// 黑标高度（毫米）。仅在 paperType == blackMark 时生效。
+  final int blackMarkMm;
 }
 
 /// 坐标定位文本元素。
@@ -532,6 +544,7 @@ class KoiLabelImageElement extends KoiLabelElement {
     required this.y,
     required this.imageBytes,
     this.width,
+    this.ditherMode = KoiImageDitherMode.threshold,
   });
 
   /// 起始 X 坐标。
@@ -545,6 +558,10 @@ class KoiLabelImageElement extends KoiLabelElement {
 
   /// 打印到纸上的具体宽度。为空则按纸宽缩放。
   final int? width;
+
+  /// 图像二值化模式。
+  /// 默认为简单阈值; 照片建议用 floydSteinberg。
+  final KoiImageDitherMode ditherMode;
 }
 
 /// 标签打印元素 — 触发打印。

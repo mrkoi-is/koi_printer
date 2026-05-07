@@ -194,6 +194,12 @@ class KoiCpclRenderer implements KoiCommandRenderer {
 
       img.grayscale(image);
 
+      // 根据 ditherMode 选择二值化算法
+      final binaryPixels =
+          element.ditherMode == KoiImageDitherMode.floydSteinberg
+              ? _floydSteinbergDither(image)
+              : _thresholdDither(image);
+
       final widthBytes = (image.width + 7) ~/ 8;
       final heightPx = image.height;
 
@@ -203,11 +209,8 @@ class KoiCpclRenderer implements KoiCommandRenderer {
           var byte = 0;
           for (var bit = 0; bit < 8; bit++) {
             final px = bx * 8 + bit;
-            if (px < image.width) {
-              final pixel = image.getPixel(px, y);
-              if (pixel.luminance < 128) {
-                byte |= 0x80 >> bit;
-              }
+            if (px < image.width && binaryPixels[y * image.width + px]) {
+              byte |= 0x80 >> bit;
             }
           }
           bitmapData.add(byte);
@@ -225,6 +228,55 @@ class KoiCpclRenderer implements KoiCommandRenderer {
       log('Image Decode Error: $e\n$st', name: 'KoiCpclRenderer', error: e);
       return [];
     }
+  }
+
+  /// 简单阈值二值化。
+  List<bool> _thresholdDither(img.Image image) {
+    final result = List<bool>.filled(image.width * image.height, false);
+    for (var y = 0; y < image.height; y++) {
+      for (var x = 0; x < image.width; x++) {
+        final pixel = image.getPixel(x, y);
+        result[y * image.width + x] = pixel.luminance < 128;
+      }
+    }
+    return result;
+  }
+
+  /// Floyd-Steinberg 误差扩散二值化。
+  List<bool> _floydSteinbergDither(img.Image image) {
+    final w = image.width;
+    final h = image.height;
+    final buffer = List<double>.generate(
+      w * h,
+      (i) => image.getPixel(i % w, i ~/ w).luminance.toDouble(),
+    );
+
+    final result = List<bool>.filled(w * h, false);
+
+    for (var y = 0; y < h; y++) {
+      for (var x = 0; x < w; x++) {
+        final idx = y * w + x;
+        final oldVal = buffer[idx];
+        final newVal = oldVal < 128.0 ? 0.0 : 255.0;
+        result[idx] = newVal == 0.0;
+        final error = oldVal - newVal;
+
+        if (x + 1 < w) {
+          buffer[idx + 1] += error * 7.0 / 16.0;
+        }
+        if (x - 1 >= 0 && y + 1 < h) {
+          buffer[(y + 1) * w + (x - 1)] += error * 3.0 / 16.0;
+        }
+        if (y + 1 < h) {
+          buffer[(y + 1) * w + x] += error * 5.0 / 16.0;
+        }
+        if (x + 1 < w && y + 1 < h) {
+          buffer[(y + 1) * w + (x + 1)] += error * 1.0 / 16.0;
+        }
+      }
+    }
+
+    return result;
   }
 
   List<int> _cmd(String command) {

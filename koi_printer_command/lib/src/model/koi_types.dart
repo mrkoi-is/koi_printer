@@ -356,6 +356,45 @@ enum KoiImageRenderMode {
   graphics,
 }
 
+/// 标签纸张类型 (TSPL 行业标准)。
+/// Label paper type — industry standard per TSC TSPL specification.
+enum KoiLabelPaperType {
+  /// 间隙标签纸 (TSPL: GAP m,n) — 标签之间有透明间距
+  gap,
+
+  /// 黑标纸 (TSPL: BLINE m,n) — 标签背面有黑色标记线
+  blackMark,
+
+  /// 连续纸 (无间距/黑标, 需手动设置长度)
+  continuous,
+}
+
+/// 标签打印方向 (TSPL 行业标准)。
+/// Label print direction — TSPL standard DIRECTION command.
+enum KoiLabelDirection {
+  /// 方向 0: 正向出纸
+  forward(0),
+
+  /// 方向 1: 反向出纸 (常用于桌面出纸口朝向用户)
+  backward(1);
+
+  const KoiLabelDirection(this.value);
+
+  /// TSPL DIRECTION 指令参数值。
+  final int value;
+}
+
+/// 图像二值化模式。
+/// Image dithering mode for thermal printing.
+/// Floyd-Steinberg is the industry standard for photo-quality output.
+enum KoiImageDitherMode {
+  /// 简单阈值 (适合文字、条码、Logo)
+  threshold,
+
+  /// Floyd-Steinberg 误差扩散 (适合照片、渐变图像)
+  floydSteinberg,
+}
+
 /// 钱箱引脚。
 /// Cash drawer pin selection.
 enum KoiCashDrawerPin {
