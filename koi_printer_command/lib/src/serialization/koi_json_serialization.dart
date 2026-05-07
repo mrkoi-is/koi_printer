@@ -460,6 +460,9 @@ Map<String, dynamic> _labelSetupToJson(KoiLabelSetupElement e) => {
   if (e.referenceX != 0) 'referenceX': e.referenceX,
   if (e.referenceY != 0) 'referenceY': e.referenceY,
   if (e.codepage != null) 'codepage': e.codepage,
+  if (e.direction != KoiLabelDirection.backward) 'direction': e.direction.name,
+  if (e.paperType != KoiLabelPaperType.gap) 'paperType': e.paperType.name,
+  if (e.blackMarkMm != 0) 'blackMarkMm': e.blackMarkMm,
 };
 
 KoiLabelSetupElement _labelSetupFromJson(Map<String, dynamic> j) =>
@@ -473,6 +476,17 @@ KoiLabelSetupElement _labelSetupFromJson(Map<String, dynamic> j) =>
       referenceX: j['referenceX'] as int? ?? 0,
       referenceY: j['referenceY'] as int? ?? 0,
       codepage: j['codepage'] as String?,
+      direction: _enumByName(
+        KoiLabelDirection.values,
+        j['direction'],
+        KoiLabelDirection.backward,
+      ),
+      paperType: _enumByName(
+        KoiLabelPaperType.values,
+        j['paperType'],
+        KoiLabelPaperType.gap,
+      ),
+      blackMarkMm: j['blackMarkMm'] as int? ?? 0,
     );
 
 // ── Positioned Text ──
@@ -612,6 +626,8 @@ Map<String, dynamic> _labelImageToJson(KoiLabelImageElement e) => {
   'y': e.y,
   'imageBytes': base64Encode(e.imageBytes),
   if (e.width != null) 'width': e.width,
+  if (e.ditherMode != KoiImageDitherMode.threshold)
+    'ditherMode': e.ditherMode.name,
 };
 
 KoiLabelImageElement _labelImageFromJson(Map<String, dynamic> j) =>
@@ -620,6 +636,11 @@ KoiLabelImageElement _labelImageFromJson(Map<String, dynamic> j) =>
       y: j['y'] as int,
       imageBytes: Uint8List.fromList(base64Decode(j['imageBytes'] as String)),
       width: j['width'] as int?,
+      ditherMode: _enumByName(
+        KoiImageDitherMode.values,
+        j['ditherMode'],
+        KoiImageDitherMode.threshold,
+      ),
     );
 
 // ── Label Print ──

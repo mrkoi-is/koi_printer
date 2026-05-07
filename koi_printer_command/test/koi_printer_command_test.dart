@@ -131,6 +131,31 @@ void main() {
       expect(e.gapMm, 3);
     });
 
+    test('KoiLabelSetupElement defaults for new fields', () {
+      const e = KoiLabelSetupElement(widthMm: 40, heightMm: 30);
+      expect(e.direction, KoiLabelDirection.backward);
+      expect(e.paperType, KoiLabelPaperType.gap);
+      expect(e.blackMarkMm, 0);
+    });
+
+    test('KoiLabelSetupElement custom direction and paper type', () {
+      const e = KoiLabelSetupElement(
+        widthMm: 50,
+        heightMm: 40,
+        direction: KoiLabelDirection.forward,
+        paperType: KoiLabelPaperType.blackMark,
+        blackMarkMm: 3,
+      );
+      expect(e.direction, KoiLabelDirection.forward);
+      expect(e.paperType, KoiLabelPaperType.blackMark);
+      expect(e.blackMarkMm, 3);
+    });
+
+    test('KoiLabelImageElement defaults ditherMode to threshold', () {
+      final e = KoiLabelImageElement(x: 0, y: 0, imageBytes: Uint8List(0));
+      expect(e.ditherMode, KoiImageDitherMode.threshold);
+    });
+
     test('KoiPositionedTextElement stores coordinates', () {
       const e = KoiPositionedTextElement(x: 100, y: 50, text: 'Hello');
       expect(e.x, 100);
@@ -257,8 +282,29 @@ void main() {
     });
   });
 
+  group('KoiLabelDirection enum', () {
+    test('forward has value 0', () {
+      expect(KoiLabelDirection.forward.value, 0);
+    });
+    test('backward has value 1', () {
+      expect(KoiLabelDirection.backward.value, 1);
+    });
+  });
+
+  group('KoiLabelPaperType enum', () {
+    test('has all expected values', () {
+      expect(KoiLabelPaperType.values.length, 3);
+    });
+  });
+
+  group('KoiImageDitherMode enum', () {
+    test('has threshold and floydSteinberg', () {
+      expect(KoiImageDitherMode.values.length, 2);
+    });
+  });
+
   group('KoiTsplRenderer', () {
-    test('renders label setup', () {
+    test('renders label setup with default direction', () {
       const renderer = KoiTsplRenderer();
       const doc = KoiLabelDocument(
         elements: [KoiLabelSetupElement(widthMm: 40, heightMm: 30)],
@@ -267,6 +313,9 @@ void main() {
       final chunks = renderer.render(doc);
       // SIZE + GAP + DIRECTION + CLS = 4 commands
       expect(chunks.length, 4);
+
+      final directionCmd = String.fromCharCodes(chunks[2]);
+      expect(directionCmd, contains('DIRECTION 1'));
     });
 
     test('renders positioned text', () {
@@ -295,6 +344,58 @@ void main() {
 
       final text = String.fromCharCodes(chunks.first);
       expect(text, contains('QRCODE'));
+    });
+
+    test('renders BLINE for black mark paper', () {
+      const renderer = KoiTsplRenderer();
+      const doc = KoiLabelDocument(
+        elements: [
+          KoiLabelSetupElement(
+            widthMm: 50,
+            heightMm: 40,
+            paperType: KoiLabelPaperType.blackMark,
+            blackMarkMm: 3,
+          ),
+        ],
+      );
+
+      final chunks = renderer.render(doc);
+      final gapCmd = String.fromCharCodes(chunks[1]);
+      expect(gapCmd, contains('BLINE 3 mm,0 mm'));
+    });
+
+    test('renders GAP 0 for continuous paper', () {
+      const renderer = KoiTsplRenderer();
+      const doc = KoiLabelDocument(
+        elements: [
+          KoiLabelSetupElement(
+            widthMm: 50,
+            heightMm: 40,
+            paperType: KoiLabelPaperType.continuous,
+          ),
+        ],
+      );
+
+      final chunks = renderer.render(doc);
+      final gapCmd = String.fromCharCodes(chunks[1]);
+      expect(gapCmd, contains('GAP 0 mm,0 mm'));
+    });
+
+    test('renders DIRECTION 0 for forward direction', () {
+      const renderer = KoiTsplRenderer();
+      const doc = KoiLabelDocument(
+        elements: [
+          KoiLabelSetupElement(
+            widthMm: 40,
+            heightMm: 30,
+            direction: KoiLabelDirection.forward,
+          ),
+        ],
+      );
+
+      final chunks = renderer.render(doc);
+      final directionCmd = String.fromCharCodes(chunks[2]);
+      expect(directionCmd, contains('DIRECTION 0'));
     });
 
     test('returns empty for ticket document', () {
