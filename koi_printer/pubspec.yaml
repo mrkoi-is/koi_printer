@@ -16,6 +16,10 @@ dependencies:
   barcode_widget: ^2.0.4
   flutter:
     sdk: flutter
+  koi_printer_command: ^0.1.0
+  koi_printer_connection: ^0.1.0
+
+dependency_overrides:
   koi_printer_command:
     path: ../koi_printer_command
   koi_printer_connection:

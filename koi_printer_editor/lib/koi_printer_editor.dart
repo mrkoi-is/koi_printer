@@ -1,4 +1,4 @@
-library koi_printer_editor;
+library;
 
 export 'editor_screen.dart';
 export 'mock_templates.dart';

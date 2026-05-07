@@ -13,6 +13,10 @@ dependencies:
   flutter:
     sdk: flutter
   google_fonts: ^8.1.0
+  koi_printer: ^0.1.0
+  koi_printer_command: ^0.1.0
+
+dependency_overrides:
   koi_printer:
     path: ../koi_printer
   koi_printer_command:

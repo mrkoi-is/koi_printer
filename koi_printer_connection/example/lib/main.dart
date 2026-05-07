@@ -47,7 +47,7 @@ class _KoiConnectionExampleState extends State<KoiConnectionExample> {
 
   void _stopScan() {
     _scanSub?.cancel();
-    _scanner.stopScan();
+    _scanner.stopScan().ignore();
     setState(() => _isScanning = false);
   }
 
@@ -67,7 +67,7 @@ class _KoiConnectionExampleState extends State<KoiConnectionExample> {
   @override
   void dispose() {
     _scanSub?.cancel();
-    _connection?.disconnect();
+    _connection?.disconnect().ignore();
     super.dispose();
   }
 
